@@ -1,0 +1,16 @@
+{
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.queondacancun.com"
+        }
+      ],
+      "destination": "https://queondacancun.com/:path*",
+      "permanent": true
+    }
+  ]
+}
