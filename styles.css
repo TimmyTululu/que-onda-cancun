@@ -28,13 +28,18 @@ body {
 
 .shell {
   min-height: 100vh;
-  display: grid;
+  display: flex;
   align-items: center;
+  justify-content: center;
   padding: clamp(32px, 6vw, 80px);
 }
 
 .intro {
   width: min(100%, 760px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .kicker {
@@ -48,7 +53,7 @@ body {
 
 h1 {
   margin: 0;
-  max-width: 12ch;
+  max-width: 11ch;
   font-size: clamp(3.4rem, 10vw, 8.5rem);
   line-height: 0.92;
   letter-spacing: 0;
@@ -56,22 +61,38 @@ h1 {
 
 .tagline {
   margin: 28px 0 0;
-  max-width: 620px;
+  max-width: 680px;
   font-size: clamp(1.4rem, 3vw, 2.3rem);
   font-weight: 800;
   line-height: 1.05;
 }
 
-.copy {
-  margin: 22px 0 0;
-  max-width: 620px;
-  color: var(--muted);
-  font-size: clamp(1.02rem, 2vw, 1.22rem);
-  line-height: 1.65;
+.categories {
+  width: min(100%, 720px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 9px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.categories li {
+  padding: 8px 11px;
+  border: 1px solid rgba(22, 35, 42, 0.16);
+  background: rgba(255, 255, 255, 0.34);
+  color: var(--ink);
+  font-size: clamp(0.78rem, 1.8vw, 0.92rem);
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .soon {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin: 38px 0 0;
   padding: 12px 18px;
   border: 1px solid var(--line);
@@ -84,11 +105,24 @@ h1 {
 
 @media (max-width: 560px) {
   .shell {
-    align-items: end;
+    align-items: center;
     padding: 28px 22px 44px;
   }
 
   h1 {
     font-size: clamp(3.2rem, 18vw, 5rem);
+  }
+
+  .tagline {
+    margin-top: 24px;
+  }
+
+  .categories {
+    gap: 7px;
+    margin-top: 22px;
+  }
+
+  .categories li {
+    padding: 7px 9px;
   }
 }
