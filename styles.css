@@ -200,6 +200,29 @@ h1 {
   display: block;
 }
 
+.reassurance {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45em;
+  margin: 12px 0 0;
+  font-size: 0.84rem;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.reassurance span:nth-child(1) {
+  color: #f6b91d;
+}
+
+.reassurance span:nth-child(2) {
+  color: #20c7cb;
+}
+
+.reassurance span:nth-child(3) {
+  color: #22a56f;
+}
+
 input,
 button {
   min-height: 50px;
