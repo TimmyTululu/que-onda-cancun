@@ -261,6 +261,28 @@ button {
   box-shadow: 0 14px 28px rgba(26, 156, 197, 0.18);
 }
 
+button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.subscribe-status {
+  min-height: 1.35em;
+  margin: 10px 0 0;
+  color: #f3ead8;
+  font-size: 0.92rem;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.subscribe-status[data-state="success"] {
+  color: #25d481;
+}
+
+.subscribe-status[data-state="error"] {
+  color: #ffbd7b;
+}
+
 .site-footer {
   width: 100%;
   padding: 0 clamp(24px, 5.8vw, 76px) clamp(24px, 4vw, 44px);
