@@ -132,7 +132,7 @@ h1 {
 }
 
 .subscribe {
-  width: min(100%, 830px);
+  width: min(100%, 660px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 12px;
