@@ -122,7 +122,7 @@ h1 {
 .subscribe {
   width: min(100%, 830px);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 10px;
   align-items: end;
   margin: clamp(30px, 4vw, 44px) 0 0;
@@ -132,6 +132,35 @@ h1 {
   background: rgba(255, 255, 255, 0.66);
   box-shadow: var(--shadow);
   backdrop-filter: blur(22px);
+}
+
+.channel-toggle {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(16, 33, 42, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.channel {
+  min-height: 50px;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  color: rgba(16, 33, 42, 0.58);
+  padding: 0 15px;
+  font-size: 0.82rem;
+  font-weight: 900;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.channel.active {
+  background: var(--ink);
+  color: var(--white);
+  box-shadow: 0 10px 20px rgba(16, 33, 42, 0.16);
 }
 
 .signup-field {
@@ -218,6 +247,10 @@ button {
     grid-template-columns: 1fr;
     margin-top: 30px;
     border-radius: 22px;
+  }
+
+  .channel-toggle {
+    width: 100%;
   }
 
   .signup-field {

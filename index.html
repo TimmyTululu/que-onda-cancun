@@ -27,18 +27,35 @@
           <span>Chismes</span>
           <span>Alertas</span>
         </p>
-        <div class="subscribe" aria-label="Suscripción">
+        <div class="subscribe" aria-label="Suscripción por email o WhatsApp">
+          <div class="channel-toggle" aria-label="Elige cómo recibirlo">
+            <button type="button" class="channel active">Email</button>
+            <button type="button" class="channel">WhatsApp</button>
+          </div>
           <label class="signup-field">
-            <span>Email</span>
+            <span>Elige uno</span>
             <input type="email" name="email" placeholder="tu@email.com" autocomplete="email">
-          </label>
-          <label class="signup-field">
-            <span>WhatsApp</span>
-            <input type="tel" name="whatsapp" placeholder="+52 998 000 0000" autocomplete="tel">
           </label>
           <button type="button">Suscribirme</button>
         </div>
       </section>
     </main>
+    <script>
+      const channels = document.querySelectorAll(".channel");
+      const signupInput = document.querySelector(".signup-field input");
+
+      channels.forEach((channel) => {
+        channel.addEventListener("click", () => {
+          channels.forEach((item) => item.classList.remove("active"));
+          channel.classList.add("active");
+
+          const isWhatsApp = channel.textContent.trim() === "WhatsApp";
+          signupInput.type = isWhatsApp ? "tel" : "email";
+          signupInput.name = isWhatsApp ? "whatsapp" : "email";
+          signupInput.placeholder = isWhatsApp ? "+52 998 000 0000" : "tu@email.com";
+          signupInput.autocomplete = isWhatsApp ? "tel" : "email";
+        });
+      });
+    </script>
   </body>
 </html>
