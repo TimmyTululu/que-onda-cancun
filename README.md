@@ -23,6 +23,9 @@ Email/security records are intentionally untouched.
 - Endpoint: `POST /api/subscribe`
 - Sheet: `Que Onda Cancun Subscribers`
 - Sheet ID: `1mQQt712MOdGHZzRLLwGGEX7a5deOegOb0nOoc2rL9So`
+- Sheet URL: `https://docs.google.com/spreadsheets/d/1mQQt712MOdGHZzRLLwGGEX7a5deOegOb0nOoc2rL9So/edit`
+- Drive folder: `https://drive.google.com/drive/folders/1BTdMAA66dhGzedAHACJpCYNXruVwn6uT`
+- Actual parent folder: `REGISTRO` inside `QUE ONDA CANCUN`
 - Tab/range: `Sheet1!A:L`
 - Vercel env vars:
   - `GOOGLE_CLIENT_ID`
