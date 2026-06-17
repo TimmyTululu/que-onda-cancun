@@ -68,11 +68,7 @@ h1 {
 .tagline {
   margin: 0;
   max-width: none;
-  color: transparent;
-  background: linear-gradient(92deg, #f6b91d 0%, #18bcc6 27%, #247fbe 52%, #22a56f 76%, #ff8f2f 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #f3ead8;
   font-size: clamp(1.2rem, 2.8vw, 2.05rem);
   font-weight: 850;
   line-height: 1;
