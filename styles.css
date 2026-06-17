@@ -129,14 +129,32 @@ h1 {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 10px;
-  align-items: end;
+  align-items: center;
   margin: clamp(30px, 4vw, 44px) 0 0;
   padding: 10px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(32, 199, 203, 0.24);
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.66);
-  box-shadow: var(--shadow);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(217, 242, 255, 0.62)),
+    rgba(255, 255, 255, 0.66);
+  box-shadow: 0 24px 70px rgba(14, 139, 152, 0.13);
   backdrop-filter: blur(22px);
+}
+
+.subscribe-choice {
+  display: grid;
+  gap: 6px;
+}
+
+.choice-label {
+  padding: 0 12px;
+  color: #0f8f98;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  line-height: 1;
+  text-align: left;
+  text-transform: uppercase;
 }
 
 .channel-toggle {
@@ -144,9 +162,9 @@ h1 {
   grid-template-columns: 1fr 1fr;
   gap: 4px;
   padding: 4px;
-  border: 1px solid rgba(16, 33, 42, 0.12);
+  border: 1px solid rgba(32, 199, 203, 0.22);
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.58);
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .channel {
@@ -154,7 +172,7 @@ h1 {
   border: 0;
   border-radius: 14px;
   background: transparent;
-  color: rgba(16, 33, 42, 0.58);
+  color: #2377b6;
   padding: 0 15px;
   font-size: 0.82rem;
   font-weight: 900;
@@ -163,24 +181,13 @@ h1 {
 }
 
 .channel.active {
-  background: var(--ink);
+  background: linear-gradient(135deg, #20c7cb 0%, #15966d 100%);
   color: var(--white);
-  box-shadow: 0 10px 20px rgba(16, 33, 42, 0.16);
+  box-shadow: 0 10px 22px rgba(32, 199, 203, 0.24);
 }
 
 .signup-field {
-  display: grid;
-  gap: 6px;
-  text-align: left;
-}
-
-.signup-field span {
-  padding: 0 14px;
-  color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 850;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  display: block;
 }
 
 input,
@@ -212,14 +219,14 @@ input:focus {
 
 button {
   border: 0;
-  background: var(--ink);
-  color: var(--white);
+  background: linear-gradient(135deg, #ffe07b 0%, #20c7cb 58%, #2377b6 100%);
+  color: #fffdf5;
   padding: 0 22px;
   font-size: 0.9rem;
   font-weight: 900;
   letter-spacing: 0;
   cursor: pointer;
-  box-shadow: 0 14px 28px rgba(16, 33, 42, 0.18);
+  box-shadow: 0 14px 30px rgba(35, 119, 182, 0.2);
 }
 
 @media (max-width: 560px) {
@@ -258,12 +265,17 @@ button {
     width: 100%;
   }
 
-  .signup-field {
+  .subscribe-choice {
     text-align: center;
   }
 
-  .signup-field span {
+  .choice-label {
     padding: 0;
+    text-align: center;
+  }
+
+  .signup-field {
+    text-align: center;
   }
 
   input {
