@@ -50,16 +50,23 @@ body {
 
 h1 {
   margin: 0;
-  max-width: 10.5ch;
-  font-size: clamp(3.6rem, 9.7vw, 8.7rem);
-  line-height: 0.9;
-  letter-spacing: 0;
-  text-wrap: balance;
-  text-shadow: 0 10px 34px rgba(16, 33, 42, 0.08);
+}
+
+.logo-title {
+  width: min(86vw, 720px);
+  margin: 0 0 clamp(26px, 4vw, 46px);
+  line-height: 0;
+}
+
+.logo-title img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 18px 34px rgba(14, 139, 152, 0.1));
 }
 
 .tagline {
-  margin: clamp(22px, 3.8vw, 34px) 0 0;
+  margin: 0;
   max-width: none;
   color: transparent;
   background: linear-gradient(92deg, #f6b91d 0%, #18bcc6 27%, #247fbe 52%, #22a56f 76%, #ff8f2f 100%);
@@ -235,12 +242,12 @@ button {
     padding: 26px 18px 40px;
   }
 
-  h1 {
-    font-size: clamp(3.1rem, 17vw, 4.8rem);
+  .logo-title {
+    width: min(92vw, 390px);
+    margin-bottom: 22px;
   }
 
   .tagline {
-    margin-top: 22px;
     font-size: clamp(0.82rem, 3.35vw, 1.05rem);
   }
 
