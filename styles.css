@@ -68,13 +68,55 @@ h1 {
 }
 
 .categories {
-  margin: 18px 0 0;
-  color: var(--ink);
-  font-size: clamp(0.64rem, 1.35vw, 0.95rem);
-  font-weight: 780;
-  line-height: 1;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: clamp(14px, 2.2vw, 28px);
+  margin: 24px 0 0;
+  padding: 0;
+  font-size: clamp(0.88rem, 1.65vw, 1.18rem);
+  font-weight: 850;
+  line-height: 1.05;
   white-space: nowrap;
-  opacity: 0.82;
+}
+
+.categories span {
+  position: relative;
+  color: var(--category-color, var(--ink));
+}
+
+.categories span:not(:last-child)::after {
+  content: "•";
+  position: absolute;
+  top: 50%;
+  right: calc(clamp(14px, 2.2vw, 28px) * -0.62);
+  color: rgba(16, 33, 42, 0.28);
+  font-size: 0.7em;
+  transform: translate(50%, -50%);
+}
+
+.categories span:nth-child(1),
+.categories span:nth-child(6) {
+  --category-color: #0f8f98;
+}
+
+.categories span:nth-child(2),
+.categories span:nth-child(7) {
+  --category-color: #c79a16;
+}
+
+.categories span:nth-child(3),
+.categories span:nth-child(8) {
+  --category-color: #2377b6;
+}
+
+.categories span:nth-child(4),
+.categories span:nth-child(9) {
+  --category-color: #15966d;
+}
+
+.categories span:nth-child(5) {
+  --category-color: #db7d25;
 }
 
 .subscribe {
@@ -163,8 +205,13 @@ button {
 
   .categories {
     width: 100%;
-    margin-top: 14px;
-    font-size: clamp(0.42rem, 1.92vw, 0.54rem);
+    gap: clamp(6px, 1.35vw, 9px);
+    margin-top: 18px;
+    font-size: clamp(0.5rem, 2.05vw, 0.64rem);
+  }
+
+  .categories span:not(:last-child)::after {
+    right: calc(clamp(6px, 1.35vw, 9px) * -0.62);
   }
 
   .subscribe {
