@@ -55,14 +55,18 @@ h1 {
 .logo-title {
   width: min(86vw, 720px);
   margin: 0 0 clamp(26px, 4vw, 46px);
+  aspect-ratio: 1048 / 312;
   line-height: 0;
+  overflow: hidden;
 }
 
 .logo-title img {
   display: block;
-  width: 100%;
+  width: calc(100% * 1080 / 1048);
+  max-width: none;
   height: auto;
   filter: drop-shadow(0 18px 34px rgba(14, 139, 152, 0.1));
+  transform: translate(-1.944%, -36.667%);
 }
 
 .tagline {
