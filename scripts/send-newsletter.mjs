@@ -13,6 +13,7 @@ const DEFAULT_ISSUE = 'esta-semana';
 const DEFAULT_SENDER_NAME = 'Qué Onda Cancún';
 const DEFAULT_SENDER_EMAIL = 'hola@queondacancun.com';
 const REQUIRED_GMAIL_ACCOUNT = 'hola@queondacancun.com';
+const SITE_ORIGIN = 'https://queondacancun.com';
 const UNSUBSCRIBE_BASE = 'https://queondacancun.com/api/unsubscribe?token=';
 const SEND_LOG_HEADERS = [
   'sent_at',
@@ -222,6 +223,12 @@ function injectFooter(html, unsubscribeToken) {
     return html.replace('</body>', `${footer}\n</body>`);
   }
   return `${html}\n${footer}`;
+}
+
+function prepareEmailHtml(html) {
+  return String(html)
+    .replace(/<nav\b[^>]*class="[^"]*\bsite-nav\b[^"]*"[^>]*>[\s\S]*?<\/nav>/i, '')
+    .replace(/\s(src|href)="\/(?!\/)([^"#?]+)([^"]*)"/g, (_match, attr, path, suffix) => ` ${attr}="${SITE_ORIGIN}/${path}${suffix}"`);
 }
 
 function escapeHtml(value) {
@@ -451,7 +458,7 @@ async function main() {
   loadGoogleOauthFallback();
   const options = parseArgs(process.argv.slice(2));
   const htmlPath = resolve(options.htmlPath);
-  const sourceHtml = readFileSync(htmlPath, 'utf8');
+  const sourceHtml = prepareEmailHtml(readFileSync(htmlPath, 'utf8'));
   const rows = await readRows(EMAIL_SHEET, 'A:W');
   const sendLogRows = await readRows(SEND_LOG_SHEET, 'A:L');
   const alreadySent = sentRecipientsForIssue(sendLogRows, options.issue);
