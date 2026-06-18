@@ -442,6 +442,12 @@ button:disabled {
   }
 
   .site-footer {
-    padding: 0 18px 26px;
+    padding: 0 6px 24px;
+  }
+
+  .site-footer p {
+    font-size: clamp(0.32rem, 1.55vw, 0.5rem);
+    line-height: 1.25;
+    white-space: nowrap;
   }
 }
