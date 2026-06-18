@@ -121,6 +121,10 @@ h1 {
   white-space: nowrap;
 }
 
+.mobile-tagline-break {
+  display: inline;
+}
+
 .categories {
   display: flex;
   flex-wrap: nowrap;
@@ -380,16 +384,25 @@ button:disabled {
     white-space: normal;
   }
 
+  .mobile-tagline-break {
+    display: block;
+  }
+
   .categories {
     width: 100%;
-    flex-wrap: wrap;
-    gap: 7px 12px;
-    margin-top: 18px;
-    font-size: clamp(0.5rem, 2.05vw, 0.64rem);
-    white-space: normal;
+    flex-wrap: nowrap;
+    gap: clamp(5px, 1.7vw, 7px);
+    margin-top: 17px;
+    font-size: clamp(0.44rem, 1.85vw, 0.54rem);
+    white-space: nowrap;
   }
 
   .categories span::after {
+    display: none;
+  }
+
+  .categories span:nth-child(8),
+  .categories span:nth-child(9) {
     display: none;
   }
 
@@ -407,7 +420,7 @@ button:disabled {
 
   .subscribe-choice {
     width: min(100%, 280px);
-    margin-top: 40px;
+    margin-top: 34px;
     text-align: center;
   }
 
