@@ -353,7 +353,7 @@ button:disabled {
   .site-nav {
     gap: 4px;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    top: 12px;
+    top: 20px;
     width: min(100% - 28px, 360px);
     max-width: 360px;
   }
