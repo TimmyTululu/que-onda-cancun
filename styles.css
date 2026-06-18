@@ -441,6 +441,15 @@ button:disabled {
     width: 100%;
   }
 
+  .subscribe-status:empty {
+    min-height: 0;
+    margin-top: 8px;
+  }
+
+  .reassurance {
+    margin-top: 6px;
+  }
+
   .site-footer {
     padding: 0 6px 24px;
   }
