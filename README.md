@@ -43,3 +43,22 @@ Email/security records are intentionally untouched.
   - Updates `status=unsubscribed`, `unsubscribed_at`, and `unsubscribe_reason=one-click`
   - Returns a branded confirmation page without exposing contact data
 - Migration: existing `Sheet1` rows were backfilled into channel-specific tabs. `Sheet1` remains untouched as legacy backup.
+
+## Newsletter Send Utility
+
+- Script: `node scripts/send-newsletter.mjs`
+- Default mode is dry-run. It reads eligible recipients and prints each row, email, send count, and a redacted unsubscribe token preview without sending or writing to Sheets.
+- Real sends require `--send` or `QOC_SEND_NEWSLETTER=1`.
+- Real sends also require the configured Gmail OAuth profile to be `hola@queondacancun.com`; the script refuses to send from any other account.
+- Recipient filter: `channel=email`, `status=active`, valid email, `unsubscribe_token` present, `unsubscribed_at` blank, and `bounce_status` not `hard`.
+- The script sends one Gmail API message per recipient from `Qué Onda Cancún <hola@queondacancun.com>`, never BCC.
+- It injects the visible unsubscribe footer into the current HTML source before sending.
+- It writes each attempt to `Send Log` with `sent_at`, `issue`, `recipient`, `status`, `message_id`, `error`, `provider`, `subject`, `unsubscribe_token`, `batch_id`, `operator`, and `notes`.
+- It updates `Email Subscribers` with `last_send_at`, `last_send_issue`, `last_send_status`, `last_send_message_id`, `last_send_error`, and `send_count`.
+
+Safe commands:
+
+```bash
+node scripts/send-newsletter.mjs --limit 5
+node scripts/send-newsletter.mjs --send --test-recipient hola@queondacancun.com --limit 1 --notes "controlled test"
+```
