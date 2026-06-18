@@ -143,6 +143,10 @@ h1 {
   color: var(--category-color, var(--ink));
 }
 
+.mobile-only-category {
+  display: none;
+}
+
 .categories span:not(:last-child)::after {
   content: "•";
   position: absolute;
@@ -389,20 +393,30 @@ button:disabled {
   }
 
   .categories {
-    width: 100%;
-    flex-wrap: nowrap;
-    gap: clamp(5px, 1.7vw, 7px);
+    width: min(100%, 340px);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px 8px;
     margin-top: 17px;
-    font-size: clamp(0.44rem, 1.85vw, 0.54rem);
+    font-size: clamp(0.62rem, 2.65vw, 0.76rem);
+    line-height: 1.1;
     white-space: nowrap;
+  }
+
+  .categories span {
+    text-align: center;
   }
 
   .categories span::after {
     display: none;
   }
 
-  .categories span:nth-child(8),
-  .categories span:nth-child(9) {
+  .mobile-only-category {
+    display: inline;
+  }
+
+  .categories span:nth-child(9),
+  .categories span:nth-child(10) {
     display: none;
   }
 
