@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">Conectividad aérea de Cancún en junio</title>
+  <desc id="desc">Tablero visual con cambios de rutas aéreas relevantes para Cancún durante junio de 2026.</desc>
+  <rect width="1200" height="560" fill="#063735"/>
+  <circle cx="1030" cy="78" r="190" fill="#00bdc8" opacity=".18"/>
+  <circle cx="120" cy="500" r="220" fill="#ffc425" opacity=".16"/>
+  <path d="M185 328 C 355 170, 530 150, 760 238 S 1040 332, 1102 192" fill="none" stroke="#fffdf8" stroke-width="4" stroke-dasharray="12 16" opacity=".74"/>
+  <path d="M184 328 C 330 422, 548 428, 730 322 S 970 186, 1068 360" fill="none" stroke="#00bdc8" stroke-width="4" stroke-dasharray="10 14" opacity=".78"/>
+  <g transform="translate(72 72)">
+    <text x="0" y="0" fill="#ffc425" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" letter-spacing="4">JUNIO 2026</text>
+    <text x="0" y="52" fill="#fffdf8" font-family="Georgia, serif" font-size="54" font-weight="800">Cancún rota mercados</text>
+    <text x="0" y="92" fill="#cce9e5" font-family="Inter, Arial, sans-serif" font-size="24">Más que volumen: nuevas señales de origen, idioma y gasto.</text>
+  </g>
+  <g transform="translate(72 238)">
+    <rect width="310" height="176" rx="18" fill="#fffdf8"/>
+    <text x="26" y="48" fill="#f47c35" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="900" letter-spacing="3">ENTRA</text>
+    <text x="26" y="88" fill="#063735" font-family="Georgia, serif" font-size="34" font-weight="800">Las Vegas</text>
+    <text x="26" y="124" fill="#243b38" font-family="Inter, Arial, sans-serif" font-size="21">Southwest · 4 jun</text>
+  </g>
+  <g transform="translate(445 238)">
+    <rect width="310" height="176" rx="18" fill="#fffdf8"/>
+    <text x="26" y="48" fill="#f47c35" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="900" letter-spacing="3">REGRESA</text>
+    <text x="26" y="88" fill="#063735" font-family="Georgia, serif" font-size="34" font-weight="800">Brasília</text>
+    <text x="26" y="124" fill="#243b38" font-family="Inter, Arial, sans-serif" font-size="21">GOL · 20 jun</text>
+  </g>
+  <g transform="translate(818 238)">
+    <rect width="310" height="176" rx="18" fill="#fffdf8"/>
+    <text x="26" y="48" fill="#f47c35" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="900" letter-spacing="3">SALE</text>
+    <text x="26" y="88" fill="#063735" font-family="Georgia, serif" font-size="34" font-weight="800">Chicago O'Hare</text>
+    <text x="26" y="124" fill="#243b38" font-family="Inter, Arial, sans-serif" font-size="21">Southwest · 4 jun</text>
+  </g>
+  <text x="72" y="488" fill="#fffdf8" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="700">Lectura: Cancún no solo recibe turistas; cambia el mapa de quién llega y cómo venderle.</text>
+</svg>
