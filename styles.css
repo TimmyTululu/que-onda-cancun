@@ -158,7 +158,8 @@ h1 {
 }
 
 .categories span:nth-child(1),
-.categories span:nth-child(6) {
+.categories span:nth-child(6),
+.categories span:nth-child(10) {
   --category-color: #0f8f98;
 }
 
