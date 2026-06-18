@@ -1,5 +1,25 @@
-const SHEET_RANGE = 'Sheet1!A:L';
+import { randomUUID } from 'node:crypto';
+
 const HEADER_OFFSET = 1;
+const EMAIL_SHEET = 'Email Subscribers';
+const WHATSAPP_SHEET = 'WhatsApp Subscribers';
+
+const SHEETS = {
+  email: {
+    name: EMAIL_SHEET,
+    readRange: `${EMAIL_SHEET}!A:W`,
+    writeColumns: 'A:W',
+    contactKeyIndex: 3,
+    duplicateCountIndex: 9,
+  },
+  whatsapp: {
+    name: WHATSAPP_SHEET,
+    readRange: `${WHATSAPP_SHEET}!A:O`,
+    writeColumns: 'A:O',
+    contactKeyIndex: 3,
+    duplicateCountIndex: 9,
+  },
+};
 
 function json(res, status, body) {
   res.setHeader('Cache-Control', 'no-store');
@@ -26,6 +46,14 @@ function isValidEmail(value) {
 function isValidPhone(value) {
   const digits = value.replace(/\D/g, '');
   return digits.length >= 10 && digits.length <= 15;
+}
+
+function createUnsubscribeToken() {
+  return `qoc_${randomUUID().replace(/-/g, '')}`;
+}
+
+function normalizeContactKey(channel, value) {
+  return channel === 'whatsapp' ? normalizePhone(value) : normalizeEmail(value);
 }
 
 function requiredEnv(name) {
@@ -74,26 +102,33 @@ async function sheetsRequest(path, options = {}) {
   return data;
 }
 
-async function readRows() {
-  const data = await sheetsRequest(`/values/${encodeURIComponent(SHEET_RANGE)}`);
+async function readRows(sheet) {
+  const data = await sheetsRequest(`/values/${encodeURIComponent(sheet.readRange)}`);
   return Array.isArray(data.values) ? data.values : [];
 }
 
-async function appendRow(row, rows) {
+async function appendRow(sheet, row, rows) {
   const lastDataIndex = rows.reduce((lastIndex, sheetRow, index) => {
-    const hasSubscriberData = sheetRow.slice(0, 12).some((cell) => String(cell || '').trim());
+    const hasSubscriberData = sheetRow.some((cell) => String(cell || '').trim());
     return hasSubscriberData ? index : lastIndex;
   }, 0);
   const rowNumber = lastDataIndex + 2;
 
-  return sheetsRequest(`/values/${encodeURIComponent(`Sheet1!A${rowNumber}:L${rowNumber}`)}?valueInputOption=USER_ENTERED`, {
+  return sheetsRequest(`/values/${encodeURIComponent(`${sheet.name}!${sheet.writeColumns.replace(':', rowNumber + ':')}${rowNumber}`)}?valueInputOption=RAW`, {
     method: 'PUT',
     body: JSON.stringify({ values: [row] }),
   });
 }
 
-async function updateDuplicate(rowNumber, duplicateCount, seenAt) {
-  return sheetsRequest(`/values/${encodeURIComponent(`Sheet1!J${rowNumber}:L${rowNumber}`)}?valueInputOption=USER_ENTERED`, {
+async function updateEmailDuplicate(rowNumber, duplicateCount, seenAt, unsubscribeToken) {
+  return sheetsRequest(`/values/${encodeURIComponent(`${EMAIL_SHEET}!I${rowNumber}:L${rowNumber}`)}?valueInputOption=RAW`, {
+    method: 'PUT',
+    body: JSON.stringify({ values: [['active', String(duplicateCount), seenAt, unsubscribeToken]] }),
+  });
+}
+
+async function updateWhatsappDuplicate(rowNumber, duplicateCount, seenAt) {
+  return sheetsRequest(`/values/${encodeURIComponent(`${WHATSAPP_SHEET}!I${rowNumber}:K${rowNumber}`)}?valueInputOption=RAW`, {
     method: 'PUT',
     body: JSON.stringify({ values: [['active', String(duplicateCount), seenAt]] }),
   });
@@ -111,6 +146,7 @@ export default async function handler(req, res) {
     const email = normalizeEmail(body.email);
     const whatsapp = normalizePhone(body.whatsapp);
     const contactKey = channel === 'whatsapp' ? whatsapp : email;
+    const sheet = SHEETS[channel];
 
     if (channel === 'email' && !isValidEmail(email)) {
       return json(res, 400, { ok: false, error: 'invalid_email' });
@@ -120,21 +156,24 @@ export default async function handler(req, res) {
     }
 
     const now = new Date().toISOString();
-    const rows = await readRows();
-    const existingIndex = rows.findIndex((row, index) => index >= HEADER_OFFSET && String(row[4] || '').trim().toLowerCase() === contactKey.toLowerCase());
+    const rows = await readRows(sheet);
+    const existingIndex = rows.findIndex((row, index) => index >= HEADER_OFFSET && normalizeContactKey(channel, row[sheet.contactKeyIndex]) === contactKey);
 
     if (existingIndex >= HEADER_OFFSET) {
       const rowNumber = existingIndex + 1;
-      const currentCount = Number.parseInt(rows[existingIndex][10] || '0', 10) || 0;
-      await updateDuplicate(rowNumber, currentCount + 1, now);
+      const currentCount = Number.parseInt(rows[existingIndex][sheet.duplicateCountIndex] || '0', 10) || 0;
+      if (channel === 'email') {
+        await updateEmailDuplicate(rowNumber, currentCount + 1, now, String(rows[existingIndex][11] || '').trim() || createUnsubscribeToken());
+      } else {
+        await updateWhatsappDuplicate(rowNumber, currentCount + 1, now);
+      }
       return json(res, 200, { ok: true, duplicate: true, message: 'already_subscribed' });
     }
 
-    await appendRow([
+    const baseRow = [
       now,
       channel,
-      email,
-      whatsapp,
+      channel === 'email' ? email : whatsapp,
       contactKey,
       String(body.source || 'queondacancun.com').slice(0, 120),
       String(body.landingUrl || '').slice(0, 500),
@@ -143,7 +182,13 @@ export default async function handler(req, res) {
       'active',
       '0',
       now,
-    ], rows);
+    ];
+
+    const row = channel === 'email'
+      ? [...baseRow, createUnsubscribeToken(), '', '', '', '', '', '', '', '0', '', '', '']
+      : [...baseRow, '', '', '', ''];
+
+    await appendRow(sheet, row, rows);
 
     return json(res, 200, { ok: true, duplicate: false, message: 'subscribed' });
   } catch (error) {

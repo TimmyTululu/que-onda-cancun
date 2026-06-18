@@ -1,4 +1,4 @@
-const SHEET_NAME = 'Sheet1';
+const SHEET_NAME = 'Email Subscribers';
 const REQUIRED_COLUMNS = ['status', 'unsubscribe_token', 'unsubscribed_at', 'unsubscribe_reason'];
 
 function requiredEnv(name) {
