@@ -266,32 +266,140 @@
       text-transform: uppercase;
     }
 
-    .story {
-      position: relative;
-      padding: 24px 0 24px 18px;
-      border-top: 1px solid rgba(6, 55, 53, 0.14);
-      border-left: 3px solid rgba(0, 142, 152, 0.26);
+    .worldcup-board {
+      display: grid;
+      gap: 12px;
     }
 
-    .story:first-of-type {
-      border-top: 0;
-      padding-top: 0;
-    }
-
-    .story::before {
-      content: "";
-      position: absolute;
-      left: -6px;
-      top: 28px;
-      width: 9px;
-      height: 9px;
+    .worldcup-note {
+      display: inline-flex;
+      width: fit-content;
+      margin: 0;
+      padding: 6px 10px;
+      border: 1px solid rgba(87, 176, 126, 0.34);
       border-radius: 999px;
-      background: var(--coral);
-      box-shadow: 0 0 0 5px rgba(244, 124, 53, 0.12);
+      background: #ecfbf1;
+      color: var(--deep);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      text-transform: uppercase;
     }
 
-    .story:first-of-type::before {
-      top: 4px;
+    .worldcup-heading {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .worldcup-heading h2 {
+      margin: 0;
+    }
+
+    .match-day {
+      overflow: hidden;
+      border: 1px solid #cfe2dc;
+      border-radius: 10px;
+      background: #f7fbf8;
+      box-shadow: 0 12px 30px rgba(16, 32, 31, 0.06);
+    }
+
+    .day-label {
+      padding: 10px 14px;
+      color: #fffdf8;
+      background: var(--deep);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .match-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      padding: 12px;
+    }
+
+    .match-card {
+      min-height: 58px;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.88);
+      color: var(--ink);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.74);
+    }
+
+    .match-time {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .match-teams {
+      display: block;
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .match-day.gold {
+      border-color: #ead995;
+      background: #fff9e8;
+    }
+
+    .match-day.gold .day-label {
+      background: #f4b942;
+      color: var(--deep);
+    }
+
+    .match-day.purple {
+      border-color: #d8c8ea;
+      background: #f7f0ff;
+    }
+
+    .match-day.purple .day-label {
+      background: #563a78;
+    }
+
+    .match-day.teal {
+      border-color: #bfe6ca;
+      background: #ecfbf1;
+    }
+
+    .match-day.teal .day-label {
+      background: var(--teal);
+    }
+
+    .story {
+      padding: 18px 20px;
+      border: 1px solid rgba(6, 55, 53, 0.16);
+      border-top: 4px solid var(--teal);
+      border-radius: 8px;
+      background:
+        linear-gradient(145deg, rgba(255, 253, 248, 0.94), rgba(242, 250, 247, 0.86)),
+        #fff;
+      box-shadow: 0 16px 42px rgba(16, 32, 31, 0.07);
+    }
+
+    .story + .story {
+      margin-top: 14px;
+    }
+
+    .story-kicker {
+      margin: 0 0 8px;
+      color: var(--coral);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
 
     .source {
@@ -303,6 +411,7 @@
     .politics-card {
       padding: 20px;
       border: 1px solid rgba(6, 55, 53, 0.16);
+      border-top: 4px solid var(--teal);
       border-radius: 8px;
       background:
         linear-gradient(145deg, rgba(255, 253, 248, 0.92), rgba(242, 250, 247, 0.86)),
@@ -396,6 +505,12 @@
       background: #fff;
     }
 
+    .feature-card {
+      border-color: #cfe2dc;
+      border-radius: 10px;
+      box-shadow: 0 18px 44px rgba(16, 32, 31, 0.08);
+    }
+
     .feature-card img,
     .offer img,
     .route-board img {
@@ -409,16 +524,77 @@
       padding: 20px;
     }
 
+    .feature-body {
+      background:
+        linear-gradient(145deg, rgba(255, 253, 248, 0.96), rgba(247, 251, 248, 0.88)),
+        #fff;
+    }
+
+    .feature-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .feature-title-row h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .place-pill {
+      flex: 0 0 auto;
+      padding: 6px 10px;
+      border: 1px solid #ead995;
+      border-radius: 999px;
+      background: #fff9e8;
+      color: #9d4b20;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .feature-detail {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border: 1px solid #eef3f1;
+      border-radius: 8px;
+      background: #f7fbf8;
+    }
+
+    .feature-detail p {
+      margin: 0;
+    }
+
     .route-board {
       overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 8px;
+      border: 1px solid #cfe2dc;
+      border-radius: 10px;
       background: #fff;
       margin-bottom: 18px;
+      box-shadow: 0 18px 44px rgba(16, 32, 31, 0.08);
     }
 
     .route-body {
       padding: 20px;
+      background:
+        linear-gradient(145deg, rgba(255, 253, 248, 0.96), rgba(247, 251, 248, 0.88)),
+        #fff;
+    }
+
+    .route-detail {
+      margin: 14px 0;
+      padding: 12px 14px;
+      border: 1px solid #eef3f1;
+      border-radius: 8px;
+      background: #f7fbf8;
+    }
+
+    .route-detail p {
+      margin: 0;
     }
 
     .route-list {
@@ -557,7 +733,20 @@
         max-width: calc(100vw - 40px);
         min-height: 0;
       }
+      .match-day {
+        width: calc(100vw - 40px);
+        max-width: calc(100vw - 40px);
+      }
+      .match-list {
+        grid-template-columns: 1fr;
+      }
+      .worldcup-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+      }
       .politics-card,
+      .story,
       .feature-card,
       .route-board,
       .offer,
@@ -565,6 +754,11 @@
       .cta {
         width: calc(100vw - 40px);
         max-width: calc(100vw - 40px);
+      }
+      .feature-title-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
       }
       .partner-contact {
         justify-content: center;
@@ -625,6 +819,78 @@
         </section>
 
         <section>
+          <div class="worldcup-heading">
+            <h2>Edición Mundial</h2>
+            <p class="worldcup-note">Calendario en hora Cancún</p>
+          </div>
+          <div class="worldcup-board">
+            <div class="match-day">
+              <div class="day-label">Lun 22</div>
+              <div class="match-list">
+                <div class="match-card"><span class="match-time">12:00</span><span class="match-teams">Argentina vs Austria</span></div>
+                <div class="match-card"><span class="match-time">4:00</span><span class="match-teams">Francia vs Irak</span></div>
+                <div class="match-card"><span class="match-time">7:00</span><span class="match-teams">Noruega vs Senegal</span></div>
+                <div class="match-card"><span class="match-time">10:00</span><span class="match-teams">Jordania vs Argelia</span></div>
+              </div>
+            </div>
+            <div class="match-day gold">
+              <div class="day-label">Mar 23</div>
+              <div class="match-list">
+                <div class="match-card"><span class="match-time">12:00</span><span class="match-teams">Portugal vs Uzbekistán</span></div>
+                <div class="match-card"><span class="match-time">3:00</span><span class="match-teams">Inglaterra vs Ghana</span></div>
+                <div class="match-card"><span class="match-time">6:00</span><span class="match-teams">Panamá vs Croacia</span></div>
+                <div class="match-card"><span class="match-time">9:00</span><span class="match-teams">Colombia vs RD Congo</span></div>
+              </div>
+            </div>
+            <div class="match-day purple">
+              <div class="day-label">Mié 24</div>
+              <div class="match-list">
+                <div class="match-card"><span class="match-time">2:00</span><span class="match-teams">Suiza vs Canadá</span></div>
+                <div class="match-card"><span class="match-time">2:00</span><span class="match-teams">Bosnia vs Qatar</span></div>
+                <div class="match-card"><span class="match-time">5:00</span><span class="match-teams">Marruecos vs Haití</span></div>
+                <div class="match-card"><span class="match-time">5:00</span><span class="match-teams">Escocia vs Brasil</span></div>
+                <div class="match-card"><span class="match-time">8:00</span><span class="match-teams">Sudáfrica vs Corea</span></div>
+                <div class="match-card"><span class="match-time">8:00</span><span class="match-teams">Chequia vs México</span></div>
+              </div>
+            </div>
+            <div class="match-day teal">
+              <div class="day-label">Jue 25</div>
+              <div class="match-list">
+                <div class="match-card"><span class="match-time">3:00</span><span class="match-teams">Curazao vs C. de Marfil</span></div>
+                <div class="match-card"><span class="match-time">3:00</span><span class="match-teams">Ecuador vs Alemania</span></div>
+                <div class="match-card"><span class="match-time">6:00</span><span class="match-teams">Túnez vs Países Bajos</span></div>
+                <div class="match-card"><span class="match-time">6:00</span><span class="match-teams">Japón vs Suecia</span></div>
+                <div class="match-card"><span class="match-time">9:00</span><span class="match-teams">Turquía vs EUA</span></div>
+                <div class="match-card"><span class="match-time">9:00</span><span class="match-teams">Paraguay vs Australia</span></div>
+              </div>
+            </div>
+            <div class="match-day gold">
+              <div class="day-label">Vie 26</div>
+              <div class="match-list">
+                <div class="match-card"><span class="match-time">2:00</span><span class="match-teams">Noruega vs Francia</span></div>
+                <div class="match-card"><span class="match-time">2:00</span><span class="match-teams">Senegal vs Irak</span></div>
+                <div class="match-card"><span class="match-time">7:00</span><span class="match-teams">Cabo Verde vs Arabia Saudita</span></div>
+                <div class="match-card"><span class="match-time">7:00</span><span class="match-teams">Uruguay vs España</span></div>
+                <div class="match-card"><span class="match-time">10:00</span><span class="match-teams">Nueva Zelanda vs Bélgica</span></div>
+                <div class="match-card"><span class="match-time">10:00</span><span class="match-teams">Egipto vs Irán</span></div>
+              </div>
+            </div>
+            <div class="match-day purple">
+              <div class="day-label">Sáb 27</div>
+              <div class="match-list">
+                <div class="match-card"><span class="match-time">4:00</span><span class="match-teams">Panamá vs Inglaterra</span></div>
+                <div class="match-card"><span class="match-time">4:00</span><span class="match-teams">Croacia vs Ghana</span></div>
+                <div class="match-card"><span class="match-time">6:30</span><span class="match-teams">Colombia vs Portugal</span></div>
+                <div class="match-card"><span class="match-time">6:30</span><span class="match-teams">RD Congo vs Uzbekistán</span></div>
+                <div class="match-card"><span class="match-time">9:00</span><span class="match-teams">Argelia vs Austria</span></div>
+                <div class="match-card"><span class="match-time">9:00</span><span class="match-teams">Jordania vs Argentina</span></div>
+              </div>
+            </div>
+          </div>
+          <p class="source">Fuente: <a href="https://www.sbnation.com/soccer/1117513/world-cup-schedule-2026-how-to-watch-every-match-scores-and-more" target="_blank" rel="noopener noreferrer">SB Nation</a>, horarios ET convertidos a Cancún; Ronda de 32 según <a href="https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage" target="_blank" rel="noopener noreferrer">calendario FIFA</a>.</p>
+        </section>
+
+        <section>
           <h2>La marea política</h2>
           <div class="politics-card">
             <h3>Morena ya ordena la sucesión de 2027 en cuatro nombres</h3>
@@ -675,12 +941,14 @@
           <h2>Radar</h2>
 
           <div class="story">
+            <div class="story-kicker">Educación</div>
             <h3>Bachillerato: 23,916 registros cerrados y resultados el 8 de julio</h3>
             <p>La SEQ reportó casi 24 mil registros concluidos para ingresar a educación media superior, frente a 25,659 espacios disponibles en los 11 municipios. La asignación será sin examen de ingreso, mediante algoritmo, priorizando primera opción, cercanía, hermanos en el plantel y otros criterios.</p>
             <p class="source">Fuente: <a href="https://cgc.qroo.gob.mx/alcanza-quintana-roo-casi-24-mil-registros-concluidos-para-ingresar-a-la-educacion-media-superior/" target="_blank" rel="noopener noreferrer">CGC Quintana Roo</a>.</p>
           </div>
 
           <div class="story">
+            <div class="story-kicker">Territorio</div>
             <h3>SEMA y ECOSUR van por datos ambientales geoespaciales</h3>
             <p>SEMA y ECOSUR firmaron un convenio para compartir, visualizar y difundir información geoespacial estratégica dentro del Sistema Estatal de Información Ambiental. El objetivo es usar evidencia técnica para planeación, monitoreo ambiental, conservación y decisiones de territorio.</p>
             <p class="source">Fuente: <a href="https://cgc.qroo.gob.mx/firman-ecosur-y-sema-convenio-de-colaboracion-para-fortalecer-la-conservacion-de-los-recursos-naturales-en-quintana-roo/" target="_blank" rel="noopener noreferrer">CGC Quintana Roo</a>.</p>
@@ -692,10 +960,17 @@
           <div class="feature-card">
             <img src="/assets/newsletter/la-habichuela.jpg" alt="Interior de La Habichuela en Cancún">
             <div class="feature-body">
-              <h3>La Habichuela — Centro</h3>
+              <div class="feature-title-row">
+                <h3>La Habichuela — Centro</h3>
+                <span class="place-pill">Centro</span>
+              </div>
               <p>Clásico cancunense desde 1977, en Calle Margaritas #25. La casa se presenta como restaurante orgullosamente local, con ambiente maya, mariscos, langosta, cocina mexicana/yucateca y reservaciones directas.</p>
-              <p><strong>Por qué cae bien esta semana:</strong> si llueve o el Caribe amanece cargado de sargazo, Centro gana. Es una cena con identidad, techo, historia y ubicación práctica entre Puerto Cancún, Plaza Las Américas y la entrada a Zona Hotelera.</p>
-              <p><strong>Horario publicado:</strong> 12:30 a 23:00, todos los días. <a href="https://www.lahabichuela.com/" target="_blank" rel="noopener noreferrer">Reservar en La Habichuela</a></p>
+              <div class="feature-detail">
+                <p><strong>Por qué cae bien esta semana:</strong> si llueve o el Caribe amanece cargado de sargazo, Centro gana. Es una cena con identidad, techo, historia y ubicación práctica entre Puerto Cancún, Plaza Las Américas y la entrada a Zona Hotelera.</p>
+              </div>
+              <div class="feature-detail">
+                <p><strong>Horario publicado:</strong> 12:30 a 23:00, todos los días. <a href="https://www.lahabichuela.com/" target="_blank" rel="noopener noreferrer">Reservar en La Habichuela</a></p>
+              </div>
             </div>
           </div>
         </section>
@@ -703,11 +978,13 @@
         <section>
           <h2>La señal aérea</h2>
           <div class="route-board">
-            <img src="/assets/newsletter/conectividad-junio.svg" alt="Cambios de conectividad aérea de Cancún en junio de 2026">
+            <img src="/assets/newsletter/conectividad-junio.svg?v=3" alt="Cambios de conectividad aérea de Cancún en junio de 2026">
             <div class="route-body">
               <h3>No es solo cuánta gente llega; es de dónde viene</h3>
               <p>Junio deja tres movimientos claros: Southwest abrió Las Vegas-Cancún el 4 de junio, dejó Chicago O'Hare-Cancún ese mismo día, y GOL marca el regreso estacional de Brasília-Cancún el 20 de junio.</p>
-              <p>La lectura para Cancún: el mercado se está haciendo más quirúrgico. Las Vegas trae un viajero estadounidense de ocio con otra ruta de entrada; Brasília pide portugués, pagos y atención pensados para Brasil; Chicago no desaparece, pero una aerolínea sale de O'Hare y obliga a mirar qué compañías sostienen ese flujo.</p>
+              <div class="route-detail">
+                <p>La lectura para Cancún: el mercado se está haciendo más quirúrgico. Las Vegas trae un viajero estadounidense de ocio con otra ruta de entrada; Brasília pide portugués, pagos y atención pensados para Brasil; Chicago no desaparece, pero una aerolínea sale de O'Hare y obliga a mirar qué compañías sostienen ese flujo.</p>
+              </div>
               <ul class="route-list">
                 <li><span class="tag">Hoteles</span><strong>Revisa origen, no solo ocupación.</strong> Un huésped de Brasília no se atiende igual que uno de Las Vegas o Chicago.</li>
                 <li><span class="tag">Restaurantes</span><strong>Menú y WhatsApp en portugués básico</strong> pueden pesar más esta semana que otra promoción genérica.</li>

@@ -1,33 +1,65 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
-  <title id="title">Conectividad aérea de Cancún en junio</title>
-  <desc id="desc">Tablero visual con cambios de rutas aéreas relevantes para Cancún durante junio de 2026.</desc>
-  <rect width="1200" height="560" fill="#063735"/>
-  <circle cx="1030" cy="78" r="190" fill="#00bdc8" opacity=".18"/>
-  <circle cx="120" cy="500" r="220" fill="#ffc425" opacity=".16"/>
-  <path d="M185 328 C 355 170, 530 150, 760 238 S 1040 332, 1102 192" fill="none" stroke="#fffdf8" stroke-width="4" stroke-dasharray="12 16" opacity=".74"/>
-  <path d="M184 328 C 330 422, 548 428, 730 322 S 970 186, 1068 360" fill="none" stroke="#00bdc8" stroke-width="4" stroke-dasharray="10 14" opacity=".78"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430" role="img" aria-labelledby="title desc">
+  <title id="title">Conectividad aérea de Cancún</title>
+  <desc id="desc">Tablero visual con cambios de rutas aéreas relevantes para Cancún.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#063735"/>
+      <stop offset="1" stop-color="#082320"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f6fffb" stop-opacity=".34"/>
+      <stop offset=".48" stop-color="#57d5ce" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#082320" stop-opacity=".52"/>
+    </linearGradient>
+    <linearGradient id="cardSheen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".46"/>
+      <stop offset=".42" stop-color="#ffffff" stop-opacity=".11"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#021817" flood-opacity=".42"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="430" fill="url(#bg)"/>
+  <circle cx="1040" cy="78" r="190" fill="#00bdc8" opacity=".16"/>
+  <circle cx="112" cy="388" r="210" fill="#ffc425" opacity=".13"/>
+  <path d="M176 286 C 358 142, 552 132, 742 210 S 1002 286, 1088 164" fill="none" stroke="#fffdf8" stroke-width="3" stroke-dasharray="10 18" opacity=".22"/>
+  <path d="M156 300 C 326 366, 552 358, 734 268 S 964 168, 1078 322" fill="none" stroke="#00bdc8" stroke-width="3" stroke-dasharray="8 18" opacity=".28"/>
+
   <g transform="translate(72 72)">
-    <text x="0" y="0" fill="#ffc425" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" letter-spacing="4">JUNIO 2026</text>
-    <text x="0" y="52" fill="#fffdf8" font-family="Georgia, serif" font-size="54" font-weight="800">Cancún rota mercados</text>
-    <text x="0" y="92" fill="#cce9e5" font-family="Inter, Arial, sans-serif" font-size="24">Más que volumen: nuevas señales de origen, idioma y gasto.</text>
+    <text x="0" y="0" fill="#fffdf8" font-family="Georgia, serif" font-size="58" font-weight="800">Cancún rota mercados</text>
   </g>
-  <g transform="translate(72 238)">
-    <rect width="310" height="176" rx="18" fill="#fffdf8"/>
-    <text x="26" y="48" fill="#f47c35" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="900" letter-spacing="3">ENTRA</text>
-    <text x="26" y="88" fill="#063735" font-family="Georgia, serif" font-size="34" font-weight="800">Las Vegas</text>
-    <text x="26" y="124" fill="#243b38" font-family="Inter, Arial, sans-serif" font-size="21">Southwest · 4 jun</text>
+
+  <g transform="translate(72 166)" filter="url(#softShadow)">
+    <rect width="310" height="158" rx="18" fill="url(#card)" stroke="#bff4ee" stroke-opacity=".62"/>
+    <rect width="310" height="158" rx="18" fill="#063735" opacity=".22"/>
+    <rect x="1" y="1" width="308" height="156" rx="17" fill="none" stroke="#ffffff" stroke-opacity=".18"/>
+    <path d="M22 18 H238 C184 46 110 58 22 55 Z" fill="url(#cardSheen)" opacity=".68"/>
+    <rect x="22" y="22" width="70" height="28" rx="14" fill="#fff4ed" opacity=".9"/>
+    <text x="57" y="41" text-anchor="middle" fill="#9d4b20" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="900" letter-spacing="2">ENTRA</text>
+    <text x="26" y="92" fill="#fffdf8" font-family="Georgia, serif" font-size="34" font-weight="800">Las Vegas</text>
+    <text x="26" y="126" fill="#cce9e5" font-family="Inter, Arial, sans-serif" font-size="21">Southwest · 4 jun</text>
   </g>
-  <g transform="translate(445 238)">
-    <rect width="310" height="176" rx="18" fill="#fffdf8"/>
-    <text x="26" y="48" fill="#f47c35" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="900" letter-spacing="3">REGRESA</text>
-    <text x="26" y="88" fill="#063735" font-family="Georgia, serif" font-size="34" font-weight="800">Brasília</text>
-    <text x="26" y="124" fill="#243b38" font-family="Inter, Arial, sans-serif" font-size="21">GOL · 20 jun</text>
+
+  <g transform="translate(445 166)" filter="url(#softShadow)">
+    <rect width="310" height="158" rx="18" fill="url(#card)" stroke="#bff4ee" stroke-opacity=".62"/>
+    <rect width="310" height="158" rx="18" fill="#063735" opacity=".22"/>
+    <rect x="1" y="1" width="308" height="156" rx="17" fill="none" stroke="#ffffff" stroke-opacity=".18"/>
+    <path d="M22 18 H238 C184 46 110 58 22 55 Z" fill="url(#cardSheen)" opacity=".68"/>
+    <rect x="22" y="22" width="96" height="28" rx="14" fill="#fff4ed" opacity=".9"/>
+    <text x="70" y="41" text-anchor="middle" fill="#9d4b20" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="900" letter-spacing="2">REGRESA</text>
+    <text x="26" y="92" fill="#fffdf8" font-family="Georgia, serif" font-size="34" font-weight="800">Brasília</text>
+    <text x="26" y="126" fill="#cce9e5" font-family="Inter, Arial, sans-serif" font-size="21">GOL · 20 jun</text>
   </g>
-  <g transform="translate(818 238)">
-    <rect width="310" height="176" rx="18" fill="#fffdf8"/>
-    <text x="26" y="48" fill="#f47c35" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="900" letter-spacing="3">SALE</text>
-    <text x="26" y="88" fill="#063735" font-family="Georgia, serif" font-size="34" font-weight="800">Chicago O'Hare</text>
-    <text x="26" y="124" fill="#243b38" font-family="Inter, Arial, sans-serif" font-size="21">Southwest · 4 jun</text>
+
+  <g transform="translate(818 166)" filter="url(#softShadow)">
+    <rect width="310" height="158" rx="18" fill="url(#card)" stroke="#bff4ee" stroke-opacity=".62"/>
+    <rect width="310" height="158" rx="18" fill="#063735" opacity=".22"/>
+    <rect x="1" y="1" width="308" height="156" rx="17" fill="none" stroke="#ffffff" stroke-opacity=".18"/>
+    <path d="M22 18 H238 C184 46 110 58 22 55 Z" fill="url(#cardSheen)" opacity=".68"/>
+    <rect x="22" y="22" width="58" height="28" rx="14" fill="#fff4ed" opacity=".9"/>
+    <text x="51" y="41" text-anchor="middle" fill="#9d4b20" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="900" letter-spacing="2">SALE</text>
+    <text x="26" y="92" fill="#fffdf8" font-family="Georgia, serif" font-size="34" font-weight="800">Chicago O'Hare</text>
+    <text x="26" y="126" fill="#cce9e5" font-family="Inter, Arial, sans-serif" font-size="21">Southwest · 4 jun</text>
   </g>
-  <text x="72" y="488" fill="#fffdf8" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="700">Lectura: Cancún no solo recibe turistas; cambia el mapa de quién llega y cómo venderle.</text>
 </svg>

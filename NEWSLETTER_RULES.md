@@ -28,13 +28,24 @@ Every issue should feel like a premium local read: practical for business owners
 - `La marea politica`: one or two high-signal political items.
   - Use concrete actors, power moves, dates, who benefits, and what to watch next.
   - Keep it objective and juicy, never partisan filler.
+  - Do not add decorative badges like `Poder local`; the section title is enough.
+  - Political item wrappers use premium cards with a teal top rule.
+- `Edicion Mundial`: include only when the upcoming week has enough World Cup relevance.
+  - Place it after `A primera vista` and before `La marea politica`.
+  - Use compact match cards by day, `vs` between teams, and label the section with `Calendario en hora Cancun`.
+  - Keep it clean and scannable; no commentary filler above the schedule.
 - Sponsor/partner banner when sold.
   - Do not call it an ad inside the newsletter.
   - If an image is clicked, link to the sponsor's chosen destination.
 - `Radar`: concise news items with real implications.
   - Avoid repeating topics already covered in politics, weather, sargazo, offer, or place sections.
+  - Use premium story cards with teal top rule and concise category labels only when useful.
+  - Do not add unrequested bubbles or meta pills such as `Lectura rapida`.
 - `Lugar de la semana`: one place with a real image of that place and a practical reason it fits the week.
 - One mobility, tourism, aviation, city, or infrastructure insight when useful.
+  - For `La señal aerea`, use the dedicated aviation visual and a card treatment matching `Lugar de la semana`.
+  - Route boxes inside the aviation visual should feel glassy/premium, not plain white overlays.
+  - Avoid noisy dotted lines behind route cards; route lines must be subtle enough not to fight the text.
 - `Oferta local`: one real offer with source, relevant image, and why it is useful now.
 - Closing quote: real attributed quote, motivating or reflective, never invented generic filler.
 - Footer: subscription/contact/unsubscribe only.
@@ -68,8 +79,15 @@ Every issue should feel like a premium local read: practical for business owners
   - USD/MXN: soft green
   - Clima: soft yellow
   - Sargazo: soft purple
+- Feature sections such as `Lugar de la semana` and `La señal aerea` use a single polished card:
+  - image inside the card,
+  - body copy directly below,
+  - subtle detail boxes for practical reads,
+  - no extra badges unless the user explicitly asks for one.
 - Avoid orphaned words in prominent lines.
 - Do not add web navigation to the email.
+- When improving UI, preserve locked copy and content order unless the user explicitly asks for content changes.
+- Never reintroduce removed labels, placeholder copy, or old image text after a section has been approved.
 
 ## Technical Send Rules
 
