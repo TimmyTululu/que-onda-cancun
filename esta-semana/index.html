@@ -135,6 +135,9 @@
       width: min(430px, 98%);
       height: auto;
       margin: 0 auto 10px;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
     .issue-line {
@@ -176,6 +179,9 @@
       border-radius: 0 0 8px 8px;
       border: 1px solid rgba(6, 55, 53, 0.12);
       box-shadow: 0 18px 44px rgba(6, 55, 53, 0.12);
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
     main { padding: 0 34px 34px; }
@@ -588,12 +594,12 @@
     <article class="newsletter">
       <div class="topbar"></div>
       <header>
-        <img class="logo" src="/assets/newsletter/logo-cropped.png" alt="Qué Onda Cancún">
+        <img class="logo" src="/assets/newsletter/logo-cropped.png" alt="Qué Onda Cancún" draggable="false">
         <p class="issue-line">Edición semanal local · Semana 22-28 junio</p>
         <h1>Todo lo que necesitas saber de Cancún en cinco minutos.</h1>
       </header>
       <div class="hero-banner">
-        <img src="/assets/newsletter/photo-guia-playa.jpg" alt="Playa de Cancún con torre de guardavidas y mar turquesa">
+        <img src="/assets/newsletter/photo-guia-playa.jpg" alt="Playa de Cancún con torre de guardavidas y mar turquesa" draggable="false">
       </div>
 
       <main>

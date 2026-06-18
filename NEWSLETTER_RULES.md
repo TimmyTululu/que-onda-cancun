@@ -53,7 +53,7 @@ Every issue should feel like a premium local read: practical for business owners
   - Acier banner -> Instagram.
   - Lugar de la semana image -> place website/reservation page.
   - Oferta local image -> offer or venue website.
-- Logo and generic hero banner do not need links unless intentionally changed.
+- Logo and generic hero banner must not be wrapped in links. Add best-effort non-interactive image attributes/styles (`draggable="false"`, `pointer-events:none`, `user-select:none`, `-webkit-user-drag:none`) so they do not behave like CTAs where clients honor it. Gmail and other clients may still expose their own image download/open controls for any remote image; the template cannot disable client-level controls.
 
 ## Design Rules
 
