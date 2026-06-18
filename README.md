@@ -52,7 +52,7 @@ Email/security records are intentionally untouched.
 - Real sends also require the configured Gmail OAuth profile to be `hola@queondacancun.com`; the script refuses to send from any other account.
 - Recipient filter: `channel=email`, `status=active`, valid email, `unsubscribe_token` present, `unsubscribed_at` blank, `bounce_status` not `hard`, and no prior successful `Send Log` row for the same issue/recipient.
 - The script sends one Gmail API message per recipient from `Qué Onda Cancún <hola@queondacancun.com>`, never BCC.
-- It injects the visible unsubscribe footer and `List-Unsubscribe` header into the current HTML source before sending.
+- It sends the table-based `email.html` template by default, not the web edition. It injects the visible unsubscribe footer and `List-Unsubscribe` header before sending.
 - It writes each attempt to `Send Log` with `sent_at`, `issue`, `recipient`, `status`, `message_id`, `error`, `provider`, `subject`, `unsubscribe_token`, `batch_id`, `operator`, and `notes`.
 - It updates `Email Subscribers` with `last_send_at`, `last_send_issue`, `last_send_status`, `last_send_message_id`, `last_send_error`, and `send_count`.
 

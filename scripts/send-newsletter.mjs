@@ -7,7 +7,7 @@ import { homedir } from 'node:os';
 const SPREADSHEET_ID = '1mQQt712MOdGHZzRLLwGGEX7a5deOegOb0nOoc2rL9So';
 const EMAIL_SHEET = 'Email Subscribers';
 const SEND_LOG_SHEET = 'Send Log';
-const DEFAULT_HTML_PATH = 'esta-semana/index.html';
+const DEFAULT_HTML_PATH = 'email.html';
 const DEFAULT_SUBJECT = 'Qué Onda Cancún: esta semana';
 const DEFAULT_ISSUE = 'esta-semana';
 const DEFAULT_SENDER_NAME = 'Qué Onda Cancún';
