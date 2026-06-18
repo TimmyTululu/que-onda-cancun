@@ -79,9 +79,15 @@ async function readRows() {
   return Array.isArray(data.values) ? data.values : [];
 }
 
-async function appendRow(row) {
-  return sheetsRequest(`/values/${encodeURIComponent('Sheet1')}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
-    method: 'POST',
+async function appendRow(row, rows) {
+  const lastDataIndex = rows.reduce((lastIndex, sheetRow, index) => {
+    const hasSubscriberData = sheetRow.slice(0, 12).some((cell) => String(cell || '').trim());
+    return hasSubscriberData ? index : lastIndex;
+  }, 0);
+  const rowNumber = lastDataIndex + 2;
+
+  return sheetsRequest(`/values/${encodeURIComponent(`Sheet1!A${rowNumber}:L${rowNumber}`)}?valueInputOption=USER_ENTERED`, {
+    method: 'PUT',
     body: JSON.stringify({ values: [row] }),
   });
 }
@@ -137,7 +143,7 @@ export default async function handler(req, res) {
       'active',
       '0',
       now,
-    ]);
+    ], rows);
 
     return json(res, 200, { ok: true, duplicate: false, message: 'subscribed' });
   } catch (error) {
