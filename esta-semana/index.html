@@ -64,9 +64,10 @@
     a:hover { text-decoration: underline; }
 
     .site-nav {
-      width: min(100% - 28px, 640px);
+      width: min(100% - 28px, 368px);
       margin: 0 auto 16px;
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
       align-items: center;
       justify-content: center;
@@ -83,6 +84,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      width: 100%;
       border-radius: 999px;
       color: #f3ead8;
       padding: 0 16px;
@@ -490,7 +492,9 @@
       }
       .site-nav {
         gap: 4px;
-        width: calc(100% - 28px);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width: min(100% - 28px, 360px);
+        max-width: 360px;
         margin: 12px auto;
       }
       .site-nav a {
