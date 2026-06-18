@@ -462,6 +462,10 @@
       font-weight: 800;
     }
 
+    .quote-line {
+      display: block;
+    }
+
     .quote p {
       margin: 12px 0 0;
       color: var(--muted);
@@ -560,7 +564,17 @@
         justify-content: center;
         font-size: 11px;
       }
-      .quote blockquote { font-size: 22px; }
+      .quote {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+      .quote blockquote {
+        font-size: clamp(15px, 4.55vw, 20px);
+        line-height: 1.24;
+      }
+      .quote-line {
+        white-space: nowrap;
+      }
     }
   </style>
 </head>
@@ -713,7 +727,7 @@
 
         <section>
           <div class="quote">
-            <blockquote>“La mejor manera de predecir el futuro<br>es crearlo.”</blockquote>
+            <blockquote><span class="quote-line">“La mejor manera de predecir el futuro</span><span class="quote-line">es crearlo.”</span></blockquote>
             <p>Peter Drucker</p>
           </div>
           <div class="cta">
