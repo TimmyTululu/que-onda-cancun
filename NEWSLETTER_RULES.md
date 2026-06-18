@@ -74,6 +74,10 @@ Every issue should feel like a premium local read: practical for business owners
 - Keep the email outer background warm beige and the inner container at 640px.
 - Use the full Que Onda Cancun logo at the top.
 - Keep the hero image directly under the headline.
+- Hero image must render uncropped in both web and email.
+  - Use natural image ratio with `height:auto`.
+  - Do not use fixed height, `object-fit: cover`, or banner-crop behavior on the hero.
+  - Web and email previews must match on hero framing before any send or deploy.
 - `A primera vista` cards must stay visually aligned and stable.
 - Use soft distinct card fills:
   - USD/MXN: soft green
@@ -105,6 +109,12 @@ Every issue should feel like a premium local read: practical for business owners
 - Every email must include visible unsubscribe footer and `List-Unsubscribe` header.
 - Do not reactivate `unsubscribed`, `suppressed`, or bounced contacts via duplicate signup.
 - Before a real Monday send, run:
+
+```bash
+node scripts/check-newsletter.mjs
+```
+
+Then run:
 
 ```bash
 node scripts/send-newsletter.mjs --issue YYYY-MM-DD --subject "Que Onda Cancun: semana DD-DD mes"
