@@ -62,3 +62,16 @@ Safe commands:
 node scripts/send-newsletter.mjs --limit 5
 node scripts/send-newsletter.mjs --send --test-recipient hola@queondacancun.com --limit 1 --issue 2026-06-22 --notes "controlled test"
 ```
+
+First Monday send runbook:
+
+```bash
+# 1. Preflight: confirm sender, eligible count, issue key, and recipients.
+node scripts/send-newsletter.mjs --issue 2026-06-22 --subject "Qué Onda Cancún: semana 22-28 junio"
+
+# 2. Controlled test: one email only; writes Send Log as test_sent and does not update subscriber send_count.
+node scripts/send-newsletter.mjs --send --test-recipient miguelflatow@gmail.com --issue 2026-06-22 --subject "Qué Onda Cancún: semana 22-28 junio" --notes "controlled Monday preflight"
+
+# 3. Real send: run only after explicit approval.
+node scripts/send-newsletter.mjs --send --issue 2026-06-22 --subject "Qué Onda Cancún: semana 22-28 junio" --operator codex --notes "first Monday send"
+```
