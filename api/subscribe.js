@@ -120,17 +120,21 @@ async function appendRow(sheet, row, rows) {
   });
 }
 
-async function updateEmailDuplicate(rowNumber, duplicateCount, seenAt, unsubscribeToken) {
+function existingStatus(row) {
+  return String(row[8] || '').trim().toLowerCase() || 'active';
+}
+
+async function updateEmailDuplicate(rowNumber, status, duplicateCount, seenAt, unsubscribeToken) {
   return sheetsRequest(`/values/${encodeURIComponent(`${EMAIL_SHEET}!I${rowNumber}:L${rowNumber}`)}?valueInputOption=RAW`, {
     method: 'PUT',
-    body: JSON.stringify({ values: [['active', String(duplicateCount), seenAt, unsubscribeToken]] }),
+    body: JSON.stringify({ values: [[status, String(duplicateCount), seenAt, unsubscribeToken]] }),
   });
 }
 
-async function updateWhatsappDuplicate(rowNumber, duplicateCount, seenAt) {
+async function updateWhatsappDuplicate(rowNumber, status, duplicateCount, seenAt) {
   return sheetsRequest(`/values/${encodeURIComponent(`${WHATSAPP_SHEET}!I${rowNumber}:K${rowNumber}`)}?valueInputOption=RAW`, {
     method: 'PUT',
-    body: JSON.stringify({ values: [['active', String(duplicateCount), seenAt]] }),
+    body: JSON.stringify({ values: [[status, String(duplicateCount), seenAt]] }),
   });
 }
 
@@ -162,10 +166,11 @@ export default async function handler(req, res) {
     if (existingIndex >= HEADER_OFFSET) {
       const rowNumber = existingIndex + 1;
       const currentCount = Number.parseInt(rows[existingIndex][sheet.duplicateCountIndex] || '0', 10) || 0;
+      const status = existingStatus(rows[existingIndex]);
       if (channel === 'email') {
-        await updateEmailDuplicate(rowNumber, currentCount + 1, now, String(rows[existingIndex][11] || '').trim() || createUnsubscribeToken());
+        await updateEmailDuplicate(rowNumber, status, currentCount + 1, now, String(rows[existingIndex][11] || '').trim() || createUnsubscribeToken());
       } else {
-        await updateWhatsappDuplicate(rowNumber, currentCount + 1, now);
+        await updateWhatsappDuplicate(rowNumber, status, currentCount + 1, now);
       }
       return json(res, 200, { ok: true, duplicate: true, message: 'already_subscribed' });
     }

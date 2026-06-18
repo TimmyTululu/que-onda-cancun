@@ -10,7 +10,8 @@ const SEND_LOG_SHEET = 'Send Log';
 const DEFAULT_HTML_PATH = 'esta-semana/index.html';
 const DEFAULT_SUBJECT = 'Qué Onda Cancún: esta semana';
 const DEFAULT_ISSUE = 'esta-semana';
-const DEFAULT_SENDER = 'Qué Onda Cancún <hola@queondacancun.com>';
+const DEFAULT_SENDER_NAME = 'Qué Onda Cancún';
+const DEFAULT_SENDER_EMAIL = 'hola@queondacancun.com';
 const REQUIRED_GMAIL_ACCOUNT = 'hola@queondacancun.com';
 const UNSUBSCRIBE_BASE = 'https://queondacancun.com/api/unsubscribe?token=';
 const SEND_LOG_HEADERS = [
@@ -70,6 +71,7 @@ function parseArgs(argv) {
     limit: null,
     testRecipient: '',
     issue: process.env.QOC_NEWSLETTER_ISSUE || DEFAULT_ISSUE,
+    issueProvided: Boolean(process.env.QOC_NEWSLETTER_ISSUE),
     subject: process.env.QOC_NEWSLETTER_SUBJECT || DEFAULT_SUBJECT,
     htmlPath: process.env.QOC_NEWSLETTER_HTML || DEFAULT_HTML_PATH,
     operator: process.env.USER || 'timmy',
@@ -92,6 +94,7 @@ function parseArgs(argv) {
       options.testRecipient = String(argv[++index] || '').trim().toLowerCase();
     } else if (arg === '--issue') {
       options.issue = String(argv[++index] || '').trim();
+      options.issueProvided = true;
     } else if (arg === '--subject') {
       options.subject = String(argv[++index] || '').trim();
     } else if (arg === '--html') {
@@ -125,6 +128,9 @@ function parseArgs(argv) {
   }
   if (!options.issue || !options.subject || !options.operator || !options.batchId) {
     throw new Error('missing_required_option');
+  }
+  if (options.send && !options.issueProvided) {
+    throw new Error('missing_issue_for_send');
   }
   return options;
 }
@@ -239,14 +245,21 @@ function base64Url(value) {
   return Buffer.from(value).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
-function buildMime({ to, subject, html, text, batchId }) {
+function encodeHeader(value) {
+  const text = String(value);
+  if (/^[\x20-\x7E]*$/.test(text)) return text;
+  return `=?UTF-8?B?${Buffer.from(text, 'utf8').toString('base64')}?=`;
+}
+
+function buildMime({ to, subject, html, text, batchId, unsubscribeUrl }) {
   const boundary = `qoc_${randomUUID().replace(/-/g, '')}`;
   const headers = [
-    `From: ${DEFAULT_SENDER}`,
+    `From: ${encodeHeader(DEFAULT_SENDER_NAME)} <${DEFAULT_SENDER_EMAIL}>`,
     `To: ${to}`,
-    `Subject: ${subject}`,
+    `Subject: ${encodeHeader(subject)}`,
     'MIME-Version: 1.0',
     `X-QOC-Batch-ID: ${batchId}`,
+    `List-Unsubscribe: <${unsubscribeUrl}>`,
     `Content-Type: multipart/alternative; boundary="${boundary}"`,
   ];
   const body = [
@@ -320,10 +333,29 @@ async function readRows(sheet, range = 'A:Z') {
   return Array.isArray(data.values) ? data.values : [];
 }
 
-function eligibleRecipients(rows, options) {
+function sentRecipientsForIssue(rows, issue) {
+  const headers = rows[0] || [];
+  const columns = getColumnMap(headers);
+  const issueColumn = columns.get('issue');
+  const recipientColumn = columns.get('recipient');
+  const statusColumn = columns.get('status');
+  if (issueColumn === undefined || recipientColumn === undefined || statusColumn === undefined) {
+    return new Set();
+  }
+
+  return new Set(rows.slice(1)
+    .filter((row) => (
+      getCell(row, columns, 'issue') === issue
+      && getCell(row, columns, 'status').toLowerCase() === 'sent'
+      && isValidEmail(normalizeEmail(getCell(row, columns, 'recipient')))
+    ))
+    .map((row) => normalizeEmail(getCell(row, columns, 'recipient'))));
+}
+
+function eligibleRecipients(rows, options, alreadySent = new Set()) {
   const headers = rows[0] || [];
   const columns = getColumnMap(headers, REQUIRED_EMAIL_COLUMNS);
-  const recipients = rows.slice(1).map((row, index) => ({
+  let recipients = rows.slice(1).map((row, index) => ({
     row,
     rowNumber: index + 2,
     email: normalizeEmail(getCell(row, columns, 'email')),
@@ -340,7 +372,15 @@ function eligibleRecipients(rows, options) {
     && recipient.token
     && !recipient.unsubscribedAt
     && recipient.bounceStatus !== 'hard'
+    && (options.testRecipient || !alreadySent.has(recipient.email))
   ));
+
+  if (options.testRecipient) {
+    const testRecipientSource = recipients.find((recipient) => recipient.email === options.testRecipient);
+    if (testRecipientSource) {
+      recipients = [testRecipientSource];
+    }
+  }
 
   return {
     headers,
@@ -385,8 +425,8 @@ async function updateSubscriber(rowNumber, columns, values) {
   });
 }
 
-async function sendEmail({ to, subject, html, text, batchId }) {
-  const raw = base64Url(buildMime({ to, subject, html, text, batchId }));
+async function sendEmail({ to, subject, html, text, batchId, unsubscribeUrl }) {
+  const raw = base64Url(buildMime({ to, subject, html, text, batchId, unsubscribeUrl }));
   return gmailRequest('/messages/send', {
     method: 'POST',
     body: JSON.stringify({ raw }),
@@ -413,7 +453,9 @@ async function main() {
   const htmlPath = resolve(options.htmlPath);
   const sourceHtml = readFileSync(htmlPath, 'utf8');
   const rows = await readRows(EMAIL_SHEET, 'A:W');
-  const { columns, recipients, totalEligible } = eligibleRecipients(rows, options);
+  const sendLogRows = await readRows(SEND_LOG_SHEET, 'A:L');
+  const alreadySent = sentRecipientsForIssue(sendLogRows, options.issue);
+  const { columns, recipients, totalEligible } = eligibleRecipients(rows, options, alreadySent);
   const gmailProfile = await getGmailProfile();
   const gmailAccount = String(gmailProfile.emailAddress || '').toLowerCase();
 
@@ -429,6 +471,7 @@ async function main() {
     subject: options.subject,
     batch_id: options.batchId,
     total_eligible: totalEligible,
+    already_sent_for_issue: alreadySent.size,
     selected: recipients.length,
     test_recipient: options.testRecipient || null,
     recipients: recipients.map((recipient) => ({
@@ -464,18 +507,20 @@ async function main() {
         html,
         text,
         batchId: options.batchId,
+        unsubscribeUrl,
       });
       messageId = message.id || '';
     } catch (error) {
       status = 'error';
       errorMessage = error.message || String(error);
     }
+    const logStatus = options.testRecipient && status === 'sent' ? 'test_sent' : status;
 
     await appendSendLog([
       now,
       options.issue,
       targetEmail,
-      status,
+      logStatus,
       messageId,
       errorMessage,
       'gmail',
@@ -486,19 +531,21 @@ async function main() {
       options.testRecipient ? `test-recipient; source=${recipient.email}; ${options.notes}`.trim() : options.notes,
     ]);
 
-    await updateSubscriber(recipient.rowNumber, columns, {
-      last_send_at: now,
-      last_send_issue: options.issue,
-      last_send_status: status,
-      last_send_message_id: messageId,
-      last_send_error: errorMessage,
-      send_count: status === 'sent' ? String(recipient.sendCount + 1) : String(recipient.sendCount),
-    });
+    if (!options.testRecipient) {
+      await updateSubscriber(recipient.rowNumber, columns, {
+        last_send_at: now,
+        last_send_issue: options.issue,
+        last_send_status: status,
+        last_send_message_id: messageId,
+        last_send_error: errorMessage,
+        send_count: status === 'sent' ? String(recipient.sendCount + 1) : String(recipient.sendCount),
+      });
+    }
 
     console.log(JSON.stringify({
       row: recipient.rowNumber,
       recipient: targetEmail,
-      status,
+      status: logStatus,
       message_id: messageId || null,
       error: errorMessage || null,
     }));
