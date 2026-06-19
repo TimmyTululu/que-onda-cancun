@@ -274,6 +274,15 @@ h1 {
   color: #22a56f;
 }
 
+.weekly-promise {
+  margin: 8px 0 0;
+  color: rgba(243, 234, 216, 0.88);
+  font-size: 0.92rem;
+  font-weight: 850;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+}
+
 input,
 button {
   min-height: 50px;
@@ -463,6 +472,11 @@ button:disabled {
 
   .reassurance {
     margin-top: 6px;
+  }
+
+  .weekly-promise {
+    margin-top: 6px;
+    font-size: 0.88rem;
   }
 
   .site-footer {
