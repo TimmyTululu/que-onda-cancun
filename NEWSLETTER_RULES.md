@@ -98,6 +98,11 @@ Every issue should feel like a premium local read: practical for business owners
 - Sender script: `node scripts/send-newsletter.mjs`
 - Default source must remain `email.html`.
 - Web edition remains `/esta-semana/`.
+- Web edition should include a `Descargar PDF` button for the current issue when the PDF asset exists.
+- Newsletter PDFs must be one continuous page generated from the approved web edition.
+  - Do not use browser print output with page breaks.
+  - Do not crop the hero or section images.
+  - Do not include website nav, dark gutters, or download controls inside the PDF.
 - Email images must use absolute URLs like `https://queondacancun.com/assets/...`.
 - Do not attach images for the standard newsletter send.
 - Every real send requires explicit `--issue`.

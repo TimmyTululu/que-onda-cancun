@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
 const checks = [];
 
@@ -20,6 +20,7 @@ function cssBlock(source, selector) {
 const web = read('esta-semana/index.html');
 const email = read('email.html');
 const rules = read('NEWSLETTER_RULES.md');
+const pdfMatch = web.match(/href="\/(assets\/newsletter\/[^"]+\.pdf)"/);
 
 const heroBlocks = [
   cssBlock(web, '.hero-banner img'),
@@ -60,6 +61,16 @@ addCheck(
   'rules include hero crop guard',
   /Hero image must render uncropped/i.test(rules),
   'NEWSLETTER_RULES.md must preserve the hero crop rule.'
+);
+addCheck(
+  'web PDF download link exists',
+  Boolean(pdfMatch) && /Descargar PDF/i.test(web),
+  'Web edition must expose a Descargar PDF link.'
+);
+addCheck(
+  'web PDF asset exists',
+  Boolean(pdfMatch) && existsSync(pdfMatch[1]),
+  'The linked PDF asset must exist in the repo.'
 );
 
 const failed = checks.filter((check) => !check.pass);
