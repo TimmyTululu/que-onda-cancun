@@ -1,0 +1,224 @@
+{
+  "updatedAt": "2026-06-19T09:00:00-05:00",
+  "weather": {
+    "title": "30-32 C",
+    "label": "Clima",
+    "summary": "Semana cálida y húmeda. Mejor ventana para planes al aire libre: mañana temprano o tarde con plan B techado.",
+    "status": "Verificado para la semana"
+  },
+  "signals": [
+    {
+      "title": "Dólar bajo vigilancia",
+      "value": "17.2105",
+      "label": "USD/MXN",
+      "summary": "Para insumos dolarizados: usar 17.30 como umbral operativo de la semana.",
+      "url": "/esta-semana/"
+    },
+    {
+      "title": "Sargazo alto regional",
+      "value": "Alto",
+      "label": "Sargazo",
+      "summary": "Playas abiertas al Caribe cargan más riesgo; Puerto Juárez, laguna y planes techados son mejor respaldo.",
+      "url": "/esta-semana/"
+    },
+    {
+      "title": "Calendario mundialista",
+      "value": "22-27 jun",
+      "label": "Pantallas",
+      "summary": "Semana fuerte de partidos; bares y restaurantes con pantalla tienen tracción clara.",
+      "url": "/eventos/"
+    }
+  ],
+  "today": [
+    {
+      "title": "Plan con techo si el Caribe amanece cargado",
+      "category": "Plan rápido",
+      "venue": "La Habichuela",
+      "area": "Centro",
+      "summary": "Cena local, techo, historia y ubicación práctica entre Puerto Cancún, Plaza Las Américas y Zona Hotelera.",
+      "why": "Buen respaldo cuando playa abierta no se siente como el mejor plan.",
+      "image": "/assets/newsletter/la-habichuela.jpg",
+      "url": "/restaurantes/",
+      "cta": "Ver restaurante",
+      "tags": ["Cena", "Centro", "Lluvia"],
+      "verified": "Verificado esta semana"
+    },
+    {
+      "title": "Oferta nocturna para grupos",
+      "category": "Promo activa",
+      "venue": "Xoximilco Cancún",
+      "area": "Carretera Cancún-Puerto Morelos",
+      "summary": "La página oficial muestra hasta 32% de descuento de lunes a jueves y descuentos por compra anticipada.",
+      "why": "Funciona para cumpleaños, visitantes que ya hicieron playa y residentes que quieren cena + música.",
+      "image": "/assets/newsletter/xoximilco-offer.jpg",
+      "url": "https://www.xoximilco.com/es/",
+      "cta": "Ver oferta",
+      "tags": ["Noche", "Grupos", "Promo"],
+      "verified": "Fuente oficial"
+    },
+    {
+      "title": "Pantallas con partidos de la semana",
+      "category": "Agenda",
+      "venue": "Edición Mundial",
+      "area": "Cancún",
+      "summary": "Calendario en hora Cancún para ubicar partidos de lunes a sábado sin estar convirtiendo horarios.",
+      "why": "Buen gancho para elegir bar, restaurante o plan de tarde.",
+      "image": "/assets/newsletter/photo-guia-playa.jpg",
+      "url": "/eventos/",
+      "cta": "Ver partidos",
+      "tags": ["Fútbol", "Hoy", "Noche"],
+      "verified": "Calendario curado"
+    },
+    {
+      "title": "Ruta aerea que cambia el origen del gasto",
+      "category": "Inteligencia",
+      "venue": "Aeropuerto Cancún",
+      "area": "Conectividad",
+      "summary": "Las Vegas, Brasilia y Chicago mueven señales de idioma, pagos y servicio para negocios turísticos.",
+      "why": "No es solo cuánta gente llega; es de dónde viene y cómo atenderla.",
+      "image": "/assets/newsletter/conectividad-junio.svg?v=3",
+      "url": "/esta-semana/",
+      "cta": "Leer analisis",
+      "tags": ["Turismo", "Negocios", "Aereo"],
+      "verified": "Verificado esta semana"
+    }
+  ],
+  "promos": [
+    {
+      "title": "Hasta 32% de lunes a jueves",
+      "venue": "Xoximilco Cancún",
+      "category": "Experiencia",
+      "area": "Sur de Cancún",
+      "days": "Lun-Jue",
+      "summary": "Promoción publicada en sitio oficial. También muestra descuentos por compra anticipada.",
+      "terms": "Sujeto a disponibilidad y condiciones del sitio oficial.",
+      "image": "/assets/newsletter/xoximilco-offer.jpg",
+      "url": "https://www.xoximilco.com/es/",
+      "cta": "Ver promoción",
+      "tags": ["Noche", "Grupos", "Cena"],
+      "verified": "Fuente oficial"
+    },
+    {
+      "title": "Blindaje vehicular en Cancún",
+      "venue": "ACIER Blindajes",
+      "category": "Servicio destacado",
+      "area": "Quintana Roo",
+      "days": "Contacto directo",
+      "summary": "Servicio premium de blindaje vehicular para quienes necesitan moverse con más seguridad.",
+      "terms": "Contacto por WhatsApp, Instagram o sitio web.",
+      "image": "/assets/newsletter/acier-blindajes.jpg",
+      "url": "https://www.instagram.com/acierblindajes/",
+      "cta": "Ver perfil",
+      "tags": ["Movilidad", "Seguridad", "Premium"],
+      "verified": "Contacto directo"
+    }
+  ],
+  "events": [
+    {
+      "title": "Argentina vs Austria",
+      "venue": "Pantallas en Cancún",
+      "category": "Mundial",
+      "date": "Lun 22",
+      "time": "12:00",
+      "summary": "Primer bloque fuerte de la semana para comidas largas, bares con pantalla y grupos de oficina.",
+      "image": "/assets/newsletter/photo-guia-playa.jpg",
+      "url": "/esta-semana/",
+      "cta": "Ver calendario",
+      "tags": ["Fútbol", "Comida", "Pantallas"],
+      "verified": "Hora Cancún"
+    },
+    {
+      "title": "Chequia vs México",
+      "venue": "Pantallas en Cancún",
+      "category": "Mundial",
+      "date": "Mie 24",
+      "time": "8:00",
+      "summary": "Partido de alta atención local; conviene reservar temprano si el lugar depende de pantallas.",
+      "image": "/assets/newsletter/photo-guia-playa.jpg",
+      "url": "/esta-semana/",
+      "cta": "Ver calendario",
+      "tags": ["México", "Desayuno", "Pantallas"],
+      "verified": "Hora Cancún"
+    },
+    {
+      "title": "Xoximilco noche con descuento",
+      "venue": "Xoximilco Cancún",
+      "category": "Noche",
+      "date": "Lun-Jue",
+      "time": "Noche",
+      "summary": "Plan con cena, música y barra libre; útil cuando la playa o lluvia no ayudan.",
+      "image": "/assets/newsletter/xoximilco-offer.jpg",
+      "url": "https://www.xoximilco.com/es/",
+      "cta": "Ver oferta",
+      "tags": ["Noche", "Grupos", "Turismo"],
+      "verified": "Fuente oficial"
+    }
+  ],
+  "restaurants": [
+    {
+      "title": "La Habichuela",
+      "category": "Clásico local",
+      "area": "Centro",
+      "bestFor": "Cena con identidad y plan techado",
+      "price": "$$$",
+      "summary": "Clásico cancunense desde 1977, cocina mexicana/yucateca, mariscos y ambiente con historia.",
+      "image": "/assets/newsletter/la-habichuela.jpg",
+      "url": "https://www.lahabichuela.com/",
+      "cta": "Reservar",
+      "tags": ["Centro", "Cena", "Visitantes"],
+      "verified": "Sitio oficial"
+    },
+    {
+      "title": "Puerto Santo",
+      "category": "Mariscos",
+      "area": "Puerto Juarez",
+      "bestFor": "Mariscos con salida practica",
+      "price": "$$",
+      "summary": "Opción útil cuando Zona Hotelera está cargada o la playa abierta no es el plan más cómodo.",
+      "image": "/assets/newsletter/photo-guia-playa.jpg",
+      "url": "https://www.instagram.com/puertosantocancun/",
+      "cta": "Ver lugar",
+      "tags": ["Mariscos", "Puerto Juarez", "Atardecer"],
+      "verified": "Perfil publico"
+    },
+    {
+      "title": "Grupo Anderson's",
+      "category": "Zona Hotelera",
+      "area": "Puerto Cancún / Zona Hotelera",
+      "bestFor": "Restaurantes con operación turística probada",
+      "price": "$$$",
+      "summary": "Grupo restaurantero nacido en Cancún con marcas de alto reconocimiento para visitantes.",
+      "image": "/assets/newsletter/photo-guia-playa.jpg",
+      "url": "https://www.grupoandersons.com/",
+      "cta": "Explorar marcas",
+      "tags": ["Turismo", "Cena", "Reservas"],
+      "verified": "Sitio oficial"
+    }
+  ],
+  "beachClubs": [
+    {
+      "title": "Mandala Beach Club",
+      "category": "Party beach",
+      "area": "Zona Hotelera",
+      "vibe": "Música, alberca, día de fiesta",
+      "summary": "Opción para quien busca ambiente social y fiesta de día en Zona Hotelera.",
+      "image": "/assets/newsletter/photo-guia-playa.jpg",
+      "url": "https://mandalabeachclub.com/",
+      "cta": "Ver club",
+      "tags": ["Party", "Zona Hotelera", "Alberca"],
+      "verified": "Sitio oficial"
+    },
+    {
+      "title": "Coralina Daylight Club",
+      "category": "Daylight club",
+      "area": "Zona Hotelera",
+      "vibe": "Pool club, música, grupos",
+      "summary": "Club de día para reservar cuando el plan es social, de alberca y música.",
+      "image": "/assets/newsletter/photo-guia-playa.jpg",
+      "url": "https://coralinadaylightclub.com/",
+      "cta": "Ver club",
+      "tags": ["Pool", "Música", "Grupos"],
+      "verified": "Sitio oficial"
+    }
+  ]
+}

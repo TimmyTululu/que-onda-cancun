@@ -4,6 +4,8 @@ Standalone landing page for `queondacancun.com`.
 
 For weekly newsletter editorial, design, and send rules, read `NEWSLETTER_RULES.md` before changing the template or sender.
 
+For platform/product rules, read `PLATFORM_RULES.md` before changing the homepage, section routes, shared renderer, shared CSS, or platform data.
+
 ## Domain
 
 - Canonical: `https://queondacancun.com`
