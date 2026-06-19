@@ -17,7 +17,7 @@ function cssBlock(source, selector) {
   return match ? match[1] : '';
 }
 
-const web = read('esta-semana/index.html');
+const web = read('newsletter/index.html');
 const email = read('email.html');
 const rules = read('NEWSLETTER_RULES.md');
 const pdfMatch = web.match(/href="\/(assets\/newsletter\/[^"]+\.pdf)"/);

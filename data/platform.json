@@ -1,88 +1,140 @@
 {
-  "updatedAt": "2026-06-19T09:00:00-05:00",
-  "weather": {
-    "title": "30-32 C",
-    "label": "Clima",
-    "summary": "Semana cálida y húmeda. Mejor ventana para planes al aire libre: mañana temprano o tarde con plan B techado.",
-    "status": "Verificado para la semana"
+  "updatedAt": "2026-06-19T00:20:00-05:00",
+  "hoy": {
+    "eyebrow": "Viernes 19 de junio",
+    "title": "Cancún, hoy.",
+    "deck": "Clima activo, dólar arriba de 17.39 y playa con plan B. Esta es la vista rápida para moverte mejor.",
+    "signals": [
+      {
+        "label": "Clima",
+        "value": "27-31 C",
+        "summary": "Tormenta probable. Mejor ventana: temprano; tarde con techo listo.",
+        "tone": "sun",
+        "url": "https://open-meteo.com/"
+      },
+      {
+        "label": "USD/MXN",
+        "value": "17.3914",
+        "summary": "Referencia Frankfurter del 18 de junio. Úsalo como umbral del día.",
+        "tone": "green",
+        "url": "https://www.frankfurter.app/"
+      },
+      {
+        "label": "Sargazo",
+        "value": "Alto",
+        "summary": "Más riesgo en Caribe abierto. Puerto Juárez, laguna o techo ganan valor.",
+        "tone": "purple",
+        "url": "/newsletter/"
+      }
+    ],
+    "lanes": [
+      {
+        "kicker": "Ahora",
+        "title": "Haz playa temprano o cambia a plan techado.",
+        "summary": "La lluvia sube el riesgo durante el día; no vendas una tarde completa al aire libre.",
+        "cta": "Ver restaurantes",
+        "url": "/restaurantes/",
+        "tags": ["Ahora", "Respaldo"]
+      },
+      {
+        "kicker": "Noche",
+        "title": "Cena + show pesa más que playa perfecta.",
+        "summary": "Viernes húmedo favorece experiencias con reserva, transporte claro y cero improvisación.",
+        "cta": "Ver promos",
+        "url": "/promos/",
+        "tags": ["Noche", "Promo"]
+      },
+      {
+        "kicker": "Pantallas",
+        "title": "Brasil y USA jalan conversación mundialista.",
+        "summary": "Bloques de tarde-noche funcionan para bares con pantalla y grupos que salen de oficina.",
+        "cta": "Ver agenda",
+        "url": "/eventos/",
+        "tags": ["Fútbol", "Agenda"]
+      }
+    ],
+    "spotlight": [
+      {
+        "title": "Xoximilco con descuento entre semana",
+        "category": "Promo activa",
+        "summary": "Oferta oficial útil para grupos que quieren noche con techo, música y transporte organizado.",
+        "image": "/assets/newsletter/xoximilco-offer.jpg",
+        "url": "https://www.xoximilco.com/es/"
+      },
+      {
+        "title": "La Habichuela como respaldo de Centro",
+        "category": "Mesa segura",
+        "summary": "Clásico local con techo, historia y ubicación práctica si cambia el clima.",
+        "image": "/assets/newsletter/la-habichuela.jpg",
+        "url": "https://www.lahabichuela.com/"
+      }
+    ]
   },
   "signals": [
     {
-      "title": "Dólar bajo vigilancia",
-      "value": "17.2105",
-      "label": "USD/MXN",
-      "summary": "Para insumos dolarizados: usar 17.30 como umbral operativo de la semana.",
-      "url": "/esta-semana/"
+      "title": "Clima de viernes",
+      "value": "27-31 C",
+      "label": "Clima",
+      "summary": "45% de probabilidad de precipitación; tormentas aisladas posibles.",
+      "url": "https://open-meteo.com/"
     },
     {
-      "title": "Sargazo alto regional",
+      "title": "Dólar operativo",
+      "value": "17.3914",
+      "label": "USD/MXN",
+      "summary": "Referencia de mercado para insumos dolarizados y precios turísticos.",
+      "url": "https://www.frankfurter.app/"
+    },
+    {
+      "title": "Sargazo regional",
       "value": "Alto",
       "label": "Sargazo",
-      "summary": "Playas abiertas al Caribe cargan más riesgo; Puerto Juárez, laguna y planes techados son mejor respaldo.",
-      "url": "/esta-semana/"
-    },
-    {
-      "title": "Calendario mundialista",
-      "value": "22-27 jun",
-      "label": "Pantallas",
-      "summary": "Semana fuerte de partidos; bares y restaurantes con pantalla tienen tracción clara.",
-      "url": "/eventos/"
+      "summary": "Usa Caribe abierto con cautela; plan B en Puerto Juárez, laguna o interior.",
+      "url": "/newsletter/"
     }
   ],
-  "today": [
+  "week": [
     {
-      "title": "Plan con techo si el Caribe amanece cargado",
-      "category": "Plan rápido",
-      "venue": "La Habichuela",
-      "area": "Centro",
-      "summary": "Cena local, techo, historia y ubicación práctica entre Puerto Cancún, Plaza Las Américas y Zona Hotelera.",
-      "why": "Buen respaldo cuando playa abierta no se siente como el mejor plan.",
-      "image": "/assets/newsletter/la-habichuela.jpg",
-      "url": "/restaurantes/",
-      "cta": "Ver restaurante",
-      "tags": ["Cena", "Centro", "Lluvia"],
-      "verified": "Verificado esta semana"
-    },
-    {
-      "title": "Oferta nocturna para grupos",
-      "category": "Promo activa",
-      "venue": "Xoximilco Cancún",
-      "area": "Carretera Cancún-Puerto Morelos",
-      "summary": "La página oficial muestra hasta 32% de descuento de lunes a jueves y descuentos por compra anticipada.",
-      "why": "Funciona para cumpleaños, visitantes que ya hicieron playa y residentes que quieren cena + música.",
-      "image": "/assets/newsletter/xoximilco-offer.jpg",
-      "url": "https://www.xoximilco.com/es/",
-      "cta": "Ver oferta",
-      "tags": ["Noche", "Grupos", "Promo"],
-      "verified": "Fuente oficial"
-    },
-    {
-      "title": "Pantallas con partidos de la semana",
+      "title": "Semana mundialista: horarios ya convertidos a Cancún",
       "category": "Agenda",
       "venue": "Edición Mundial",
       "area": "Cancún",
-      "summary": "Calendario en hora Cancún para ubicar partidos de lunes a sábado sin estar convirtiendo horarios.",
-      "why": "Buen gancho para elegir bar, restaurante o plan de tarde.",
+      "summary": "El calendario 22-27 de junio organiza partidos por día y hora local sin obligar a convertir ET.",
+      "why": "Para negocios con pantallas, esto define turnos, reservas y promociones por bloque horario.",
       "image": "/assets/newsletter/photo-guia-playa.jpg",
-      "url": "/eventos/",
-      "cta": "Ver partidos",
-      "tags": ["Fútbol", "Hoy", "Noche"],
+      "url": "/newsletter/",
+      "cta": "Ver calendario",
+      "tags": ["Agenda", "Fútbol", "Negocios"],
       "verified": "Calendario curado"
     },
     {
-      "title": "Ruta aerea que cambia el origen del gasto",
-      "category": "Inteligencia",
+      "title": "Morena abre carrera sucesoria en cuatro nombres",
+      "category": "Política",
+      "venue": "Quintana Roo",
+      "area": "Estado",
+      "summary": "Ana Paty Peralta, Marybel Villegas, Rafael Marín y Eugenio Segura aparecen en la mesa rumbo a 2027.",
+      "why": "Cancún pesa como bastión electoral; la disputa define alianzas y narrativa pública desde ahora.",
+      "image": "/assets/newsletter/conectividad-junio.svg?v=3",
+      "url": "/newsletter/",
+      "cta": "Leer análisis",
+      "tags": ["Política", "Gobierno"],
+      "verified": "Fuente pública"
+    },
+    {
+      "title": "Brasilia-Cancún vuelve a mover el mapa de demanda",
+      "category": "Movilidad",
       "venue": "Aeropuerto Cancún",
       "area": "Conectividad",
-      "summary": "Las Vegas, Brasilia y Chicago mueven señales de idioma, pagos y servicio para negocios turísticos.",
-      "why": "No es solo cuánta gente llega; es de dónde viene y cómo atenderla.",
+      "summary": "La ruta estacional de GOL vuelve el 20 de junio y empuja atención a portugués, pagos y horarios.",
+      "why": "No es volumen por volumen; cambia de dónde viene el gasto y cómo atenderlo.",
       "image": "/assets/newsletter/conectividad-junio.svg?v=3",
-      "url": "/esta-semana/",
-      "cta": "Leer analisis",
-      "tags": ["Turismo", "Negocios", "Aereo"],
+      "url": "/newsletter/",
+      "cta": "Ver señal aérea",
+      "tags": ["Movilidad", "Turismo", "Negocios"],
       "verified": "Verificado esta semana"
     }
   ],
+  "today": [],
   "promos": [
     {
       "title": "Hasta 32% de lunes a jueves",
@@ -90,7 +142,7 @@
       "category": "Experiencia",
       "area": "Sur de Cancún",
       "days": "Lun-Jue",
-      "summary": "Promoción publicada en sitio oficial. También muestra descuentos por compra anticipada.",
+      "summary": "Promoción publicada en sitio oficial. Sirve para grupos, cumpleaños y noche con clima incierto.",
       "terms": "Sujeto a disponibilidad y condiciones del sitio oficial.",
       "image": "/assets/newsletter/xoximilco-offer.jpg",
       "url": "https://www.xoximilco.com/es/",
@@ -101,11 +153,11 @@
     {
       "title": "Blindaje vehicular en Cancún",
       "venue": "ACIER Blindajes",
-      "category": "Servicio destacado",
+      "category": "Servicio premium",
       "area": "Quintana Roo",
       "days": "Contacto directo",
-      "summary": "Servicio premium de blindaje vehicular para quienes necesitan moverse con más seguridad.",
-      "terms": "Contacto por WhatsApp, Instagram o sitio web.",
+      "summary": "Servicio de blindaje vehicular para movilidad ejecutiva y familiar de alto perfil.",
+      "terms": "Contacto por Instagram o sitio web.",
       "image": "/assets/newsletter/acier-blindajes.jpg",
       "url": "https://www.instagram.com/acierblindajes/",
       "cta": "Ver perfil",
@@ -115,29 +167,29 @@
   ],
   "events": [
     {
-      "title": "Argentina vs Austria",
+      "title": "Brasil vs Haití",
       "venue": "Pantallas en Cancún",
       "category": "Mundial",
-      "date": "Lun 22",
+      "date": "Vie 19",
       "time": "12:00",
-      "summary": "Primer bloque fuerte de la semana para comidas largas, bares con pantalla y grupos de oficina.",
+      "summary": "Bloque ideal para comidas largas y bares con pantalla antes de que pese la lluvia.",
       "image": "/assets/newsletter/photo-guia-playa.jpg",
-      "url": "/esta-semana/",
+      "url": "/newsletter/",
       "cta": "Ver calendario",
       "tags": ["Fútbol", "Comida", "Pantallas"],
       "verified": "Hora Cancún"
     },
     {
-      "title": "Chequia vs México",
+      "title": "Estados Unidos vs Australia",
       "venue": "Pantallas en Cancún",
       "category": "Mundial",
-      "date": "Mie 24",
-      "time": "8:00",
-      "summary": "Partido de alta atención local; conviene reservar temprano si el lugar depende de pantallas.",
+      "date": "Vie 19",
+      "time": "21:00",
+      "summary": "Partido de noche para bares, hoteles y restaurantes que quieren una segunda vuelta de consumo.",
       "image": "/assets/newsletter/photo-guia-playa.jpg",
-      "url": "/esta-semana/",
+      "url": "/newsletter/",
       "cta": "Ver calendario",
-      "tags": ["México", "Desayuno", "Pantallas"],
+      "tags": ["Fútbol", "Noche", "Pantallas"],
       "verified": "Hora Cancún"
     },
     {
@@ -161,7 +213,7 @@
       "area": "Centro",
       "bestFor": "Cena con identidad y plan techado",
       "price": "$$$",
-      "summary": "Clásico cancunense desde 1977, cocina mexicana/yucateca, mariscos y ambiente con historia.",
+      "summary": "Clásico cancunense desde 1977; útil hoy por techo, ubicación y reserva directa.",
       "image": "/assets/newsletter/la-habichuela.jpg",
       "url": "https://www.lahabichuela.com/",
       "cta": "Reservar",
@@ -171,23 +223,23 @@
     {
       "title": "Puerto Santo",
       "category": "Mariscos",
-      "area": "Puerto Juarez",
-      "bestFor": "Mariscos con salida practica",
+      "area": "Puerto Juárez",
+      "bestFor": "Mariscos con salida práctica",
       "price": "$$",
-      "summary": "Opción útil cuando Zona Hotelera está cargada o la playa abierta no es el plan más cómodo.",
+      "summary": "Opción útil cuando Zona Hotelera está cargada o la playa abierta no se siente cómoda.",
       "image": "/assets/newsletter/photo-guia-playa.jpg",
       "url": "https://www.instagram.com/puertosantocancun/",
       "cta": "Ver lugar",
-      "tags": ["Mariscos", "Puerto Juarez", "Atardecer"],
-      "verified": "Perfil publico"
+      "tags": ["Mariscos", "Puerto Juárez", "Atardecer"],
+      "verified": "Perfil público"
     },
     {
       "title": "Grupo Anderson's",
       "category": "Zona Hotelera",
       "area": "Puerto Cancún / Zona Hotelera",
-      "bestFor": "Restaurantes con operación turística probada",
+      "bestFor": "Operación turística probada",
       "price": "$$$",
-      "summary": "Grupo restaurantero nacido en Cancún con marcas de alto reconocimiento para visitantes.",
+      "summary": "Grupo nacido en Cancún con marcas reconocidas; útil para reservas de visitantes.",
       "image": "/assets/newsletter/photo-guia-playa.jpg",
       "url": "https://www.grupoandersons.com/",
       "cta": "Explorar marcas",
@@ -201,7 +253,7 @@
       "category": "Party beach",
       "area": "Zona Hotelera",
       "vibe": "Música, alberca, día de fiesta",
-      "summary": "Opción para quien busca ambiente social y fiesta de día en Zona Hotelera.",
+      "summary": "Para quien busca ambiente social y fiesta de día. Mejor revisar reserva si el clima cambia.",
       "image": "/assets/newsletter/photo-guia-playa.jpg",
       "url": "https://mandalabeachclub.com/",
       "cta": "Ver club",
@@ -213,7 +265,7 @@
       "category": "Daylight club",
       "area": "Zona Hotelera",
       "vibe": "Pool club, música, grupos",
-      "summary": "Club de día para reservar cuando el plan es social, de alberca y música.",
+      "summary": "Club de día para plan social de alberca y música; mejor con reserva de grupo.",
       "image": "/assets/newsletter/photo-guia-playa.jpg",
       "url": "https://coralinadaylightclub.com/",
       "cta": "Ver club",

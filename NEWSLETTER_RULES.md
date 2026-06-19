@@ -1,6 +1,6 @@
 # Que Onda Cancun Newsletter Rules
 
-This file is the production memory for the weekly newsletter. Read it before changing `email.html`, `esta-semana/index.html`, or `scripts/send-newsletter.mjs`.
+This file is the production memory for the weekly newsletter. Read it before changing `email.html`, `newsletter/index.html`, or `scripts/send-newsletter.mjs`.
 
 ## Mission
 
@@ -97,7 +97,7 @@ Every issue should feel like a premium local read: practical for business owners
 
 - Sender script: `node scripts/send-newsletter.mjs`
 - Default source must remain `email.html`.
-- Web edition remains `/esta-semana/`.
+- Web edition remains `/newsletter/`.
 - Web edition should include a `Descargar PDF` button for the current issue when the PDF asset exists.
 - Newsletter PDFs must be one continuous page generated from the approved web edition.
   - Do not use browser print output with page breaks.
@@ -140,8 +140,8 @@ node scripts/send-newsletter.mjs --send --issue YYYY-MM-DD --subject "Que Onda C
 ## Current Permanent Template Files
 
 - `email.html`: production email template and source of truth for sending.
-- `esta-semana/index.html`: public web edition.
+- `newsletter/index.html`: public web edition.
 - `scripts/send-newsletter.mjs`: Gmail send utility.
 - `README.md`: operational subscriber and send-system documentation.
 
-Keep `email.html` and `esta-semana/index.html` aligned in content, but do not collapse them into one file. Email and web have different layout constraints.
+Keep `email.html` and `newsletter/index.html` aligned in content, but do not collapse them into one file. Email and web have different layout constraints.

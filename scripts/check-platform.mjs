@@ -6,16 +6,17 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const routes = [
   ["Hoy", "index.html", 'data-page="hoy"'],
-  ["Esta semana", "esta-semana/index.html", "Descargar PDF"],
+  ["Esta semana", "esta-semana/index.html", 'data-page="esta-semana"'],
   ["Promos", "promos/index.html", 'data-page="promos"'],
   ["Eventos", "eventos/index.html", 'data-page="eventos"'],
   ["Restaurantes", "restaurantes/index.html", 'data-page="restaurantes"'],
   ["Beach clubs", "beach-clubs/index.html", 'data-page="beach-clubs"'],
-  ["Boletín", "boletin/index.html", 'data-page="boletin"']
+  ["Newsletter", "newsletter/index.html", "Descargar PDF"],
+  ["Boletín redirect", "boletin/index.html", "/newsletter/"]
 ];
 
-const requiredNav = ["Hoy", "Esta semana", "Promos", "Eventos", "Restaurantes", "Beach clubs", "Boletín"];
-const forbidden = ["Lectura rápida", "Última referencia disponible", "no publicar"];
+const requiredNav = ["Hoy", "Esta semana", "Promos", "Eventos", "Restaurantes", "Beach clubs", "Newsletter"];
+const forbidden = ["Lectura rápida", "Última referencia disponible", "no publicar", "data-channel=\"whatsapp\""];
 
 function assert(condition, message) {
   if (!condition) {
@@ -40,7 +41,7 @@ for (const item of requiredNav) {
   assert(app.includes(`label: "${item}"`), `App nav is missing ${item}`);
 }
 
-const newsletter = read("esta-semana/index.html");
+const newsletter = read("newsletter/index.html");
 for (const item of requiredNav) {
   assert(newsletter.includes(`>${item}<`), `Newsletter nav is missing ${item}`);
 }
@@ -52,7 +53,9 @@ assert(
 assert(!newsletter.includes("object-fit: cover"), "Newsletter hero images must not be cropped with object-fit cover");
 
 const data = JSON.parse(read("data/platform.json"));
-for (const collection of ["today", "promos", "events", "restaurants", "beachClubs"]) {
+assert(data.hoy && Array.isArray(data.hoy.signals) && data.hoy.signals.length === 3, "Hoy must have exactly three live signals");
+assert(data.hoy && Array.isArray(data.hoy.lanes) && data.hoy.lanes.length >= 3, "Hoy must have action lanes");
+for (const collection of ["week", "promos", "events", "restaurants", "beachClubs"]) {
   assert(Array.isArray(data[collection]) && data[collection].length > 0, `Missing data collection: ${collection}`);
   for (const [index, item] of data[collection].entries()) {
     for (const field of ["title", "summary", "image", "url", "cta", "verified"]) {
@@ -65,7 +68,7 @@ for (const collection of ["today", "promos", "events", "restaurants", "beachClub
   }
 }
 
-for (const file of ["index.html", "app.js", "data/platform.json", "esta-semana/index.html"]) {
+for (const file of ["index.html", "app.js", "data/platform.json", "esta-semana/index.html", "newsletter/index.html"]) {
   const content = read(file);
   for (const phrase of forbidden) {
     assert(!content.includes(phrase), `${file} contains forbidden phrase: ${phrase}`);

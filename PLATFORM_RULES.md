@@ -20,13 +20,13 @@ Permanent public nav:
 - Eventos
 - Restaurantes
 - Beach clubs
-- Boletín
+- Newsletter
 
 `Hoy` is the homepage. Do not call it Inicio in the public nav.
 
-`Esta semana` remains the locked weekly newsletter web edition and PDF surface.
+`Esta semana` is the weekly platform view: agenda, signals, politics, mobility, tourism, and business implications for the coming week.
 
-`Boletín` is the signup/intake surface for the newsletter. Keep it integrated with the same `/api/subscribe` endpoint.
+`Newsletter` shows the approved weekly newsletter issue and PDF. The old `/boletin/` route may redirect to `/newsletter/`, but it must not show a separate intake page.
 
 ## Data Model
 
@@ -70,10 +70,10 @@ Local image paths must point to existing files under `assets/`. External links n
 
 ## Signup Rules
 
-- The newsletter/boletín popup is allowed on platform pages.
-- Do not show the popup on `/boletin/`, because that route already exists to subscribe.
-- Popup and page forms must use `/api/subscribe`.
-- Email and WhatsApp remain separate channels.
+- Do not auto-open a blocking signup modal on page load.
+- Newsletter signup is email-only on the website.
+- Signup forms must use `/api/subscribe`.
+- Do not show WhatsApp as a newsletter intake channel.
 - Do not break unsubscribe, suppression, or send-log behavior.
 
 ## QA Before Deploy
@@ -89,11 +89,11 @@ Then browser-check:
 
 - `/`
 - `/esta-semana/`
+- `/newsletter/`
 - `/promos/`
 - `/eventos/`
 - `/restaurantes/`
 - `/beach-clubs/`
-- `/boletin/`
 
 For each route:
 
@@ -101,7 +101,7 @@ For each route:
 - images load,
 - no horizontal overflow on desktop or mobile,
 - links are clickable,
-- newsletter page keeps PDF button and uncropped hero,
+- `/newsletter/` keeps PDF button and uncropped hero,
 - no forbidden labels reappear.
 
 ## Current Platform Files
@@ -114,5 +114,6 @@ For each route:
 - `eventos/index.html`: Eventos route.
 - `restaurantes/index.html`: Restaurantes route.
 - `beach-clubs/index.html`: Beach clubs route.
-- `boletin/index.html`: Boletín route.
+- `newsletter/index.html`: approved weekly newsletter web edition.
+- `boletin/index.html`: compatibility redirect to `/newsletter/`.
 - `scripts/check-platform.mjs`: platform guardrail check.

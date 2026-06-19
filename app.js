@@ -5,22 +5,35 @@ const NAV_ITEMS = [
   { label: "Eventos", href: "/eventos/", key: "eventos" },
   { label: "Restaurantes", href: "/restaurantes/", key: "restaurantes" },
   { label: "Beach clubs", href: "/beach-clubs/", key: "beach-clubs" },
-  { label: "Boletín", href: "/boletin/", key: "boletin" }
+  { label: "Newsletter", href: "/newsletter/", key: "newsletter" }
 ];
 
 const PAGE_CONFIG = {
   hoy: {
-    eyebrow: "Hoy en Cancún",
-    title: "Qué hacer hoy en Cancún.",
-    deck: "Planes, promos, eventos y señales locales para moverte con mejores decisiones y cero ruido.",
-    primary: "Ver promos",
-    primaryHref: "/promos/",
-    secondary: "Leer esta semana",
-    secondaryHref: "/esta-semana/",
+    eyebrow: "Hoy",
+    title: "Cancún, hoy.",
+    deck: "El pulso diario para decidir rápido: clima, sargazo, dólar, planes y mejores ventanas.",
+    primary: "Ver eventos",
+    primaryHref: "/eventos/",
+    secondary: "Newsletter",
+    secondaryHref: "/newsletter/",
     collection: "today",
-    lead: "Radar de hoy",
-    intro: "Planes, señales y oportunidades seleccionadas para abrir el día con contexto.",
-    filters: ["Todo", "Plan rápido", "Promo", "Agenda", "Inteligencia"]
+    lead: "Hoy",
+    intro: "Una sola vista para moverte mejor por Cancún.",
+    filters: ["Todo", "Ahora", "Noche", "Fútbol", "Respaldo"]
+  },
+  "esta-semana": {
+    eyebrow: "Esta semana",
+    title: "La semana útil de Cancún.",
+    deck: "Lo que cambia decisiones de lunes a domingo: agenda, clima operativo, política, turismo y oportunidades.",
+    primary: "Leer newsletter",
+    primaryHref: "/newsletter/",
+    secondary: "Ver eventos",
+    secondaryHref: "/eventos/",
+    collection: "week",
+    lead: "Semana 22-28 junio",
+    intro: "El mapa semanal sin relleno.",
+    filters: ["Todo", "Agenda", "Política", "Movilidad", "Negocios"]
   },
   promos: {
     eyebrow: "Promos",
@@ -74,19 +87,6 @@ const PAGE_CONFIG = {
     intro: "La decisión rápida: fiesta, alberca, familia, reserva o plan tranquilo.",
     filters: ["Todo", "Party beach", "Daylight club", "Pool", "Zona Hotelera", "Grupos"]
   },
-  boletin: {
-    eyebrow: "Boletín",
-    title: "El boletín local de la semana.",
-    deck: "Recibe lo importante: qué hacer, dónde ir, promos, eventos, política local y señales útiles para Cancún.",
-    primary: "Suscribirme",
-    primaryHref: "#boletin",
-    secondary: "Leer esta semana",
-    secondaryHref: "/esta-semana/",
-    collection: "today",
-    lead: "Qué recibes",
-    intro: "El boletín es el motor de confianza. La plataforma es el mapa vivo.",
-    filters: ["Todo", "Plan rápido", "Promo", "Agenda", "Inteligencia"]
-  }
 };
 
 const state = {
@@ -193,13 +193,21 @@ function renderHero(config) {
         </div>
       </div>
       <div class="hero-panel reveal" style="--delay:80ms">
-        <img src="/assets/que-onda-cancun-logo.png" alt="Qué Onda Cancún">
+        <img src="/assets/social/que-onda-logo-trimmed.png" alt="Qué Onda Cancún">
         <div>
           <strong>Si está pasando en Cancún, está aquí.</strong>
           <span>Planes, promos, eventos y señales locales en una sola superficie.</span>
         </div>
       </div>
     </section>
+  `;
+}
+
+function renderBrand() {
+  return `
+    <a class="brand-mark" href="/" aria-label="Qué Onda Cancún">
+      <img src="/assets/social/que-onda-logo-trimmed.png" alt="Qué Onda Cancún">
+    </a>
   `;
 }
 
@@ -221,6 +229,87 @@ function renderHomeExtras(data) {
   `;
 }
 
+function renderTodayPage(data) {
+  const today = data.hoy;
+  const signals = today.signals || [];
+  const lanes = today.lanes || [];
+  const spotlight = today.spotlight || [];
+  return `
+    ${renderBrand()}
+    <section class="today-command">
+      <div class="today-lead reveal">
+        <span class="eyebrow">${escapeHtml(today.eyebrow)}</span>
+        <h1>${escapeHtml(today.title)}</h1>
+        <p>${escapeHtml(today.deck)}</p>
+        <div class="today-actions">
+          <a class="action primary" href="/eventos/">Ver eventos</a>
+          <a class="action secondary" href="/newsletter/">Leer newsletter</a>
+        </div>
+      </div>
+      <div class="today-signals" aria-label="Señales de hoy">
+        ${signals.map((item, index) => `
+          <a class="today-signal reveal ${escapeHtml(item.tone || "")}" style="--delay:${index * 55}ms" href="${item.url}"${linkAttrs(item.url)}>
+            <span>${escapeHtml(item.label)}</span>
+            <strong>${escapeHtml(item.value)}</strong>
+            <small>${escapeHtml(item.summary)}</small>
+          </a>
+        `).join("")}
+      </div>
+      <div class="today-lanes">
+        ${lanes.map((lane, index) => `
+          <a class="lane-card reveal" style="--delay:${120 + index * 55}ms" href="${lane.url}"${linkAttrs(lane.url)}>
+            <span>${escapeHtml(lane.kicker)}</span>
+            <h2>${escapeHtml(lane.title)}</h2>
+            <p>${escapeHtml(lane.summary)}</p>
+            <strong>${escapeHtml(lane.cta)}</strong>
+          </a>
+        `).join("")}
+      </div>
+      <div class="today-spotlight">
+        ${spotlight.map((item, index) => `
+          <a class="spotlight-card reveal" style="--delay:${260 + index * 55}ms" href="${item.url}"${linkAttrs(item.url)}>
+            <img src="${item.image}" alt="${escapeHtml(item.title)}">
+            <div>
+              <span>${escapeHtml(item.category)}</span>
+              <h3>${escapeHtml(item.title)}</h3>
+              <p>${escapeHtml(item.summary)}</p>
+            </div>
+          </a>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderWeeklyPage(config, data) {
+  const items = filterItems(data.week || []);
+  return `
+    ${renderBrand()}
+    <section class="week-hero reveal">
+      <div>
+        <span class="eyebrow">${escapeHtml(config.eyebrow)}</span>
+        <h1>${escapeHtml(config.title)}</h1>
+        <p>${escapeHtml(config.deck)}</p>
+      </div>
+      <a class="week-issue" href="/newsletter/">
+        <span>Newsletter</span>
+        <strong>Semana 22-28 junio</strong>
+        <small>Edición completa + PDF</small>
+      </a>
+    </section>
+    <section class="section-head compact">
+      <div>
+        <span class="eyebrow">${escapeHtml(config.lead)}</span>
+        <h2>${escapeHtml(config.intro)}</h2>
+      </div>
+      ${renderFilters(config)}
+    </section>
+    <section class="card-grid weekly-grid" aria-live="polite">
+      ${items.map(card).join("") || `<p class="empty-state">No hay resultados para este filtro.</p>`}
+    </section>
+  `;
+}
+
 function renderCollection(config, data) {
   const items = filterItems(data[config.collection] || []);
   return `
@@ -237,13 +326,13 @@ function renderCollection(config, data) {
   `;
 }
 
-function renderBoletinPanel() {
+function renderNewsletterPanel() {
   return `
-    <section class="boletin-panel" id="boletin">
+    <section class="newsletter-panel" id="newsletter-signup">
       <div>
-        <span class="eyebrow">Boletín</span>
+        <span class="eyebrow">Newsletter</span>
         <h2>Una lectura útil. Una vez por semana. Cero spam.</h2>
-        <p>Elige email o WhatsApp y recibe la edición local con lo que importa para Cancún.</p>
+        <p>Recibe la edición local cada lunes.</p>
       </div>
       ${subscribeForm("page")}
     </section>
@@ -252,11 +341,7 @@ function renderBoletinPanel() {
 
 function subscribeForm(source) {
   return `
-    <form class="subscribe platform-subscribe" data-source="${source}" aria-label="Suscripción al boletín">
-      <div class="channel-toggle" aria-label="Elige cómo recibirlo">
-        <button type="button" class="channel active" data-channel="email">Email</button>
-        <button type="button" class="channel" data-channel="whatsapp">WhatsApp</button>
-      </div>
+    <form class="subscribe platform-subscribe" data-source="${source}" aria-label="Suscripción al newsletter">
       <div class="subscribe-row">
         <label class="signup-field">
           <input type="email" name="email" placeholder="tu@email.com" autocomplete="email" required>
@@ -275,9 +360,9 @@ function renderModal() {
     <div class="modal-backdrop" data-modal hidden>
       <section class="signup-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <button class="modal-close" type="button" aria-label="Cerrar">×</button>
-        <span class="eyebrow">Boletín local</span>
+        <span class="eyebrow">Newsletter local</span>
         <h2 id="modal-title">Recibe Qué Onda Cancún</h2>
-        <p>La guía local para saber qué hacer, dónde ir y qué está pasando.</p>
+        <p>La guía local para decidir mejor en Cancún.</p>
         ${subscribeForm("modal")}
         <button class="modal-later" type="button">Ahora no</button>
       </section>
@@ -289,17 +374,15 @@ async function handleSubscribe(event) {
   const form = event.target.closest(".subscribe");
   if (!form) return;
   event.preventDefault();
-  const active = $(".channel.active", form);
-  const channel = active?.dataset.channel || "email";
   const input = $("input", form);
   const button = $(".subscribe-button", form);
   const status = $(".subscribe-status", form);
   const value = input.value.trim();
+  const channel = "email";
   const messages = {
     subscribed: "Listo. Te sumamos a Qué Onda Cancún.",
     already_subscribed: "Ya estabas en la lista. Te mantenemos activo.",
     invalid_email: "Escribe un email válido.",
-    invalid_whatsapp: "Escribe un WhatsApp con lada.",
     subscribe_failed: "No entró. Inténtalo otra vez en unos segundos."
   };
 
@@ -313,8 +396,8 @@ async function handleSubscribe(event) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         channel,
-        email: channel === "email" ? value : "",
-        whatsapp: channel === "whatsapp" ? value : "",
+        email: value,
+        whatsapp: "",
         source: form.dataset.source || "platform",
         landingUrl: window.location.href,
         referrer: document.referrer
@@ -330,7 +413,7 @@ async function handleSubscribe(event) {
     status.textContent = message;
     status.dataset.state = "success";
     form.reset();
-    window.localStorage.setItem("qoc_boletin_seen", "1");
+    window.localStorage.setItem("qoc_newsletter_seen", "1");
   } catch {
     status.textContent = messages.subscribe_failed;
     status.dataset.state = "error";
@@ -348,24 +431,6 @@ function bindInteractions(config) {
       return;
     }
 
-    const channel = event.target.closest(".channel");
-    if (channel) {
-      const form = channel.closest(".subscribe");
-      $$(".channel", form).forEach((item) => item.classList.remove("active"));
-      channel.classList.add("active");
-      const input = $("input", form);
-      const isWhatsApp = channel.dataset.channel === "whatsapp";
-      input.type = isWhatsApp ? "tel" : "email";
-      input.name = isWhatsApp ? "whatsapp" : "email";
-      input.placeholder = isWhatsApp ? "+52 998 000 0000" : "tu@email.com";
-      input.autocomplete = isWhatsApp ? "tel" : "email";
-      input.value = "";
-      const status = $(".subscribe-status", form);
-      status.textContent = "";
-      status.dataset.state = "";
-      return;
-    }
-
     if (event.target.closest(".modal-close") || event.target.closest(".modal-later")) {
       closeModal();
       return;
@@ -380,17 +445,11 @@ function bindInteractions(config) {
     if (event.key === "Escape") closeModal();
   });
 
-  if (config.primaryHref === "#boletin") {
-    $(".action.primary")?.addEventListener("click", (event) => {
-      event.preventDefault();
-      $("#boletin")?.scrollIntoView({ behavior: "smooth" });
-    });
-  }
 }
 
 function openModal() {
   const modal = $("[data-modal]");
-  if (!modal || window.localStorage.getItem("qoc_boletin_seen")) return;
+  if (!modal || window.localStorage.getItem("qoc_newsletter_seen")) return;
   modal.hidden = false;
   requestAnimationFrame(() => modal.classList.add("visible"));
 }
@@ -399,7 +458,7 @@ function closeModal() {
   const modal = $("[data-modal]");
   if (!modal) return;
   modal.classList.remove("visible");
-  window.localStorage.setItem("qoc_boletin_seen", "1");
+  window.localStorage.setItem("qoc_newsletter_seen", "1");
   setTimeout(() => {
     modal.hidden = true;
   }, 180);
@@ -410,11 +469,18 @@ function renderApp() {
   if (!app || !state.data) return;
   const config = PAGE_CONFIG[state.page] || PAGE_CONFIG.hoy;
   document.title = state.page === "hoy" ? "Hoy | Qué Onda Cancún" : `${config.eyebrow} | Qué Onda Cancún`;
+  if (state.page === "hoy") {
+    app.innerHTML = renderTodayPage(state.data);
+    return;
+  }
+  if (state.page === "esta-semana") {
+    app.innerHTML = renderWeeklyPage(config, state.data);
+    return;
+  }
   app.innerHTML = `
+    ${renderBrand()}
     ${renderHero(config)}
-    ${state.page === "hoy" ? renderHomeExtras(state.data) : ""}
     ${renderCollection(config, state.data)}
-    ${state.page === "boletin" ? renderBoletinPanel() : ""}
   `;
 }
 
@@ -435,9 +501,6 @@ async function init() {
   state.data = await response.json();
   renderApp();
   bindInteractions(PAGE_CONFIG[state.page] || PAGE_CONFIG.hoy);
-  if (state.page !== "boletin") {
-    setTimeout(openModal, 900);
-  }
 }
 
 init().catch((error) => {
