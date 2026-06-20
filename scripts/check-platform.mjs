@@ -31,6 +31,24 @@ const requiredFiles = [
   "robots.txt",
   "sitemap.xml"
 ];
+const platformShellRoutes = [
+  "index.html",
+  "esta-semana/index.html",
+  "promos/index.html",
+  "eventos/index.html"
+];
+const platformVersionString = "20260620f";
+const platformBootSrc = "platform-route-boot.js";
+const platformVersionContractFiles = [
+  "platform-route-boot.js",
+  "app.js",
+  "index.html",
+  "esta-semana/index.html",
+  "promos/index.html",
+  "eventos/index.html",
+  "platform.css",
+  "newsletter/index.html"
+];
 const forbidden = [
   "Lectura rápida",
   "Última referencia disponible",
@@ -40,6 +58,130 @@ const forbidden = [
   "filter-chip",
   "renderFilters"
 ];
+const inlineTransitionAndNavGuards = [
+  "pageshow",
+  "pagehide",
+  "beforeunload",
+  "sameOrigin",
+  "qoc-route-transition",
+  "window.location.assign",
+  "site-logo-link",
+  "brand-mark",
+  "addEventListener(\"click\""
+];
+
+function routeLabelFor(file) {
+  if (file === "index.html") return "Hoy";
+  if (file === "esta-semana/index.html") return "Esta semana";
+  if (file === "promos/index.html") return "Promos";
+  if (file === "eventos/index.html") return "Eventos";
+  return file;
+}
+
+function assertBootShellContract() {
+  for (const file of platformShellRoutes) {
+    const html = read(file);
+    const label = routeLabelFor(file);
+
+    assert(
+      /<html[^>]*class="[^"]*\bqoc-booting\b[^"]*"/i.test(html),
+      `${label} shell must include class="qoc-booting" on <html>`
+    );
+    assert(
+      html.includes("<script src=\"/platform-route-boot.js\"></script>"),
+      `${label} shell must include shared route boot script`
+    );
+    assert(!/\/platform\.css\?v=/.test(html), `${label} shell must not hardcode versioned platform.css`);
+    assert(!/\/app\.js\?v=/.test(html), `${label} shell must not hardcode versioned app.js`);
+
+    const inlineScripts = [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)];
+    for (const match of inlineScripts) {
+      const scriptBody = match[1] || "";
+      for (const token of inlineTransitionAndNavGuards) {
+        assert(
+          !scriptBody.includes(token),
+          `${label} shell contains duplicated boot/nav/BFCache logic in inline script (${token})`
+        );
+      }
+    }
+  }
+}
+
+function assertPlatformVersionContract() {
+  const boot = read(platformBootSrc);
+  const app = read("app.js");
+  const bootVersionMatch = boot.match(/PLATFORM_VERSION\s*=\s*["']([^"']+)["']/);
+  assert(bootVersionMatch, `platform-route-boot.js must declare PLATFORM_VERSION`);
+  assert(bootVersionMatch[1] === platformVersionString, `platform-route-boot.js PLATFORM_VERSION must be ${platformVersionString}`);
+
+  for (const file of platformVersionContractFiles) {
+    if (file === platformBootSrc) continue;
+    const content = read(file);
+    const count = (content.match(new RegExp(platformVersionString, "g")) || []).length;
+    assert(
+      count === 0,
+      `Platform version string ${platformVersionString} should be centralized in ${platformBootSrc} only (found in ${file})`
+    );
+  }
+
+  assert(
+    /const\s+DATA_VERSION\s*=\s*["']/.test(app) === false,
+    "app.js must not hardcode DATA_VERSION; it should resolve dynamically"
+  );
+  assert(app.includes("function resolvePlatformVersion()"), "app.js must resolve DATA_VERSION dynamically");
+  assert(app.includes('const DATA_VERSION_QUERY = DATA_VERSION ? `?v=${encodeURIComponent(DATA_VERSION)}` : "";'),
+    "app.js must build DATA_VERSION_QUERY from resolved platform version"
+  );
+  assert(app.includes("return `/data/platform.json${DATA_VERSION_QUERY}`"), "data/platform.json fetch URL must include platform version query");
+  assert(!/fetch\(["']\/data\/platform\.json["']/.test(app), "app.js must use versioned platform data fetch path");
+  assert(app.includes("window.__qocPlatform"), "app.js must consume centralized boot version metadata fallback");
+}
+
+function assertBootDuplicationContract() {
+  const platformBoot = read(platformBootSrc);
+  const bootPageshow = platformBoot.match(/pageshow|pagehide|beforeunload|sameOrigin|qoc-route-transition/g);
+  assert(bootPageshow, "platform boot script must include nav transition / BFCache guard logic");
+
+  for (const file of [...platformShellRoutes, "app.js", "newsletter/index.html"]) {
+    const content = read(file);
+    const label = routeLabelFor(file) || file;
+
+    assert(!/window\.addEventListener\(\s*["']pageshow["']/.test(content), `${label} must not register pageshow handler outside boot`);
+    assert(!/window\.addEventListener\(\s*["']pagehide["']/.test(content), `${label} must not register pagehide handler outside boot`);
+    assert(!/window\.addEventListener\(\s*["']beforeunload["']/.test(content), `${label} must not register beforeunload handler outside boot`);
+    assert(!/sameOrigin\(/.test(content), `${label} must not contain duplicated same-origin nav hardening`);
+    if (!file.endsWith(".js")) {
+      assert(!/qoc-route-transition/.test(content), `${label} must not contain duplicated qoc-route-transition handling`);
+    }
+    if (file === "app.js") {
+      assert(!/window\.location\.assign\(/.test(content), "app.js must not implement boot-style same-origin nav hardening");
+      assert(
+        !/classList\.add\(\s*["']qoc-route-transition["']/.test(content),
+        "app.js must not own qoc-route-transition transition add/remove logic"
+      );
+    }
+  }
+
+  const newsletter = read("newsletter/index.html");
+  assert(!/qoc-booting/.test(newsletter), "Newsletter must not use route boot class state");
+}
+
+function assertLoadingContract() {
+  for (const file of ["app.js", "platform.css", ...platformShellRoutes]) {
+    const content = read(file);
+    assert(!/loading-card/.test(content), `${file} must not reference removed .loading-card UI`);
+  }
+}
+
+function assertNewsletterIsolation() {
+  const newsletter = read("newsletter/index.html");
+  assert(!newsletter.includes("/platform-route-boot.js"), "newsletter should not include platform-route-boot.js");
+  assert(!newsletter.includes("qoc-booting"), "newsletter should not include route boot shielding class");
+  assert(!newsletter.includes("qoc-route-transition"), "newsletter should not include qoc route transition shielding");
+  assert(!newsletter.includes("pageshow"), "newsletter should not include pageshow logic");
+  assert(!newsletter.includes("pagehide"), "newsletter should not include pagehide logic");
+  assert(!newsletter.includes("beforeunload"), "newsletter should not include beforeunload logic");
+}
 
 function assert(condition, message) {
   if (!condition) {
@@ -154,6 +296,12 @@ for (const [label, file, marker] of routes) {
   assert(html.includes(marker), `${label} route is missing marker: ${marker}`);
   assert(html.includes("<title>"), `${label} route is missing <title>`);
 }
+
+assertBootShellContract();
+assertPlatformVersionContract();
+assertBootDuplicationContract();
+assertLoadingContract();
+assertNewsletterIsolation();
 
 const seoRoutes = [
   ["Hoy", "index.html", "https://queondacancun.com/"],
