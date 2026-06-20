@@ -68,6 +68,16 @@ Email/security records are intentionally untouched.
 
 These tools are non-visual. They harden the data pipeline without changing `platform.css`, card layout, or page structure.
 
+- Daily refresh workflow:
+  - GitHub Actions file: `.github/workflows/daily-platform-refresh.yml`
+  - Runs daily at `06:00 UTC`, which is `01:00 America/Cancun`.
+  - Manual run: GitHub Actions -> `Daily Platform Refresh` -> `Run workflow`.
+  - Requires repository secret `FIRECRAWL_API_KEY` while the World Cup module is active.
+  - Runs `node scripts/refresh-platform-data.mjs`, `node --check app.js`, `node scripts/check-platform.mjs`, and `node scripts/check-newsletter.mjs`.
+  - Commits only `data/platform.json` and `data/platform-candidates.json` when those files change.
+- Manual daily refresh:
+  - `node scripts/refresh-platform-data.mjs`
+  - Optional local fixture mode for reviewed Firecrawl markdown: `node scripts/refresh-platform-data.mjs --worldcup-markdown .firecrawl/espn-worldcup-schedule.md`
 - Data audit:
   - `node scripts/audit-platform-data.mjs`
   - Surfaces remote images, missing local assets, stale dates, promo/event expiry gaps, repeated locations, and generic CTA labels.

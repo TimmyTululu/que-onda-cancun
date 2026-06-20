@@ -27,7 +27,9 @@ const requiredFiles = [
   "scripts/audit-platform-data.mjs",
   "scripts/apply-platform-lifecycle.mjs",
   "scripts/cache-platform-images.mjs",
+  "scripts/refresh-platform-data.mjs",
   "scripts/generate-sponsor-report.mjs",
+  ".github/workflows/daily-platform-refresh.yml",
   "robots.txt",
   "sitemap.xml"
 ];
@@ -69,6 +71,9 @@ const inlineTransitionAndNavGuards = [
   "brand-mark",
   "addEventListener(\"click\""
 ];
+const CANCUN_TIME_ZONE = "America/Cancun";
+const CANCUN_OFFSET = "-05:00";
+const PLATFORM_STALE_HOURS_LIMIT = 30;
 
 function routeLabelFor(file) {
   if (file === "index.html") return "Hoy";
@@ -183,9 +188,95 @@ function assertNewsletterIsolation() {
   assert(!newsletter.includes("beforeunload"), "newsletter should not include beforeunload logic");
 }
 
+function assertDailyAutomationContract() {
+  const workflow = read(".github/workflows/daily-platform-refresh.yml");
+  const refreshScript = read("scripts/refresh-platform-data.mjs");
+
+  assert(workflow.includes('cron: "0 6 * * *"'), "Daily refresh must run at 06:00 UTC / 01:00 Cancun");
+  assert(workflow.includes("workflow_dispatch:"), "Daily refresh must allow manual workflow_dispatch runs");
+  assert(workflow.includes("node scripts/refresh-platform-data.mjs"), "Daily workflow must run the refresh script");
+  assert(workflow.includes("node --check app.js"), "Daily workflow must syntax-check app.js");
+  assert(workflow.includes("node scripts/check-platform.mjs"), "Daily workflow must run platform checks");
+  assert(workflow.includes("node scripts/check-newsletter.mjs"), "Daily workflow must run newsletter checks");
+  assert(workflow.includes("git add data/platform.json data/platform-candidates.json"), "Daily workflow must commit data files only");
+  assert(!/git add \./.test(workflow), "Daily workflow must not blindly commit the whole repo");
+
+  assert(refreshScript.includes("FIRECRAWL_API_KEY"), "Refresh script must gate Firecrawl ingestion on FIRECRAWL_API_KEY");
+  assert(refreshScript.includes("/v2/scrape"), "Refresh script must use Firecrawl scrape for source gathering");
+  assert(refreshScript.includes("ESPN_WORLD_CUP_URL"), "Refresh script must keep the World Cup source URL explicit");
+  assert(refreshScript.includes("Preserved existing non-World-Cup content sections"), "Refresh script must preserve non-World-Cup content");
+  assert(refreshScript.includes("assertPlatformShape"), "Refresh script must validate platform data shape before writing");
+  assert(refreshScript.includes("assertFreshEnough"), "Refresh script must enforce freshness before publishing data");
+  assert(refreshScript.includes("World Cup module is active, but no fresh Firecrawl schedule was available"), "Refresh script must fail safely when active World Cup data cannot be refreshed");
+}
+
 function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
+  }
+}
+
+function cancunParts(now = new Date()) {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: CANCUN_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  });
+  const parts = Object.fromEntries(formatter.formatToParts(now).map((part) => [part.type, part.value]));
+  return {
+    isoDate: `${parts.year}-${parts.month}-${parts.day}`
+  };
+}
+
+function cancunDateLabel(isoDate) {
+  const date = new Date(`${isoDate}T12:00:00${CANCUN_OFFSET}`);
+  const formatted = new Intl.DateTimeFormat("es-MX", {
+    timeZone: CANCUN_TIME_ZONE,
+    weekday: "long",
+    day: "numeric",
+    month: "long"
+  }).format(date);
+  const normalized = formatted.replace(",", "");
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+}
+
+function normalizeDateLabel(label) {
+  return String(label || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function assertFreshPlatformData(data) {
+  const updatedAtTs = Date.parse(data.updatedAt || "");
+  assert(Number.isFinite(updatedAtTs), "Platform data must include a valid updatedAt timestamp");
+  const ageHours = (Date.now() - updatedAtTs) / (60 * 60 * 1000);
+  assert(
+    ageHours <= PLATFORM_STALE_HOURS_LIMIT,
+    `Platform data is stale: updatedAt is ${ageHours.toFixed(1)} hours old`
+  );
+}
+
+function assertCurrentWorldCupLabel(worldCup) {
+  if (!isTemporalFeatureActive(worldCup)) return;
+  if (!worldCup?.today?.label) return;
+  const todayIso = cancunParts().isoDate;
+  const expectedLabel = normalizeDateLabel(cancunDateLabel(todayIso));
+  const actualLabel = normalizeDateLabel(worldCup.today.label);
+  const currentMatches = Array.isArray(worldCup.today.matches) ? worldCup.today.matches : [];
+  const allMatchesHaveTodayKickoff = currentMatches.length > 0 && currentMatches.every((match) => {
+    const kickoffTs = Date.parse(match.kickoff || "");
+    return Number.isFinite(kickoffTs) && cancunParts(new Date(kickoffTs)).isoDate === todayIso;
+  });
+
+  if (allMatchesHaveTodayKickoff) {
+    assert(
+      actualLabel === expectedLabel,
+      `World Cup today label is stale: expected ${cancunDateLabel(todayIso)}, found ${worldCup.today.label}`
+    );
   }
 }
 
@@ -302,6 +393,7 @@ assertPlatformVersionContract();
 assertBootDuplicationContract();
 assertLoadingContract();
 assertNewsletterIsolation();
+assertDailyAutomationContract();
 
 const seoRoutes = [
   ["Hoy", "index.html", "https://queondacancun.com/"],
@@ -368,6 +460,7 @@ assert(
 assert(!newsletter.includes("object-fit: cover"), "Newsletter hero images must not be cropped with object-fit cover");
 
 const data = JSON.parse(read("data/platform.json"));
+assertFreshPlatformData(data);
 const claimCouponApi = read("api/claim-coupon.js");
 const trackInteractionApi = read("api/track-interaction.js");
 assert(claimCouponApi.includes("Coupon Claims"), "Claim endpoint must write to Coupon Claims sheet");
@@ -407,6 +500,7 @@ if (hero.heroTone === "gold") {
 const worldCup = data.hoy && data.hoy.worldCup;
 assert(worldCup && typeof worldCup === "object", "Hoy should keep a worldCup module entry for campaign scheduling");
 assert(Array.isArray(worldCup.days), "World Cup module should expose days schedule data");
+assertCurrentWorldCupLabel(worldCup);
 if (worldCup.activeFrom) {
   assert(Number.isFinite(Date.parse(worldCup.activeFrom)), `worldCup.activeFrom is not a valid date: ${worldCup.activeFrom}`);
 }

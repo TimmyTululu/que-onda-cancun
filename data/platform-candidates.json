@@ -1,22 +1,37 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-06-19T13:00:00-05:00",
+  "generatedAt": "2026-06-20T13:03:34-05:00",
   "sourceRef": "data/source-research.json",
   "schema": {
     "source": "manual-to-validated pipeline",
-    "allowedCollections": ["hoy.today", "week", "promos", "events", "signals", "worldCup", "hero"]
+    "allowedCollections": [
+      "hoy.today",
+      "week",
+      "promos",
+      "events",
+      "signals",
+      "worldCup",
+      "hero"
+    ]
   },
   "hoy": {
     "hero": {
       "id": "casa-palma-semana",
       "kicker": "Recomendación de la semana",
       "title": "Casa Palma: food for the soul",
-      "titleLines": ["Casa Palma:", "food for the", "soul"],
+      "titleLines": [
+        "Casa Palma:",
+        "food for the",
+        "soul"
+      ],
       "category": "Restaurante",
       "date": "2026-06-19",
       "time": "Semana",
       "dateTime": "Domingo-miércoles · 08:00-23:00 / Jueves-sábado · 08:00-00:30",
-      "metaChips": ["Domingo-miércoles · 08:00-23:00", "Jueves-sábado · 08:00-00:30"],
+      "metaChips": [
+        "Domingo-miércoles · 08:00-23:00",
+        "Jueves-sábado · 08:00-00:30"
+      ],
       "location": "Casa Palma",
       "neighborhood": "Cancún",
       "image": "/assets/sponsored/casa-palma-hero-2.png",
@@ -95,31 +110,234 @@
       "title": "MUNDIAL: CALENDARIO EN HORA CANCÚN",
       "activeFrom": "2026-06-14T00:00:00-05:00",
       "activeUntil": "2026-07-19T23:59:59-05:00",
-      "sourceName": "SB Nation / FIFA",
-      "sourceUrl": "https://www.sbnation.com/soccer/1117513/world-cup-schedule-2026-how-to-watch-every-match-scores-and-more",
+      "sourceName": "ESPN / FIFA",
+      "sourceUrl": "https://www.espn.com/soccer/schedule/_/league/fifa.world",
       "today": {
-        "label": "viernes 19 de junio",
+        "label": "Sábado 20 de junio",
         "matches": [
           {
-            "time": "14:00",
-            "teams": "Estados Unidos vs Australia",
+            "time": "12:00",
+            "teams": "Países Bajos vs Suecia",
             "channel": "FOX",
-            "kickoff": "2026-06-19T14:00:00-05:00"
+            "kickoff": "2026-06-20T12:00:00-05:00"
           },
           {
-            "time": "17:00",
-            "teams": "Escocia vs Marruecos",
+            "time": "15:00",
+            "teams": "Alemania vs Costa de Marfil",
             "channel": "FOX",
-            "kickoff": "2026-06-19T17:00:00-05:00"
+            "kickoff": "2026-06-20T15:00:00-05:00"
+          },
+          {
+            "time": "19:00",
+            "teams": "Ecuador vs Curazao",
+            "channel": "FS1",
+            "kickoff": "2026-06-20T19:00:00-05:00"
+          },
+          {
+            "time": "23:00",
+            "teams": "Túnez vs Japón",
+            "channel": "FS1",
+            "kickoff": "2026-06-20T23:00:00-05:00"
           }
         ]
       },
       "days": [
         {
+          "label": "Sáb 20",
+          "matches": [
+            {
+              "time": "12:00",
+              "teams": "Países Bajos vs Suecia",
+              "channel": "FOX",
+              "kickoff": "2026-06-20T12:00:00-05:00"
+            },
+            {
+              "time": "15:00",
+              "teams": "Alemania vs Costa de Marfil",
+              "channel": "FOX",
+              "kickoff": "2026-06-20T15:00:00-05:00"
+            },
+            {
+              "time": "19:00",
+              "teams": "Ecuador vs Curazao",
+              "channel": "FS1",
+              "kickoff": "2026-06-20T19:00:00-05:00"
+            },
+            {
+              "time": "23:00",
+              "teams": "Túnez vs Japón",
+              "channel": "FS1",
+              "kickoff": "2026-06-20T23:00:00-05:00"
+            }
+          ]
+        },
+        {
+          "label": "Dom 21",
+          "matches": [
+            {
+              "time": "11:00",
+              "teams": "España vs Arabia Saudita",
+              "channel": "FOX",
+              "kickoff": "2026-06-21T11:00:00-05:00"
+            },
+            {
+              "time": "14:00",
+              "teams": "Bélgica vs Irán",
+              "channel": "FS1",
+              "kickoff": "2026-06-21T14:00:00-05:00"
+            },
+            {
+              "time": "17:00",
+              "teams": "Uruguay vs Cabo Verde",
+              "channel": "FS1",
+              "kickoff": "2026-06-21T17:00:00-05:00"
+            },
+            {
+              "time": "20:00",
+              "teams": "Nueva Zelanda vs Egipto",
+              "channel": "FS1",
+              "kickoff": "2026-06-21T20:00:00-05:00"
+            }
+          ]
+        },
+        {
           "label": "Lun 22",
           "matches": [
-            { "time": "12:00", "teams": "Argentina vs Austria" },
-            { "time": "16:00", "teams": "Francia vs Irak" }
+            {
+              "time": "12:00",
+              "teams": "Argentina vs Austria",
+              "channel": "FOX",
+              "kickoff": "2026-06-22T12:00:00-05:00"
+            },
+            {
+              "time": "16:00",
+              "teams": "Francia vs Irak",
+              "channel": "FOX",
+              "kickoff": "2026-06-22T16:00:00-05:00"
+            },
+            {
+              "time": "19:00",
+              "teams": "Noruega vs Senegal",
+              "channel": "FOX",
+              "kickoff": "2026-06-22T19:00:00-05:00"
+            },
+            {
+              "time": "22:00",
+              "teams": "Jordania vs Argelia",
+              "channel": "FS1",
+              "kickoff": "2026-06-22T22:00:00-05:00"
+            }
+          ]
+        },
+        {
+          "label": "Mar 23",
+          "matches": [
+            {
+              "time": "12:00",
+              "teams": "Portugal vs Uzbekistán",
+              "channel": "FOX",
+              "kickoff": "2026-06-23T12:00:00-05:00"
+            },
+            {
+              "time": "15:00",
+              "teams": "Inglaterra vs Ghana",
+              "channel": "FOX",
+              "kickoff": "2026-06-23T15:00:00-05:00"
+            },
+            {
+              "time": "18:00",
+              "teams": "Panamá vs Croacia",
+              "channel": "FOX",
+              "kickoff": "2026-06-23T18:00:00-05:00"
+            },
+            {
+              "time": "21:00",
+              "teams": "Colombia vs RD Congo",
+              "channel": "FS1",
+              "kickoff": "2026-06-23T21:00:00-05:00"
+            }
+          ]
+        },
+        {
+          "label": "Mié 24",
+          "matches": [
+            {
+              "time": "14:00",
+              "teams": "Bosnia y Herzegovina vs Qatar",
+              "channel": "FS1",
+              "kickoff": "2026-06-24T14:00:00-05:00"
+            },
+            {
+              "time": "14:00",
+              "teams": "Suiza vs Canadá",
+              "channel": "FOX",
+              "kickoff": "2026-06-24T14:00:00-05:00"
+            },
+            {
+              "time": "17:00",
+              "teams": "Marruecos vs Haití",
+              "channel": "FS1",
+              "kickoff": "2026-06-24T17:00:00-05:00"
+            },
+            {
+              "time": "17:00",
+              "teams": "Escocia vs Brasil",
+              "channel": "FOX",
+              "kickoff": "2026-06-24T17:00:00-05:00"
+            },
+            {
+              "time": "20:00",
+              "teams": "Chequia vs México",
+              "channel": "FOX",
+              "kickoff": "2026-06-24T20:00:00-05:00"
+            },
+            {
+              "time": "20:00",
+              "teams": "Sudáfrica vs Corea del Sur",
+              "channel": "FS1",
+              "kickoff": "2026-06-24T20:00:00-05:00"
+            }
+          ]
+        },
+        {
+          "label": "Jue 25",
+          "matches": [
+            {
+              "time": "15:00",
+              "teams": "Curazao vs Costa de Marfil",
+              "channel": "FS1",
+              "kickoff": "2026-06-25T15:00:00-05:00"
+            },
+            {
+              "time": "15:00",
+              "teams": "Ecuador vs Alemania",
+              "channel": "FOX",
+              "kickoff": "2026-06-25T15:00:00-05:00"
+            },
+            {
+              "time": "18:00",
+              "teams": "Japón vs Suecia",
+              "channel": "FS1",
+              "kickoff": "2026-06-25T18:00:00-05:00"
+            },
+            {
+              "time": "18:00",
+              "teams": "Túnez vs Países Bajos",
+              "channel": "FOX",
+              "kickoff": "2026-06-25T18:00:00-05:00"
+            },
+            {
+              "time": "21:00",
+              "teams": "Paraguay vs Australia",
+              "channel": "FS1",
+              "kickoff": "2026-06-25T21:00:00-05:00"
+            },
+            {
+              "time": "21:00",
+              "teams": "Türkiye vs United States",
+              "channel": "FOX",
+              "kickoff": "2026-06-25T21:00:00-05:00"
+            }
           ]
         }
       ]
