@@ -252,10 +252,6 @@ function renderNav() {
     return `<a href="${item.href}"${isCurrent ? ' aria-current="page"' : ""}>${item.label}</a>`;
   }).join("");
   nav.innerHTML = `
-    <button type="button" class="mobile-nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Abrir menú">
-      <span>Menú</span>
-      <span class="mobile-nav-icon" aria-hidden="true"></span>
-    </button>
     <div class="nav-links">${links}</div>
   `;
 }
@@ -839,17 +835,6 @@ function bindInteractions() {
   document.addEventListener("click", (event) => {
     const target = event.target;
     if (!(target instanceof Element)) return;
-
-    const navToggle = target.closest("[data-nav-toggle]");
-    if (navToggle) {
-      event.preventDefault();
-      const nav = navToggle.closest(".site-nav");
-      const isOpen = !nav?.classList.contains("is-open");
-      nav?.classList.toggle("is-open", isOpen);
-      navToggle.setAttribute("aria-expanded", String(isOpen));
-      navToggle.setAttribute("aria-label", isOpen ? "Cerrar menú" : "Abrir menú");
-      return;
-    }
 
     const contactTrigger = target.closest("[data-action='contacto']");
     if (contactTrigger) {
