@@ -78,6 +78,12 @@ These tools are non-visual. They harden the data pipeline without changing `plat
 - Manual daily refresh:
   - `node scripts/refresh-platform-data.mjs`
   - Optional local fixture mode for reviewed Firecrawl markdown: `node scripts/refresh-platform-data.mjs --worldcup-markdown .firecrawl/espn-worldcup-schedule.md`
+- Static platform snapshots:
+  - `node scripts/generate-platform-snapshots.mjs`
+  - Generates crawler-friendly `<noscript>` summaries and conservative `ItemList` JSON-LD for the platform routes.
+  - Exists so crawlers can understand current route content without depending only on client-side rendering.
+  - Event JSON-LD is allowed only for complete, active, trusted event records. Promo `Offer` JSON-LD is intentionally not generated until promo terms and explicit expirations are source-backed.
+  - Check mode: `node scripts/generate-platform-snapshots.mjs --check`.
 - Data audit:
   - `node scripts/audit-platform-data.mjs`
   - Surfaces remote images, missing local assets, stale dates, promo/event expiry gaps, repeated locations, and generic CTA labels.

@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-06-20T16:26:28-05:00",
+  "generatedAt": "2026-06-20T17:01:28-05:00",
   "sourceRef": "data/source-research.json",
   "schema": {
     "source": "manual-to-validated pipeline",
@@ -606,7 +606,7 @@
   ],
   "platformMeta": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-20T16:26:28-05:00",
+    "generatedAt": "2026-06-20T17:01:28-05:00",
     "timeZone": "America/Cancun",
     "sections": {
       "hoy.hero": {
@@ -637,10 +637,10 @@
         "timeSensitive": true,
         "automated": true,
         "freshness": {
-          "updatedAt": "2026-06-20T16:26:28-05:00",
+          "updatedAt": "2026-06-20T17:01:28-05:00",
           "source": "espn",
           "status": "fresh",
-          "lastSuccessfulRefreshAt": "2026-06-20T16:26:28-05:00",
+          "lastSuccessfulRefreshAt": "2026-06-20T17:01:28-05:00",
           "expiresAt": "2026-07-19T23:59:59-05:00",
           "notes": "World Cup schedule is the required automated section while active."
         }

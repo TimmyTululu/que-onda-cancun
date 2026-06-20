@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -29,6 +30,7 @@ const requiredFiles = [
   "scripts/apply-platform-lifecycle.mjs",
   "scripts/cache-platform-images.mjs",
   "scripts/refresh-platform-data.mjs",
+  "scripts/generate-platform-snapshots.mjs",
   "scripts/generate-sponsor-report.mjs",
   ".github/workflows/daily-platform-refresh.yml",
   "llms.txt",
@@ -224,10 +226,12 @@ function assertDailyAutomationContract() {
   assert(workflow.includes('cron: "0 6 * * *"'), "Daily refresh must run at 06:00 UTC / 01:00 Cancun");
   assert(workflow.includes("workflow_dispatch:"), "Daily refresh must allow manual workflow_dispatch runs");
   assert(workflow.includes("node scripts/refresh-platform-data.mjs"), "Daily workflow must run the refresh script");
+  assert(workflow.includes("node scripts/generate-platform-snapshots.mjs"), "Daily workflow must generate static platform snapshots after refresh");
   assert(workflow.includes("node --check app.js"), "Daily workflow must syntax-check app.js");
+  assert(workflow.includes("node --check scripts/generate-platform-snapshots.mjs"), "Daily workflow must syntax-check snapshot generator");
   assert(workflow.includes("node scripts/check-platform.mjs"), "Daily workflow must run platform checks");
   assert(workflow.includes("node scripts/check-newsletter.mjs"), "Daily workflow must run newsletter checks");
-  assert(workflow.includes("git add data/platform.json data/platform-candidates.json data/platform-refresh-report.json"), "Daily workflow must commit intended data/report files only");
+  assert(workflow.includes("git add data/platform.json data/platform-candidates.json data/platform-refresh-report.json index.html esta-semana/index.html eventos/index.html promos/index.html"), "Daily workflow must commit intended data/report/snapshot files only");
   assert(workflow.includes("data/platform-refresh-report.json"), "Daily workflow must include platform refresh report in diff/commit path");
   assert(workflow.includes("FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}"), "Daily workflow must read FIRECRAWL_API_KEY from Actions secrets");
   assert(!/echo\s+["']?\$FIRECRAWL_API_KEY/.test(workflow), "Daily workflow must not print FIRECRAWL_API_KEY");
@@ -244,6 +248,66 @@ function assertDailyAutomationContract() {
   assert(refreshScript.includes("platformMeta"), "Refresh script must write section-level platformMeta freshness data");
   assert(refreshScript.includes("sourceType") && refreshScript.includes("confidence"), "Refresh script must add source trust metadata");
   assert(refreshScript.includes("World Cup module is active, but no fresh Firecrawl schedule was available"), "Refresh script must fail safely when active World Cup data cannot be refreshed");
+}
+
+function assertSnapshotContract() {
+  const result = spawnSync(process.execPath, ["scripts/generate-platform-snapshots.mjs", "--check"], {
+    cwd: root,
+    encoding: "utf8"
+  });
+  assert(result.status === 0, `Static platform snapshots are stale or invalid: ${result.stderr || result.stdout}`);
+
+  const data = readJson("data/platform.json");
+  const dataDate = parseTimestamp(data.updatedAt) ? cancunParts(new Date(data.updatedAt)).isoDate : cancunParts().isoDate;
+  for (const file of platformShellRoutes) {
+    const html = read(file);
+    assert(html.includes("qoc-static-snapshot:start"), `${file} is missing static snapshot start marker`);
+    assert(html.includes("qoc-static-snapshot:end"), `${file} is missing static snapshot end marker`);
+    assert(html.includes("qoc-generated-jsonld:start"), `${file} is missing generated JSON-LD start marker`);
+    assert(html.includes("qoc-generated-jsonld:end"), `${file} is missing generated JSON-LD end marker`);
+    assert(html.includes("<noscript>"), `${file} static snapshot must live in noscript to avoid visible UI changes`);
+    assert(!html.includes('"@type": "Offer"'), `${file} must not emit Offer JSON-LD in this pass`);
+
+    const jsonLdBlocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+    assert(jsonLdBlocks.length >= 2, `${file} should include base and generated JSON-LD blocks`);
+    for (const block of jsonLdBlocks) {
+      const parsed = JSON.parse(block[1]);
+      if (parsed["@graph"]) {
+        for (const node of parsed["@graph"]) {
+          assert(node["@type"] !== "Offer", `${file} generated JSON-LD must not include Offer`);
+          if (node["@type"] === "Event") {
+            const event = data.events.find((item) => item.title === node.name);
+            assert(event, `${file} Event JSON-LD ${node.name} is not backed by platform data`);
+            assert(event.lifecycleStatus === "active", `${file} Event JSON-LD ${node.name} is not active`);
+            assert(["medium", "high"].includes(event.confidence), `${file} Event JSON-LD ${node.name} lacks confidence`);
+            assert(["official", "partner", "manual"].includes(event.sourceType) || (event.sourceType === "scraped" && event.verifiedAt),
+              `${file} Event JSON-LD ${node.name} lacks trusted source eligibility`);
+          }
+        }
+      }
+    }
+  }
+
+  const snapshotText = platformShellRoutes.map((file) => read(file)).join("\n");
+  for (const item of data.events || []) {
+    if (item.lifecycleStatus === "expired") {
+      assert(!snapshotText.includes(item.title), `Expired event appears in static snapshot: ${item.title}`);
+    }
+  }
+  for (const collectionName of ["events", "week"]) {
+    for (const item of data[collectionName] || []) {
+      const startDate = String(item.date || "").slice(0, 10);
+      const endDate = String(item.endDate || item.activeUntil || "").slice(0, 10);
+      if (startDate && startDate < dataDate && (!endDate || endDate < dataDate)) {
+        assert(!snapshotText.includes(item.title), `Past-dated ${collectionName} item appears in static snapshot: ${item.title}`);
+      }
+    }
+  }
+  for (const item of data.promos || []) {
+    if (item.lifecycleStatus === "active") {
+      assert(item.validUntil || item.reviewAfter || item.alwaysOn === true, `Active promo lacks lifecycle metadata in snapshot source: ${item.id}`);
+    }
+  }
 }
 
 function assert(condition, message) {
@@ -670,6 +734,7 @@ assertBootDuplicationContract();
 assertLoadingContract();
 assertNewsletterIsolation();
 assertDailyAutomationContract();
+assertSnapshotContract();
 
 const seoRoutes = [
   ["Hoy", "index.html", "https://queondacancun.com/"],
