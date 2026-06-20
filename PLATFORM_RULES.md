@@ -23,7 +23,7 @@ As of 2026-06-19, this is the baseline UI design and behavior that is considered
 - Do not rework structure for new content updates; only update data and assets.
 - Daily updates (Hoy, promos, events, "El plan de hoy") must keep structure, typography scale, card/chip patterns, and CTA treatments unchanged unless explicitly approved.
 - New content must follow existing component contracts and constraints already present in `platform.css`/`app.js`.
-- Do not add alternate media modes (`contain`, padded logo mode, letterbox mode) to shared homepage or card components.
+- Default shared card media remains full-bleed `cover`. Intentional contained media is allowed only for card images marked or inferred as poster, flyer, logo, banner, or text-heavy promo art; homepage hero media must remain full-bleed.
 - Do not mutate the homepage hero into a multi-column sponsorship layout. Monetization modules must be isolated components, not edits to the locked hero/card structure.
 - Never "template-cleanup" with unrelated UX redesign while updating data.
 - If design is accidentally altered, first restore from repository baseline and then rerun checks.
@@ -179,8 +179,8 @@ Do not fake automation. If a source cannot be verified quickly, mark the card as
 - Premium means useful density, restrained motion, clean hierarchy, sourceable cards, and clickable images/CTAs.
 - Use soft reveal/loading animation, but respect `prefers-reduced-motion`.
 - All discovery cards in Hoy, Esta semana, Promos, and Eventos use one reusable editorial card component: image on top, consistent metadata row, strong title, time/location line, one short description, and CTA glued to the bottom.
-- Card images must fill their image area with `object-fit: cover`; no `contain`, no letterboxing, no dark bars, no empty bands, and no distortion.
-- Standard discovery cards cannot use logo-only assets. If the asset is not a full-bleed editorial image, it does not belong in the shared card template.
+- Card images default to `object-fit: cover`; poster, flyer, logo, banner, and text-heavy promo assets may use the intentional contained media treatment with a soft branded background. No accidental letterboxing, dark bars, empty bands, or distortion.
+- Standard discovery cards should prefer full-bleed editorial images. If only logo/text/banner assets are available, they must use explicit or inferred image presentation metadata so the card does not pretend the asset is a photo.
 - Card CTAs align to the bottom through flex-column layout. Rows should feel even when copy length differs.
 - Do not show visible `Fuente:` text inside cards. The CTA links to the source; source trust can appear as a subtle metadata badge such as `Sitio oficial` or `Fuente verificada`.
 - Cards must be clickable through their image and CTA.

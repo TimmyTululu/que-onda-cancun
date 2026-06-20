@@ -141,6 +141,62 @@ function linkAttrs(url) {
   return isExternal(url) ? ' target="_blank" rel="noopener noreferrer"' : "";
 }
 
+const IMAGE_FITS = new Set(["cover", "contain"]);
+const IMAGE_KINDS = new Set(["photo", "poster", "flyer", "logo", "banner", "text_art", "fallback", "unknown"]);
+const IMAGE_QUALITIES = new Set(["good", "acceptable", "poor", "missing", "unknown"]);
+
+function safeToken(value, allowed, fallback) {
+  const token = String(value || "").toLowerCase().replace(/[^a-z0-9_-]/g, "_");
+  return allowed.has(token) ? token : fallback;
+}
+
+function cssString(value) {
+  return String(value || "")
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/[\n\r\f]/g, "");
+}
+
+function safeObjectPosition(value) {
+  const position = String(value || "").trim();
+  if (!position) return "";
+  return /^[a-z0-9.%\s-]+$/i.test(position) ? position : "";
+}
+
+function inferImageKind(item) {
+  const subject = normalizeSearchText([item.id, item.title, item.image, item.imageAlt, item.sourceName].join(" "));
+  if (/harrys-prime-steak-house-and-raw-bar|harry/.test(subject)) return "logo";
+  if (/vivoen|bazar|britney|pop tour|tributo/.test(subject)) return "flyer";
+  if (/xoximilco|2x1|platinum|gimmeall|extreme-canopy|offroad|zipline|frogs-pass/.test(subject)) return "text_art";
+  if (/aquaworld cancun|1920x514|cocobongo|mandala|selvatica-live-the-adrenaline/.test(subject)) return "banner";
+  return "photo";
+}
+
+function resolveImagePresentation(item) {
+  const kind = item.imageKind
+    ? safeToken(item.imageKind, IMAGE_KINDS, "unknown")
+    : inferImageKind(item);
+  const fit = item.imageFit
+    ? safeToken(item.imageFit, IMAGE_FITS, "cover")
+    : ["flyer", "logo", "poster", "text_art"].includes(kind) ? "contain" : "cover";
+  const quality = safeToken(item.imageQuality, IMAGE_QUALITIES, "unknown");
+  const position = safeObjectPosition(item.imagePosition);
+  return {
+    kind,
+    fit,
+    quality,
+    position,
+    mediaClass: [
+      "feature-media",
+      `feature-media--fit-${fit}`,
+      `feature-media--kind-${kind}`,
+      `feature-media--quality-${quality}`
+    ].join(" "),
+    mediaStyle: fit === "contain" ? ` style="--media-bg: url('${escapeHtml(cssString(item.image))}')"` : "",
+    imageStyle: position ? ` style="object-position:${escapeHtml(position)}"` : ""
+  };
+}
+
 function dataAttr(name, value) {
   const text = String(value || "").trim();
   return text ? ` ${name}="${escapeHtml(text)}"` : "";
@@ -516,10 +572,11 @@ function renderFeatureCard(item, index = 0) {
   const variant = item.cardVariant || "standard";
   const placeLine = [item.dateTime, item.location, item.neighborhood].filter(Boolean).join(" · ");
   const cardClass = `feature-card reveal feature-card--${variant === "compact" ? "compact" : variant === "featured" ? "featured" : "standard"}`;
+  const image = resolveImagePresentation(item);
   return `
     <article class="${cardClass}" style="--delay:${Math.min(index, 8) * 55}ms">
-      <a class="feature-media" href="${item.ctaUrl}"${linkAttrs(item.ctaUrl)} aria-label="${escapeHtml(item.title)}"${trackAttrs({ action: "card_media_click", item, section: item.category, targetUrl: item.ctaUrl })}>
-        <img src="${item.image}" alt="${escapeHtml(item.imageAlt || item.title)}" loading="lazy">
+      <a class="${image.mediaClass}"${image.mediaStyle} href="${item.ctaUrl}"${linkAttrs(item.ctaUrl)} aria-label="${escapeHtml(item.title)}" data-image-kind="${escapeHtml(image.kind)}" data-image-fit="${escapeHtml(image.fit)}"${trackAttrs({ action: "card_media_click", item, section: item.category, targetUrl: item.ctaUrl })}>
+        <img src="${item.image}" alt="${escapeHtml(item.imageAlt || item.title)}" loading="lazy"${image.imageStyle}>
       </a>
       <div class="feature-body">
         ${renderCardMeta(item)}

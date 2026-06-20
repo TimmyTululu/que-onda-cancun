@@ -1245,7 +1245,40 @@ p { margin: 0; }
     #d9e6e0;
 }
 
+.feature-media--fit-contain {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(255, 253, 248, 0.22), transparent 30%),
+    linear-gradient(135deg, rgba(12, 69, 65, 0.28), rgba(0, 142, 152, 0.16)),
+    #cddfd8;
+}
+
+.feature-media--fit-contain::before {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  z-index: 0;
+  background-image: var(--media-bg);
+  background-position: center;
+  background-size: cover;
+  filter: blur(18px) saturate(1.08);
+  opacity: 0.32;
+  transform: scale(1.08);
+}
+
+.feature-media--fit-contain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 248, 0.16), rgba(255, 253, 248, 0.32)),
+    radial-gradient(circle at 50% 45%, rgba(255, 253, 248, 0.3), transparent 54%);
+}
+
 .feature-media img {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1253,9 +1286,38 @@ p { margin: 0; }
   transition: transform 0.5s ease, filter 0.5s ease;
 }
 
+.feature-media--fit-contain img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  padding: 10px;
+}
+
+.feature-media--kind-logo img {
+  padding: 24px;
+}
+
+.feature-media--kind-flyer img,
+.feature-media--kind-poster img {
+  padding: 6px;
+}
+
+.feature-media--kind-banner img,
+.feature-media--kind-text_art img {
+  padding: 9px;
+}
+
 .feature-card:hover .feature-media img {
   filter: saturate(1.05) contrast(1.02);
   transform: scale(1.035);
+}
+
+.feature-card:hover .feature-media--fit-contain img {
+  filter: saturate(1.02) contrast(1.01);
+  transform: none;
 }
 
 .feature-card--featured {

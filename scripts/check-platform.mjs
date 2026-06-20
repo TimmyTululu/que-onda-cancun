@@ -93,6 +93,9 @@ const requiredFreshnessSections = [
 const validSectionStatuses = new Set(["fresh", "preserved", "stale", "failed", "manual"]);
 const validSourceTypes = new Set(["official", "partner", "scraped", "manual", "unknown"]);
 const validConfidenceLevels = new Set(["high", "medium", "low"]);
+const validImageFits = new Set(["cover", "contain"]);
+const validImageKinds = new Set(["photo", "poster", "flyer", "logo", "banner", "text_art", "fallback", "unknown"]);
+const validImageQualities = new Set(["good", "acceptable", "poor", "missing", "unknown"]);
 const trustedHighConfidenceSourceTypes = new Set(["official", "partner", "manual"]);
 const validPromoLifecycleStatuses = new Set(["active", "expired", "needs_review", "preserved", "manual"]);
 const promoAlwaysOnSourceTypes = new Set(["official", "partner", "manual"]);
@@ -656,6 +659,18 @@ function validateItem(item, pathLabel, options = {}) {
   }
   assert(item.description.length <= maxDescriptionLength, `${pathLabel} description exceeds ${maxDescriptionLength} characters`);
   validateImage(item.image);
+  if (item.imageFit !== undefined) {
+    assert(validImageFits.has(String(item.imageFit).toLowerCase()), `${pathLabel} imageFit must be cover or contain`);
+  }
+  if (item.imageKind !== undefined) {
+    assert(validImageKinds.has(String(item.imageKind).toLowerCase()), `${pathLabel} imageKind is invalid`);
+  }
+  if (item.imageQuality !== undefined) {
+    assert(validImageQualities.has(String(item.imageQuality).toLowerCase()), `${pathLabel} imageQuality is invalid`);
+  }
+  if (item.imagePosition !== undefined) {
+    assert(/^[a-z0-9.%\s-]+$/i.test(String(item.imagePosition)), `${pathLabel} imagePosition has unsafe characters`);
+  }
   if (Array.isArray(item.gallery)) {
     assert(item.gallery.length >= 2, `${pathLabel} gallery must have at least two images`);
     const galleryImages = item.gallery.map((slide) => String(slide.image || "").split("?")[0]);
@@ -787,9 +802,11 @@ assert(app.includes("data-track-action"), "Trackable CTAs must use explicit data
 assert(app.includes("scheduleSearchTracking"), "Search queries must be logged through a debounced search tracker");
 assert(app.includes("shouldUseServerlessEndpoint"), "Local static preview must avoid fake serverless API errors");
 assert(!app.includes("feature-topline"), "Cards must not use the old scattered feature-topline layout");
-assert(!app.includes('imageFit === "contain"'), "Shared platform hero must not support contain mode");
+assert(app.includes("resolveImagePresentation"), "Cards must resolve image presentation metadata");
+assert(app.includes("data-image-fit"), "Card media must expose image fit for QA/debugging");
 assert(!app.includes("featuredPartners"), "Homepage sponsorship experiments must not mutate the locked hero/card structure");
-assert(!css.includes(".feature-media.contain"), "Discovery card images must not use contain/letterboxing");
+assert(css.includes(".feature-media--fit-contain"), "Discovery cards must support intentional contained media for posters/logos/banners");
+assert(css.includes("object-fit: contain"), "Contained card media must use object-fit contain");
 assert(!css.includes(".live-hero-media.contain"), "Homepage hero must not use contain/letterboxing");
 assert(css.includes("object-fit: cover"), "Discovery card images must use object-fit cover");
 assert(!css.includes("worldcup-next"), "World Cup panel must not use legacy next-match block");
