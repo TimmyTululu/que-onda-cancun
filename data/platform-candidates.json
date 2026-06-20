@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-06-20T14:07:07-05:00",
+  "generatedAt": "2026-06-20T15:12:52-05:00",
   "sourceRef": "data/source-research.json",
   "schema": {
     "source": "manual-to-validated pipeline",
@@ -78,7 +78,10 @@
         "activeFrom": "2026-06-19T00:00:00-05:00",
         "activeUntil": "2026-06-26T23:59:59-05:00",
         "terms": "Muestra el código al mesero. Válido esta semana en Casa Palma. No acumulable con otras promociones."
-      }
+      },
+      "sourceType": "partner",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     "signals": [
       {
@@ -87,7 +90,10 @@
         "value": "27-31 C",
         "summary": "Lluvia: 7%",
         "tone": "green",
-        "sourceUrl": "https://open-meteo.com/"
+        "sourceUrl": "https://open-meteo.com/",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "static"
       },
       {
         "id": "usd-mxn-2026-06-19",
@@ -95,7 +101,10 @@
         "value": "17.3914",
         "summary": "",
         "tone": "green",
-        "sourceUrl": "https://www.frankfurter.app/"
+        "sourceUrl": "https://www.frankfurter.app/",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "static"
       },
       {
         "id": "sargazo-regional",
@@ -103,7 +112,10 @@
         "value": "Medio",
         "summary": "",
         "tone": "yellow",
-        "sourceUrl": "https://diredimoat.semar.gob.mx/OpSargazo/SargazoBoletinDiario.html"
+        "sourceUrl": "https://diredimoat.semar.gob.mx/OpSargazo/SargazoBoletinDiario.html",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "static"
       }
     ],
     "worldCup": {
@@ -340,14 +352,17 @@
             }
           ]
         }
-      ]
+      ],
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "firecrawl_fixture"
     },
     "today": [
       {
         "id": "aquaworld-hoy",
         "title": "AquaWorld: reserva antes de salir al mar",
         "category": "Tour",
-        "date": "2026-06-19",
+        "date": "2026-06-20",
         "time": "Hoy",
         "dateTime": "Hoy · Salidas por reserva",
         "location": "AquaWorld",
@@ -360,13 +375,18 @@
         "ctaLabel": "Ver tours",
         "ctaUrl": "https://aquaworld.com.mx/",
         "description": "Si el mar está viable, conviene reservar con operador grande y confirmar horario antes de moverse.",
-        "priority": 2
+        "priority": 2,
+        "dateDerivedFrom": "america-cancun-current-date",
+        "dateLabelDerivedFrom": "america-cancun-current-date",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "coco-bongo-hoy",
         "title": "Coco Bongo: show cerrado para noche de lluvia",
         "category": "Show",
-        "date": "2026-06-19",
+        "date": "2026-06-20",
         "time": "Noche",
         "dateTime": "Hoy · Noche",
         "location": "Coco Bongo",
@@ -379,13 +399,18 @@
         "ctaLabel": "Ver tickets",
         "ctaUrl": "https://www.cocobongo.com/locations/?lang=es",
         "description": "Show cerrado para noche lluviosa con compra directa y sin improvisar.",
-        "priority": 3
+        "priority": 3,
+        "dateDerivedFrom": "america-cancun-current-date",
+        "dateLabelDerivedFrom": "america-cancun-current-date",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "la-habichuela-hoy",
         "title": "La Habichuela: cena clásica en Centro",
         "category": "Restaurante",
-        "date": "2026-06-19",
+        "date": "2026-06-20",
         "time": "12:30-23:00",
         "dateTime": "Hoy · 12:30-23:00",
         "location": "La Habichuela",
@@ -398,9 +423,16 @@
         "ctaLabel": "Reservar",
         "ctaUrl": "https://www.lahabichuela.com/",
         "description": "Cierre útil para clima variable y plan de noche en zona céntrica.",
-        "priority": 4
+        "priority": 4,
+        "dateDerivedFrom": "america-cancun-current-date",
+        "dateLabelDerivedFrom": "america-cancun-current-date",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       }
-    ]
+    ],
+    "week": [],
+    "events": []
   },
   "week": [
     {
@@ -420,7 +452,10 @@
       "ctaLabel": "Ver promo",
       "ctaUrl": "https://www.venturapark.com/en/2x1-platinum-january/",
       "description": "Plan familiar con horarios claros para día completo.",
-      "priority": 3
+      "priority": 3,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "aquaworld-week",
@@ -439,7 +474,10 @@
       "ctaLabel": "Ver tours",
       "ctaUrl": "https://aquaworld.com.mx/",
       "description": "Revisa clima y reserva antes de pagar para evitar pérdidas.",
-      "priority": 4
+      "priority": 4,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "habichuela-week",
@@ -458,7 +496,10 @@
       "ctaLabel": "Reservar",
       "ctaUrl": "https://www.lahabichuela.com/",
       "description": "Cenita y ubicación centrada para plan de semana con grupos.",
-      "priority": 5
+      "priority": 5,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     }
   ],
   "promos": [
@@ -479,7 +520,10 @@
       "ctaLabel": "Ver marcas",
       "ctaUrl": "https://www.mandalagroup.com/",
       "description": "Varios venues con acceso rápido para plan nocturno.",
-      "priority": 1
+      "priority": 1,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "xoximilco-promo",
@@ -498,7 +542,10 @@
       "ctaLabel": "Ver oferta",
       "ctaUrl": "https://www.xoximilco.com/",
       "description": "Plan de diversión con alternativas cerradas bajo techo.",
-      "priority": 2
+      "priority": 2,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     }
   ],
   "events": [
@@ -519,7 +566,10 @@
       "ctaLabel": "Ver detalles",
       "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
       "description": "Baile abierto en Centro para noche de barrio y plan rápido.",
-      "priority": 1
+      "priority": 1,
+      "sourceType": "scraped",
+      "confidence": "medium",
+      "extractionMethod": "manual"
     },
     {
       "id": "evento-ancestros-home",
@@ -538,7 +588,125 @@
       "ctaLabel": "Ver detalles",
       "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
       "description": "Evento cultural nocturno para grupo familiar o pareja.",
-      "priority": 2
+      "priority": 2,
+      "sourceType": "scraped",
+      "confidence": "medium",
+      "extractionMethod": "manual"
     }
-  ]
+  ],
+  "platformMeta": {
+    "schemaVersion": 1,
+    "generatedAt": "2026-06-20T15:12:52-05:00",
+    "timeZone": "America/Cancun",
+    "sections": {
+      "hoy.hero": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "manual",
+          "status": "manual",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Hero/sponsor item is preserved from manual editorial data."
+        }
+      },
+      "hoy.signals": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "preserved",
+          "status": "preserved",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Signal seed data is preserved by this job; live signal fetches happen at runtime where available."
+        }
+      },
+      "hoy.worldCup": {
+        "timeSensitive": true,
+        "automated": true,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:12:52-05:00",
+          "source": "espn",
+          "status": "fresh",
+          "lastSuccessfulRefreshAt": "2026-06-20T15:12:52-05:00",
+          "expiresAt": "2026-07-19T23:59:59-05:00",
+          "notes": "World Cup schedule is the required automated section while active."
+        }
+      },
+      "hoy.today": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "preserved",
+          "status": "preserved",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Daily cards are preserved from editorial data; Cancun date labels are computed."
+        }
+      },
+      "hoy.week": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "preserved",
+          "status": "preserved",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Weekly preview cards are preserved from editorial data."
+        }
+      },
+      "hoy.events": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "preserved",
+          "status": "preserved",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Home event cards are lifecycle-filtered and otherwise preserved."
+        }
+      },
+      "week": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "preserved",
+          "status": "preserved",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Weekly route cards are preserved from editorial data."
+        }
+      },
+      "promos": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "manual",
+          "status": "manual",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Promo cards are preserved from manual/editorial data; unknown expiry requires review."
+        }
+      },
+      "events": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "preserved",
+          "status": "stale",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Event route cards are lifecycle-filtered and otherwise preserved."
+        }
+      }
+    }
+  }
 }

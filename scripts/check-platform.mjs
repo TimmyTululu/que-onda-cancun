@@ -22,6 +22,7 @@ const requiredFiles = [
   "scripts/build-platform-data.mjs",
   "data/source-research.json",
   "data/platform-candidates.json",
+  "data/platform-refresh-report.json",
   "api/claim-coupon.js",
   "api/track-interaction.js",
   "scripts/audit-platform-data.mjs",
@@ -75,6 +76,31 @@ const inlineTransitionAndNavGuards = [
 const CANCUN_TIME_ZONE = "America/Cancun";
 const CANCUN_OFFSET = "-05:00";
 const PLATFORM_STALE_HOURS_LIMIT = 30;
+const DAY_MS = 24 * 60 * 60 * 1000;
+const requiredFreshnessSections = [
+  "hoy.hero",
+  "hoy.signals",
+  "hoy.worldCup",
+  "hoy.today",
+  "hoy.week",
+  "hoy.events",
+  "week",
+  "promos",
+  "events"
+];
+const validSectionStatuses = new Set(["fresh", "preserved", "stale", "failed", "manual"]);
+const validSourceTypes = new Set(["official", "partner", "scraped", "manual", "unknown"]);
+const validConfidenceLevels = new Set(["high", "medium", "low"]);
+const trustedHighConfidenceSourceTypes = new Set(["official", "partner", "manual"]);
+const weekdayIndex = new Map([
+  ["dom", 0],
+  ["lun", 1],
+  ["mar", 2],
+  ["mie", 3],
+  ["jue", 4],
+  ["vie", 5],
+  ["sab", 6]
+]);
 
 function routeLabelFor(file) {
   if (file === "index.html") return "Hoy";
@@ -199,7 +225,11 @@ function assertDailyAutomationContract() {
   assert(workflow.includes("node --check app.js"), "Daily workflow must syntax-check app.js");
   assert(workflow.includes("node scripts/check-platform.mjs"), "Daily workflow must run platform checks");
   assert(workflow.includes("node scripts/check-newsletter.mjs"), "Daily workflow must run newsletter checks");
-  assert(workflow.includes("git add data/platform.json data/platform-candidates.json"), "Daily workflow must commit data files only");
+  assert(workflow.includes("git add data/platform.json data/platform-candidates.json data/platform-refresh-report.json"), "Daily workflow must commit intended data/report files only");
+  assert(workflow.includes("data/platform-refresh-report.json"), "Daily workflow must include platform refresh report in diff/commit path");
+  assert(workflow.includes("FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}"), "Daily workflow must read FIRECRAWL_API_KEY from Actions secrets");
+  assert(!/echo\s+["']?\$FIRECRAWL_API_KEY/.test(workflow), "Daily workflow must not print FIRECRAWL_API_KEY");
+  assert(!/secrets\.FIRECRAWL_API_KEY[^}\n]*>>/.test(workflow), "Daily workflow must not write FIRECRAWL_API_KEY to logs/files");
   assert(!/git add \./.test(workflow), "Daily workflow must not blindly commit the whole repo");
 
   assert(refreshScript.includes("FIRECRAWL_API_KEY"), "Refresh script must gate Firecrawl ingestion on FIRECRAWL_API_KEY");
@@ -208,6 +238,9 @@ function assertDailyAutomationContract() {
   assert(refreshScript.includes("Preserved existing non-World-Cup content sections"), "Refresh script must preserve non-World-Cup content");
   assert(refreshScript.includes("assertPlatformShape"), "Refresh script must validate platform data shape before writing");
   assert(refreshScript.includes("assertFreshEnough"), "Refresh script must enforce freshness before publishing data");
+  assert(refreshScript.includes("platform-refresh-report.json"), "Refresh script must write platform-refresh-report.json");
+  assert(refreshScript.includes("platformMeta"), "Refresh script must write section-level platformMeta freshness data");
+  assert(refreshScript.includes("sourceType") && refreshScript.includes("confidence"), "Refresh script must add source trust metadata");
   assert(refreshScript.includes("World Cup module is active, but no fresh Firecrawl schedule was available"), "Refresh script must fail safely when active World Cup data cannot be refreshed");
 }
 
@@ -259,6 +292,193 @@ function assertFreshPlatformData(data) {
     ageHours <= PLATFORM_STALE_HOURS_LIMIT,
     `Platform data is stale: updatedAt is ${ageHours.toFixed(1)} hours old`
   );
+}
+
+function readJson(relativePath) {
+  return JSON.parse(read(relativePath));
+}
+
+function parseTimestamp(value) {
+  const ts = Date.parse(value || "");
+  return Number.isFinite(ts) ? ts : null;
+}
+
+function ageHours(value) {
+  const ts = parseTimestamp(value);
+  if (!Number.isFinite(ts)) return Infinity;
+  return (Date.now() - ts) / (60 * 60 * 1000);
+}
+
+function normalizeKey(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function cancunStartOfDayMs(isoDate) {
+  return Date.parse(`${isoDate}T00:00:00${CANCUN_OFFSET}`);
+}
+
+function parseTimeRangeEnd(value) {
+  const matches = [...String(value || "").matchAll(/\b(\d{1,2}):(\d{2})(?:\s*-\s*(\d{1,2}):(\d{2}))?/g)];
+  if (!matches.length) return null;
+  const last = matches[matches.length - 1];
+  return {
+    hour: Number(last[3] || last[1]),
+    minute: Number(last[4] || last[2]),
+    singleTime: !last[3]
+  };
+}
+
+function weekdayFromIso(isoDate) {
+  return new Date(`${isoDate}T12:00:00${CANCUN_OFFSET}`).getUTCDay();
+}
+
+function eventRangeEndOffset(item) {
+  const prefix = String(item.dateTime || "").split("·")[0] || "";
+  const match = normalizeKey(prefix).match(/\b(dom|lun|mar|mie|jue|vie|sab)\s*-\s*(dom|lun|mar|mie|jue|vie|sab)\b/);
+  if (!match || !item.date) return 0;
+  const startWeekday = weekdayFromIso(item.date);
+  const endWeekday = weekdayIndex.get(match[2]);
+  if (endWeekday === undefined) return 0;
+  return (endWeekday - startWeekday + 7) % 7;
+}
+
+function eventEndTimestamp(item) {
+  const explicit = parseTimestamp(item.validUntil || item.endsAt || item.activeUntil);
+  if (Number.isFinite(explicit)) return explicit;
+  if (!item.date) return null;
+  const rangeOffset = eventRangeEndOffset(item);
+  const endTime = parseTimeRangeEnd(item.time) || parseTimeRangeEnd(item.dateTime) || { hour: 23, minute: 59, singleTime: false };
+  const cleanupMinutes = endTime.singleTime ? 180 : 180;
+  return cancunStartOfDayMs(item.date) + rangeOffset * DAY_MS + endTime.hour * 60 * 60 * 1000 + endTime.minute * 60 * 1000 + cleanupMinutes * 60 * 1000;
+}
+
+function visibleItemCollections(data) {
+  return {
+    "hoy.hero": data.hoy?.hero ? [data.hoy.hero] : [],
+    "hoy.signals": data.hoy?.signals || [],
+    "hoy.today": data.hoy?.today || [],
+    "hoy.week": data.hoy?.week || [],
+    "hoy.events": data.hoy?.events || [],
+    week: data.week || [],
+    promos: data.promos || [],
+    events: data.events || []
+  };
+}
+
+function assertPlatformMeta(data, report) {
+  assert(data.platformMeta && typeof data.platformMeta === "object", "Platform data must include platformMeta");
+  assert(data.platformMeta.schemaVersion === 1, "platformMeta.schemaVersion must be 1");
+  assert(data.platformMeta.timeZone === CANCUN_TIME_ZONE, "platformMeta must use America/Cancun time zone");
+  assert(data.platformMeta.sections && typeof data.platformMeta.sections === "object", "platformMeta.sections is missing");
+
+  assert(report && typeof report === "object", "platform refresh report must be a JSON object");
+  assert(Number.isFinite(parseTimestamp(report.generatedAt)), "platform-refresh-report generatedAt is invalid");
+  assert(ageHours(report.generatedAt) <= PLATFORM_STALE_HOURS_LIMIT, "platform-refresh-report is stale");
+  assert(["success", "partial", "failed"].includes(report.overallStatus), "platform-refresh-report overallStatus is invalid");
+  assert(["scheduled", "manual", "local", "unknown"].includes(report.runMode), "platform-refresh-report runMode is invalid");
+  assert(report.sections && typeof report.sections === "object", "platform-refresh-report sections are missing");
+
+  for (const section of requiredFreshnessSections) {
+    const meta = data.platformMeta.sections[section];
+    const reportSection = report.sections[section];
+    assert(meta, `platformMeta.sections.${section} is missing`);
+    assert(reportSection, `platform-refresh-report.sections.${section} is missing`);
+    assert(meta.timeSensitive === true, `${section} must be marked timeSensitive`);
+    assert(meta.freshness && typeof meta.freshness === "object", `${section} freshness metadata is missing`);
+    assert(validSectionStatuses.has(meta.freshness.status), `${section} freshness status is invalid: ${meta.freshness.status}`);
+    assert(validSectionStatuses.has(reportSection.status), `${section} report status is invalid: ${reportSection.status}`);
+    assert(Number.isFinite(parseTimestamp(meta.freshness.updatedAt)), `${section} freshness.updatedAt is invalid`);
+    if (meta.freshness.status === "fresh") {
+      assert(ageHours(meta.freshness.updatedAt) <= PLATFORM_STALE_HOURS_LIMIT, `${section} is marked fresh but updatedAt is stale`);
+      assert(Number.isFinite(parseTimestamp(meta.freshness.lastSuccessfulRefreshAt)), `${section} fresh status requires lastSuccessfulRefreshAt`);
+    }
+    if (meta.freshness.expiresAt) {
+      assert(Number.isFinite(parseTimestamp(meta.freshness.expiresAt)), `${section} freshness.expiresAt is invalid`);
+    }
+    for (const counter of ["itemsAdded", "itemsUpdated", "itemsRemoved", "itemsPreserved"]) {
+      assert(Number.isInteger(reportSection[counter]) && reportSection[counter] >= 0, `${section} report ${counter} must be a non-negative integer`);
+    }
+    assert(Array.isArray(reportSection.warnings), `${section} report warnings must be an array`);
+    assert(Array.isArray(reportSection.errors), `${section} report errors must be an array`);
+  }
+
+  const worldCup = data.hoy?.worldCup;
+  if (isTemporalFeatureActive(worldCup)) {
+    const worldCupMeta = data.platformMeta.sections["hoy.worldCup"].freshness;
+    assert(worldCupMeta.status === "fresh", "Active World Cup section must be freshly refreshed");
+    assert(ageHours(worldCupMeta.lastSuccessfulRefreshAt) <= PLATFORM_STALE_HOURS_LIMIT, "Active World Cup refresh is stale");
+    assert(report.sections["hoy.worldCup"].status === "fresh", "Active World Cup report status must be fresh");
+  }
+
+  if (report.overallStatus === "success") {
+    for (const [section, sectionReport] of Object.entries(report.sections)) {
+      assert(!sectionReport.errors.length, `Report claims success but ${section} has errors`);
+      assert(sectionReport.status !== "failed", `Report claims success but ${section} failed`);
+    }
+  }
+}
+
+function assertLifecycleIntegrity(data) {
+  const todayIso = cancunParts().isoDate;
+  for (const item of data.hoy?.today || []) {
+    assert(item.date === todayIso, `hoy.today.${item.id} date must match Cancun today (${todayIso})`);
+    if (/^hoy\b/i.test(String(item.dateTime || ""))) {
+      assert(item.dateDerivedFrom === "america-cancun-current-date" || item.dateLabelDerivedFrom === "america-cancun-current-date",
+        `hoy.today.${item.id} uses Hoy label without Cancun date derivation metadata`);
+    }
+  }
+
+  for (const section of ["hoy.events", "events"]) {
+    const items = section === "hoy.events" ? data.hoy?.events || [] : data.events || [];
+    for (const item of items) {
+      const endTs = eventEndTimestamp(item);
+      assert(Number.isFinite(endTs), `${section}.${item.id} needs reliable event lifecycle end metadata`);
+      assert(Date.now() <= endTs, `${section}.${item.id} is expired but still visible`);
+      assert(item.lifecycleStatus === "active", `${section}.${item.id} must be explicitly marked lifecycleStatus=active`);
+    }
+  }
+
+  for (const item of data.promos || []) {
+    const explicitEnd = parseTimestamp(item.validUntil || item.endsAt || item.activeUntil);
+    if (Number.isFinite(explicitEnd)) {
+      assert(Date.now() <= explicitEnd, `promos.${item.id} has expired explicit lifecycle metadata`);
+    } else {
+      assert(item.confidence !== "high" || item.sourceType === "official" || item.sourceType === "partner" || item.sourceType === "manual",
+        `promos.${item.id} has high confidence without trusted sourceType`);
+    }
+  }
+}
+
+function assertSourceTrust(data) {
+  const placeholderUrl = /example\.com|placeholder|todo|tbd|localhost|your-url/i;
+  for (const [section, items] of Object.entries(visibleItemCollections(data))) {
+    for (const item of items) {
+      if (item.sourceUrl) {
+        assert(/^https?:\/\//i.test(item.sourceUrl), `${section}.${item.id || item.label} sourceUrl must be http(s)`);
+        assert(!placeholderUrl.test(item.sourceUrl), `${section}.${item.id || item.label} sourceUrl looks like a placeholder`);
+      }
+      assert(validSourceTypes.has(item.sourceType || "unknown"), `${section}.${item.id || item.label} sourceType is invalid`);
+      assert(validConfidenceLevels.has(item.confidence || "low"), `${section}.${item.id || item.label} confidence is invalid`);
+      if (item.confidence === "high") {
+        assert(
+          trustedHighConfidenceSourceTypes.has(item.sourceType) || item.verifiedAt,
+          `${section}.${item.id || item.label} high confidence requires official/partner/manual sourceType or verifiedAt`
+        );
+      }
+      if (item.sourceType === "scraped") {
+        assert(item.confidence !== "high", `${section}.${item.id || item.label} scraped unknown content must not default to high confidence`);
+      }
+    }
+  }
+
+  const worldCup = data.hoy?.worldCup;
+  assert(worldCup.sourceType === "official", "World Cup sourceType must be official");
+  assert(worldCup.confidence === "high", "World Cup confidence must be high after successful parse");
+  assert(["firecrawl", "firecrawl_fixture"].includes(worldCup.extractionMethod), "World Cup extractionMethod must be explicit");
 }
 
 function assertCurrentWorldCupLabel(worldCup) {
@@ -468,8 +688,12 @@ assert(
 );
 assert(!newsletter.includes("object-fit: cover"), "Newsletter hero images must not be cropped with object-fit cover");
 
-const data = JSON.parse(read("data/platform.json"));
+const data = readJson("data/platform.json");
+const refreshReport = readJson("data/platform-refresh-report.json");
 assertFreshPlatformData(data);
+assertPlatformMeta(data, refreshReport);
+assertLifecycleIntegrity(data);
+assertSourceTrust(data);
 const claimCouponApi = read("api/claim-coupon.js");
 const trackInteractionApi = read("api/track-interaction.js");
 assert(claimCouponApi.includes("Coupon Claims"), "Claim endpoint must write to Coupon Claims sheet");
@@ -557,7 +781,7 @@ assert(data.hoy.today.length >= 8, "Hoy must have at least 8 live daily items");
 assert(data.hoy.week.length >= 8, "Hoy weekly preview must have at least 8 items");
 assert(data.week.length >= 10, "Esta semana must have at least 10 items");
 assert(data.promos.length >= 20, "Promos must have at least 20 active opportunities");
-assert(data.events.length >= 10, "Eventos must have at least 10 items");
+assert(data.events.length >= 6, "Eventos must keep at least 6 non-expired items after lifecycle filtering");
 
 const nonPromoData = JSON.stringify({
   hoy: data.hoy,

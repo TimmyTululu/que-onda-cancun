@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-20T14:07:07-05:00",
+  "updatedAt": "2026-06-20T15:12:52-05:00",
   "editorialNote": "Manual live-content fallback. Update daily from public official sources before automated ingestion.",
   "schema": {
     "description": "Each card must be current, sourced, clickable, and useful for a local or visitor decision.",
@@ -86,7 +86,10 @@
         "activeFrom": "2026-06-19T00:00:00-05:00",
         "activeUntil": "2026-06-26T23:59:59-05:00",
         "terms": "Muestra el código al mesero. Válido esta semana en Casa Palma. No acumulable con otras promociones."
-      }
+      },
+      "sourceType": "partner",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     "signals": [
       {
@@ -95,7 +98,10 @@
         "value": "27-31 C",
         "summary": "Lluvia: 7%",
         "tone": "green",
-        "sourceUrl": "https://open-meteo.com/"
+        "sourceUrl": "https://open-meteo.com/",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "static"
       },
       {
         "id": "usd-mxn-2026-06-18",
@@ -103,7 +109,10 @@
         "value": "17.3914",
         "summary": "",
         "tone": "green",
-        "sourceUrl": "https://www.frankfurter.app/"
+        "sourceUrl": "https://www.frankfurter.app/",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "static"
       },
       {
         "id": "sargazo-regional",
@@ -111,7 +120,10 @@
         "value": "Medio",
         "summary": "",
         "tone": "yellow",
-        "sourceUrl": "https://diredimoat.semar.gob.mx/OpSargazo/SargazoBoletinDiario.html"
+        "sourceUrl": "https://diredimoat.semar.gob.mx/OpSargazo/SargazoBoletinDiario.html",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "static"
       }
     ],
     "worldCup": {
@@ -348,14 +360,17 @@
             }
           ]
         }
-      ]
+      ],
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "firecrawl_fixture"
     },
     "today": [
       {
         "id": "aquaworld-hoy",
         "title": "AquaWorld: reserva antes de salir al mar",
         "category": "Tour",
-        "date": "2026-06-19",
+        "date": "2026-06-20",
         "time": "Hoy",
         "dateTime": "Hoy · Salidas por reserva",
         "location": "AquaWorld",
@@ -369,13 +384,18 @@
         "ctaLabel": "Ver tours",
         "ctaUrl": "https://aquaworld.com.mx/",
         "description": "Si el mar está viable, conviene reservar con operador grande y confirmar horario antes de moverse.",
-        "priority": 2
+        "priority": 2,
+        "dateDerivedFrom": "america-cancun-current-date",
+        "dateLabelDerivedFrom": "america-cancun-current-date",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "coco-bongo-hoy",
         "title": "Coco Bongo: show cerrado para noche de lluvia",
         "category": "Show",
-        "date": "2026-06-19",
+        "date": "2026-06-20",
         "time": "Noche",
         "dateTime": "Hoy · Noche",
         "location": "Coco Bongo Cancún",
@@ -389,13 +409,18 @@
         "ctaLabel": "Ver tickets",
         "ctaUrl": "https://www.cocobongo.com/locations/?lang=es",
         "description": "Útil cuando llueve: show cerrado, entrada clara y plan completo en Zona Hotelera.",
-        "priority": 3
+        "priority": 3,
+        "dateDerivedFrom": "america-cancun-current-date",
+        "dateLabelDerivedFrom": "america-cancun-current-date",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "rosa-negra-hoy",
         "title": "Rosa Negra: cena-show con reserva directa",
         "category": "Cena",
-        "date": "2026-06-19",
+        "date": "2026-06-20",
         "time": "13:00-02:00",
         "dateTime": "Hoy · 13:00-02:00",
         "location": "Rosa Negra",
@@ -408,13 +433,18 @@
         "ctaLabel": "Reservar",
         "ctaUrl": "https://booking.gruporosanegra.com.mx/rosanegra-cancun?lang=es-MX",
         "description": "Cena con show y reserva formal para citas, grupos o visitantes que quieren noche vistosa.",
-        "priority": 4
+        "priority": 4,
+        "dateDerivedFrom": "america-cancun-current-date",
+        "dateLabelDerivedFrom": "america-cancun-current-date",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "la-habichuela-hoy",
         "title": "La Habichuela: cena clásica en Centro",
         "category": "Restaurante",
-        "date": "2026-06-19",
+        "date": "2026-06-20",
         "time": "12:30-23:00",
         "dateTime": "Hoy · 12:30-23:00",
         "location": "La Habichuela",
@@ -427,13 +457,18 @@
         "ctaLabel": "Reservar",
         "ctaUrl": "https://www.lahabichuela.com/",
         "description": "Centro gana cuando clima o sargazo complican playa; buen plan para cenar bajo techo.",
-        "priority": 5
+        "priority": 5,
+        "dateDerivedFrom": "america-cancun-current-date",
+        "dateLabelDerivedFrom": "america-cancun-current-date",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "mandala-hoy",
         "title": "Mandala Group: decide mesa antes de salir",
         "category": "Noche",
-        "date": "2026-06-19",
+        "date": "2026-06-20",
         "time": "Noche",
         "dateTime": "Hoy · Noche",
         "location": "Mandala Group",
@@ -447,13 +482,18 @@
         "ctaLabel": "Ver marcas",
         "ctaUrl": "https://www.mandalagroup.com/",
         "description": "Revisa marca y reserva antes de llegar; la zona de antros se decide mejor con plan cerrado.",
-        "priority": 6
+        "priority": 6,
+        "dateDerivedFrom": "america-cancun-current-date",
+        "dateLabelDerivedFrom": "america-cancun-current-date",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "ventura-hoy",
         "title": "Ventura Park: día familiar con horario claro",
         "category": "Familia",
-        "date": "2026-06-19",
+        "date": "2026-06-20",
         "time": "09:00-17:00",
         "dateTime": "Hoy · 09:00-17:00",
         "location": "Ventura Park",
@@ -466,13 +506,18 @@
         "ctaLabel": "Ver parque",
         "ctaUrl": "https://www.venturapark.com/en/",
         "description": "Parque compacto para familias; si hay lluvia, confirma operación antes de comprar.",
-        "priority": 7
+        "priority": 7,
+        "dateDerivedFrom": "america-cancun-current-date",
+        "dateLabelDerivedFrom": "america-cancun-current-date",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "selvatica-hoy",
         "title": "Selvatica: aventura fuera de playa",
         "category": "Aventura",
-        "date": "2026-06-19",
+        "date": "2026-06-20",
         "time": "Por reserva",
         "dateTime": "Hoy · Por reserva",
         "location": "Selvatica",
@@ -486,13 +531,18 @@
         "ctaLabel": "Ver tours",
         "ctaUrl": "https://www.selvatica.com.mx/",
         "description": "Tirolesas y ATV funcionan como plan alterno cuando el día de playa no pinta limpio.",
-        "priority": 8
+        "priority": 8,
+        "dateDerivedFrom": "america-cancun-current-date",
+        "dateLabelDerivedFrom": "america-cancun-current-date",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "senor-frogs-hoy-card",
         "title": "Señor Frog's: comida y fiesta sin complicarte",
         "category": "Restaurante",
-        "date": "2026-06-19",
+        "date": "2026-06-20",
         "time": "Hoy",
         "dateTime": "Hoy · Comida y noche",
         "location": "Señor Frog's",
@@ -506,7 +556,12 @@
         "ctaLabel": "Ver lugar",
         "ctaUrl": "https://senorfrogs.com/what-to-do-in-cancun/",
         "description": "Opción directa para grupos turísticos que quieren comer y quedarse en ambiente de fiesta.",
-        "priority": 9
+        "priority": 9,
+        "dateDerivedFrom": "america-cancun-current-date",
+        "dateLabelDerivedFrom": "america-cancun-current-date",
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       }
     ],
     "week": [
@@ -528,7 +583,10 @@
         "ctaLabel": "Ver promo",
         "ctaUrl": "https://www.venturapark.com/en/2x1-platinum-january/",
         "description": "Plan familiar con horario diurno y promo visible para armar día completo.",
-        "priority": 3
+        "priority": 3,
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "aquaworld-week",
@@ -547,7 +605,10 @@
         "ctaLabel": "Ver tours",
         "ctaUrl": "https://aquaworld.com.mx/",
         "description": "Tours de agua con reserva directa; revisa ventana de clima antes de pagar.",
-        "priority": 4
+        "priority": 4,
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "rosa-week",
@@ -566,7 +627,10 @@
         "ctaLabel": "Reservar",
         "ctaUrl": "https://booking.gruporosanegra.com.mx/rosanegra-cancun?lang=es-MX",
         "description": "Cena-show para visitantes que quieren una noche memorable sin brincar entre lugares.",
-        "priority": 5
+        "priority": 5,
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "selvatica-week",
@@ -586,7 +650,10 @@
         "ctaLabel": "Ver deals",
         "ctaUrl": "https://www.selvatica.com.mx/riviera-maya-cancun-deals/",
         "description": "Buena alternativa cuando playa no es el centro del viaje.",
-        "priority": 6
+        "priority": 6,
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "habichuela-week",
@@ -605,7 +672,10 @@
         "ctaLabel": "Reservar",
         "ctaUrl": "https://www.lahabichuela.com/",
         "description": "Cena con identidad local, techo y ubicación práctica entre Centro y Zona Hotelera.",
-        "priority": 7
+        "priority": 7,
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "senor-week",
@@ -625,7 +695,10 @@
         "ctaLabel": "Ver lugar",
         "ctaUrl": "https://senorfrogs.com/what-to-do-in-cancun/",
         "description": "Plan de alto volumen para cumpleaños, despedidas y grupos turísticos.",
-        "priority": 8
+        "priority": 8,
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "cocobongo-week",
@@ -645,7 +718,10 @@
         "ctaLabel": "Ver tickets",
         "ctaUrl": "https://www.cocobongo.com/locations/?lang=es",
         "description": "Si la semana viene húmeda, el show cerrado vuelve a ganar valor.",
-        "priority": 9
+        "priority": 9,
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       },
       {
         "id": "mandala-week",
@@ -665,7 +741,10 @@
         "ctaLabel": "Ver marcas",
         "ctaUrl": "https://www.mandalagroup.com/",
         "description": "Útil para comparar marcas antes de elegir mesa, acceso o ruta nocturna.",
-        "priority": 10
+        "priority": 10,
+        "sourceType": "official",
+        "confidence": "high",
+        "extractionMethod": "manual"
       }
     ],
     "events": [
@@ -686,45 +765,12 @@
         "ctaLabel": "Ver detalles",
         "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
         "description": "Bazar local de fin de semana frente al Palacio Municipal.",
-        "priority": 1
-      },
-      {
-        "id": "evento-salsa-palapas-home",
-        "title": "Viernes de salsa en Las Palapas",
-        "category": "Baile",
-        "date": "2026-06-19",
-        "time": "19:30",
-        "dateTime": "Hoy · 19:30",
-        "location": "Parque de Las Palapas",
-        "neighborhood": "Centro",
-        "image": "https://i0.wp.com/vivoen.mx/wp-content/uploads/2026/06/19_19_salsa.jpg?resize=640%2C800&ssl=1",
-        "imageAlt": "Viernes de salsa en Cancún",
-        "sourceUrl": "https://vivoen.mx/eventos-de-la-semana/",
-        "sourceName": "VivoEnMX",
-        "freshness": "Hoy",
-        "ctaLabel": "Ver detalles",
-        "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
-        "description": "Clase y baile abierto en Las Palapas; plan fácil para noche de Centro.",
-        "priority": 2
-      },
-      {
-        "id": "evento-ancestros-home",
-        "title": "Ancestros: aventura clown",
-        "category": "Teatro",
-        "date": "2026-06-19",
-        "time": "20:00",
-        "dateTime": "Hoy · 20:00",
-        "location": "Centro Cultural Xbalamqué",
-        "neighborhood": "Centro",
-        "image": "https://i0.wp.com/vivoen.mx/wp-content/uploads/2026/06/19_20_danielancestros.jpg?resize=640%2C800&ssl=1",
-        "imageAlt": "Ancestros Aventura Clown",
-        "sourceUrl": "https://vivoen.mx/eventos-de-la-semana/",
-        "sourceName": "VivoEnMX",
-        "freshness": "Hoy",
-        "ctaLabel": "Ver detalles",
-        "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
-        "description": "Teatro clown con boleto publicado; alternativa cultural para cerrar viernes.",
-        "priority": 3
+        "priority": 1,
+        "lifecycleStatus": "active",
+        "lifecycleEndsAt": "2026-06-22T06:00:00.000Z",
+        "sourceType": "scraped",
+        "confidence": "medium",
+        "extractionMethod": "manual"
       }
     ]
   },
@@ -747,7 +793,10 @@
       "ctaLabel": "Ver promo",
       "ctaUrl": "https://www.venturapark.com/en/2x1-platinum-january/",
       "description": "Plan familiar diurno con oferta visible para armar día completo.",
-      "priority": 2
+      "priority": 2,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "semana-aquaworld",
@@ -767,7 +816,10 @@
       "ctaLabel": "Ver tours",
       "ctaUrl": "https://aquaworld.com.mx/",
       "description": "Tours de agua con reserva directa; confirma ventana de clima antes de pagar.",
-      "priority": 3
+      "priority": 3,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "semana-rosa-negra",
@@ -786,7 +838,10 @@
       "ctaLabel": "Reservar",
       "ctaUrl": "https://booking.gruporosanegra.com.mx/rosanegra-cancun?lang=es-MX",
       "description": "Cena de alto impacto para visitantes que quieren una noche memorable.",
-      "priority": 4
+      "priority": 4,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "semana-selvatica",
@@ -806,7 +861,10 @@
       "ctaLabel": "Ver deals",
       "ctaUrl": "https://www.selvatica.com.mx/riviera-maya-cancun-deals/",
       "description": "Tirolesas y ATV funcionan cuando el día de playa no pinta limpio.",
-      "priority": 5
+      "priority": 5,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "semana-habichuela",
@@ -825,7 +883,10 @@
       "ctaLabel": "Reservar",
       "ctaUrl": "https://www.lahabichuela.com/",
       "description": "Cena con identidad local, techo y ubicación práctica entre Centro y Zona Hotelera.",
-      "priority": 7
+      "priority": 7,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "semana-senor-frogs",
@@ -845,7 +906,10 @@
       "ctaLabel": "Ver lugar",
       "ctaUrl": "https://senorfrogs.com/what-to-do-in-cancun/",
       "description": "Plan directo para cumpleaños, despedidas y grupos turísticos con ambiente.",
-      "priority": 8
+      "priority": 8,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "semana-cocobongo",
@@ -865,7 +929,10 @@
       "ctaLabel": "Ver tickets",
       "ctaUrl": "https://www.cocobongo.com/locations/?lang=es",
       "description": "Show cerrado y venta oficial para no depender de clima ni de playa.",
-      "priority": 9
+      "priority": 9,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "semana-mandala",
@@ -885,7 +952,10 @@
       "ctaLabel": "Ver marcas",
       "ctaUrl": "https://www.mandalagroup.com/",
       "description": "Compara marcas antes de elegir mesa, acceso o ruta nocturna.",
-      "priority": 10
+      "priority": 10,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "semana-bazar-papa",
@@ -904,7 +974,10 @@
       "ctaLabel": "Ver detalles",
       "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
       "description": "Regalos, comida y talento local frente al Palacio Municipal.",
-      "priority": 11
+      "priority": 11,
+      "sourceType": "scraped",
+      "confidence": "medium",
+      "extractionMethod": "manual"
     },
     {
       "id": "semana-britney-forever",
@@ -923,7 +996,10 @@
       "ctaLabel": "Ver boletos",
       "ctaUrl": "https://boletostkpass.comprarboletos.com/musica/britney-forever-383",
       "description": "Tributo pop con boletos publicados para noche de sábado.",
-      "priority": 12
+      "priority": 12,
+      "sourceType": "scraped",
+      "confidence": "medium",
+      "extractionMethod": "manual"
     }
   ],
   "promos": [
@@ -945,7 +1021,10 @@
       "ctaLabel": "Ver promo",
       "ctaUrl": "https://www.xoximilco.com/es/",
       "description": "Promo útil para grupos que buscan cena, música y noche organizada.",
-      "priority": 1
+      "priority": 1,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-ventura-2x1",
@@ -965,7 +1044,10 @@
       "ctaLabel": "Ver promo",
       "ctaUrl": "https://www.venturapark.com/en/2x1-platinum-january/",
       "description": "Oferta clara para familias que quieren resolver un día completo.",
-      "priority": 2
+      "priority": 2,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-selvatica-gimmeall",
@@ -985,7 +1067,10 @@
       "ctaLabel": "Ver deal",
       "ctaUrl": "https://www.selvatica.com.mx/riviera-maya-cancun-deals/",
       "description": "Paquete de aventura para condensar tirolesa, offroad y día activo.",
-      "priority": 3
+      "priority": 3,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-selvatica-canopy",
@@ -1005,7 +1090,10 @@
       "ctaLabel": "Ver deal",
       "ctaUrl": "https://www.selvatica.com.mx/riviera-maya-cancun-deals/",
       "description": "Aventura de tirolesas para quienes quieren actividad sin playa.",
-      "priority": 4
+      "priority": 4,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-selvatica-offroad",
@@ -1025,7 +1113,10 @@
       "ctaLabel": "Ver deal",
       "ctaUrl": "https://www.selvatica.com.mx/riviera-maya-cancun-deals/",
       "description": "ATV y selva como plan de energía alta para grupos.",
-      "priority": 5
+      "priority": 5,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-selvatica-zipline",
@@ -1045,7 +1136,10 @@
       "ctaLabel": "Ver deal",
       "ctaUrl": "https://www.selvatica.com.mx/riviera-maya-cancun-deals/",
       "description": "Plan corto de tirolesa para meter adrenalina sin bloquear todo el día.",
-      "priority": 6
+      "priority": 6,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-aquaworld-jungle",
@@ -1064,7 +1158,10 @@
       "ctaLabel": "Ver tour",
       "ctaUrl": "https://aquaworld.com.mx/",
       "description": "Tour de agua con operador establecido y reserva directa.",
-      "priority": 7
+      "priority": 7,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-aquaworld-subsee",
@@ -1083,7 +1180,10 @@
       "ctaLabel": "Ver tour",
       "ctaUrl": "https://aquaworld.com.mx/",
       "description": "Opción más ligera para familias o grupos con menos tolerancia a adrenalina.",
-      "priority": 8
+      "priority": 8,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-senor-frogs-pass",
@@ -1103,7 +1203,10 @@
       "ctaLabel": "Ver pase",
       "ctaUrl": "https://senorfrogs.com/what-to-do-in-cancun/",
       "description": "Pase útil para turistas que quieren comida, bebidas y ambiente en una parada.",
-      "priority": 9
+      "priority": 9,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-senor-frogs-cancun",
@@ -1123,7 +1226,10 @@
       "ctaLabel": "Ver lugar",
       "ctaUrl": "https://senorfrogs.com/what-to-do-in-cancun/",
       "description": "Restaurante-fiesta para grupos que quieren resolver salida en Zona Hotelera.",
-      "priority": 10
+      "priority": 10,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-rosa-reserva",
@@ -1142,7 +1248,10 @@
       "ctaLabel": "Reservar",
       "ctaUrl": "https://booking.gruporosanegra.com.mx/rosanegra-cancun?lang=es-MX",
       "description": "Cena-show para grupos que buscan una experiencia más producida.",
-      "priority": 11
+      "priority": 11,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-habichuela",
@@ -1161,7 +1270,10 @@
       "ctaLabel": "Reservar",
       "ctaUrl": "https://www.lahabichuela.com/",
       "description": "Mesa de Centro para cena con identidad local y logística sencilla.",
-      "priority": 12
+      "priority": 12,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-cocobongo",
@@ -1181,7 +1293,10 @@
       "ctaLabel": "Ver tickets",
       "ctaUrl": "https://www.cocobongo.com/locations/?lang=es",
       "description": "Compra directa para show nocturno techado en Zona Hotelera.",
-      "priority": 13
+      "priority": 13,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-mandala-group",
@@ -1201,7 +1316,10 @@
       "ctaLabel": "Ver marcas",
       "ctaUrl": "https://www.mandalagroup.com/",
       "description": "Comparar marcas ayuda a elegir mesa y tipo de noche antes de salir.",
-      "priority": 14
+      "priority": 14,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-ventura-general",
@@ -1220,7 +1338,10 @@
       "ctaLabel": "Ver parque",
       "ctaUrl": "https://www.venturapark.com/en/",
       "description": "Parque de día con agua, actividades y horario claro para familias.",
-      "priority": 15
+      "priority": 15,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-aquaworld-general",
@@ -1239,7 +1360,10 @@
       "ctaLabel": "Ver tours",
       "ctaUrl": "https://aquaworld.com.mx/",
       "description": "Operador grande para comparar tours, horarios y disponibilidad.",
-      "priority": 16
+      "priority": 16,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-harrys",
@@ -1259,7 +1383,10 @@
       "ctaLabel": "Ver restaurante",
       "ctaUrl": "https://harrys.com.mx/",
       "description": "Cena premium para grupos que quieren steakhouse y reserva formal.",
-      "priority": 17
+      "priority": 17,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-rosa-late",
@@ -1278,7 +1405,10 @@
       "ctaLabel": "Reservar",
       "ctaUrl": "https://booking.gruporosanegra.com.mx/rosanegra-cancun?lang=es-MX",
       "description": "Horario amplio para cena que puede convertirse en plan de noche.",
-      "priority": 18
+      "priority": 18,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-selvatica-live",
@@ -1298,7 +1428,10 @@
       "ctaLabel": "Ver tours",
       "ctaUrl": "https://www.selvatica.com.mx/",
       "description": "Ruta de aventura para cambiar playa por selva, tirolesa y acción.",
-      "priority": 19
+      "priority": 19,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     },
     {
       "id": "promo-senor-food",
@@ -1317,7 +1450,10 @@
       "ctaLabel": "Ver lugar",
       "ctaUrl": "https://senorfrogs.com/what-to-do-in-cancun/",
       "description": "Comida informal, música y ambiente turístico sin moverse de Zona Hotelera.",
-      "priority": 20
+      "priority": 20,
+      "sourceType": "official",
+      "confidence": "high",
+      "extractionMethod": "manual"
     }
   ],
   "events": [
@@ -1338,7 +1474,12 @@
       "ctaLabel": "Ver detalles",
       "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
       "description": "Regalos, comida y talento local frente al Palacio Municipal.",
-      "priority": 1
+      "priority": 1,
+      "lifecycleStatus": "active",
+      "lifecycleEndsAt": "2026-06-22T06:00:00.000Z",
+      "sourceType": "scraped",
+      "confidence": "medium",
+      "extractionMethod": "manual"
     },
     {
       "id": "evento-rincon-otaku",
@@ -1357,7 +1498,12 @@
       "ctaLabel": "Ver detalles",
       "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
       "description": "Cosplay, coleccionables y cultura geek en formato bazar.",
-      "priority": 2
+      "priority": 2,
+      "lifecycleStatus": "active",
+      "lifecycleEndsAt": "2026-06-22T04:00:00.000Z",
+      "sourceType": "scraped",
+      "confidence": "medium",
+      "extractionMethod": "manual"
     },
     {
       "id": "evento-bazar-torres",
@@ -1376,83 +1522,12 @@
       "ctaLabel": "Ver detalles",
       "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
       "description": "Emprendimientos, gastronomía y música al aire libre por la tarde.",
-      "priority": 3
-    },
-    {
-      "id": "evento-gala-vivaldi",
-      "title": "Gala Vivaldi Música",
-      "category": "Música",
-      "date": "2026-06-19",
-      "time": "18:00",
-      "dateTime": "Hoy · 18:00",
-      "location": "Teatro de la Ciudad",
-      "neighborhood": "Centro",
-      "image": "https://i0.wp.com/vivoen.mx/wp-content/uploads/2026/06/19_18_gala.jpg?resize=640%2C800&ssl=1",
-      "imageAlt": "Gala Vivaldi Música",
-      "sourceUrl": "https://vivoen.mx/eventos-de-la-semana/",
-      "sourceName": "VivoEnMX",
-      "freshness": "Hoy",
-      "ctaLabel": "Ver boletos",
-      "ctaUrl": "https://www.mistickets.com.mx/evento/1193/",
-      "description": "Presentación de piano y canto; boletos publicados en MisTickets.",
-      "priority": 4
-    },
-    {
-      "id": "evento-salsa-palapas",
-      "title": "Viernes de salsa",
-      "category": "Baile",
-      "date": "2026-06-19",
-      "time": "19:30",
-      "dateTime": "Hoy · 19:30",
-      "location": "Parque de Las Palapas",
-      "neighborhood": "Centro",
-      "image": "https://i0.wp.com/vivoen.mx/wp-content/uploads/2026/06/19_19_salsa.jpg?resize=640%2C800&ssl=1",
-      "imageAlt": "Viernes de salsa",
-      "sourceUrl": "https://vivoen.mx/eventos-de-la-semana/",
-      "sourceName": "VivoEnMX",
-      "freshness": "Hoy",
-      "ctaLabel": "Ver detalles",
-      "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
-      "description": "Baile abierto en Las Palapas para una noche local sin reservación.",
-      "priority": 5
-    },
-    {
-      "id": "evento-ancestros",
-      "title": "Ancestros: aventura clown",
-      "category": "Teatro",
-      "date": "2026-06-19",
-      "time": "20:00",
-      "dateTime": "Hoy · 20:00",
-      "location": "Centro Cultural Xbalamqué",
-      "neighborhood": "Centro",
-      "image": "https://i0.wp.com/vivoen.mx/wp-content/uploads/2026/06/19_20_danielancestros.jpg?resize=640%2C800&ssl=1",
-      "imageAlt": "Ancestros Aventura Clown",
-      "sourceUrl": "https://vivoen.mx/eventos-de-la-semana/",
-      "sourceName": "VivoEnMX",
-      "freshness": "Hoy",
-      "ctaLabel": "Ver detalles",
-      "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
-      "description": "Teatro clown con boleto publicado para plan cultural de viernes.",
-      "priority": 6
-    },
-    {
-      "id": "evento-medita-fest",
-      "title": "Medita Fest en Tajamar",
-      "category": "Bienestar",
-      "date": "2026-06-20",
-      "time": "06:03-07:30",
-      "dateTime": "Sábado · 06:03-07:30",
-      "location": "Malecón Tajamar",
-      "neighborhood": "Centro",
-      "image": "https://i0.wp.com/vivoen.mx/wp-content/uploads/2026/06/20_06_meditafest.jpg?resize=640%2C853&ssl=1",
-      "imageAlt": "Medita Fest Cancún",
-      "sourceUrl": "https://vivoen.mx/eventos-de-la-semana/",
-      "sourceName": "VivoEnMX",
-      "freshness": "Sábado",
-      "ctaLabel": "Ver detalles",
-      "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
-      "description": "Meditación al amanecer frente a la laguna; plan temprano y gratuito.",
-      "priority": 7
+      "priority": 3,
+      "lifecycleStatus": "active",
+      "lifecycleEndsAt": "2026-06-22T06:30:00.000Z",
+      "sourceType": "scraped",
+      "confidence": "medium",
+      "extractionMethod": "manual"
     },
     {
       "id": "evento-bistro-mx",
@@ -1471,7 +1546,12 @@
       "ctaLabel": "Ver detalles",
       "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
       "description": "Comida a seis manos con sabores de Veracruz y Yucatán.",
-      "priority": 8
+      "priority": 8,
+      "lifecycleStatus": "active",
+      "lifecycleEndsAt": "2026-06-21T00:00:00.000Z",
+      "sourceType": "scraped",
+      "confidence": "medium",
+      "extractionMethod": "manual"
     },
     {
       "id": "evento-britney-tribute",
@@ -1490,7 +1570,12 @@
       "ctaLabel": "Ver boletos",
       "ctaUrl": "https://boletostkpass.comprarboletos.com/musica/britney-forever-383",
       "description": "Tributo pop con boletos publicados para noche de sábado.",
-      "priority": 9
+      "priority": 9,
+      "lifecycleStatus": "active",
+      "lifecycleEndsAt": "2026-06-21T04:00:00.000Z",
+      "sourceType": "scraped",
+      "confidence": "medium",
+      "extractionMethod": "manual"
     },
     {
       "id": "evento-pop-tour",
@@ -1509,7 +1594,127 @@
       "ctaLabel": "Ver detalles",
       "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
       "description": "Pop 2000s, karaoke y rooftop para sábado de noche.",
-      "priority": 10
+      "priority": 10,
+      "lifecycleStatus": "active",
+      "lifecycleEndsAt": "2026-06-21T05:00:00.000Z",
+      "sourceType": "scraped",
+      "confidence": "medium",
+      "extractionMethod": "manual"
     }
-  ]
+  ],
+  "platformMeta": {
+    "schemaVersion": 1,
+    "generatedAt": "2026-06-20T15:12:52-05:00",
+    "timeZone": "America/Cancun",
+    "sections": {
+      "hoy.hero": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "manual",
+          "status": "manual",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Hero/sponsor item is preserved from manual editorial data."
+        }
+      },
+      "hoy.signals": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "preserved",
+          "status": "preserved",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Signal seed data is preserved by this job; live signal fetches happen at runtime where available."
+        }
+      },
+      "hoy.worldCup": {
+        "timeSensitive": true,
+        "automated": true,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:12:52-05:00",
+          "source": "espn",
+          "status": "fresh",
+          "lastSuccessfulRefreshAt": "2026-06-20T15:12:52-05:00",
+          "expiresAt": "2026-07-19T23:59:59-05:00",
+          "notes": "World Cup schedule is the required automated section while active."
+        }
+      },
+      "hoy.today": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "preserved",
+          "status": "preserved",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Daily cards are preserved from editorial data; Cancun date labels are computed."
+        }
+      },
+      "hoy.week": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "preserved",
+          "status": "preserved",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Weekly preview cards are preserved from editorial data."
+        }
+      },
+      "hoy.events": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "preserved",
+          "status": "preserved",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Home event cards are lifecycle-filtered and otherwise preserved."
+        }
+      },
+      "week": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "preserved",
+          "status": "preserved",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Weekly route cards are preserved from editorial data."
+        }
+      },
+      "promos": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "manual",
+          "status": "manual",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Promo cards are preserved from manual/editorial data; unknown expiry requires review."
+        }
+      },
+      "events": {
+        "timeSensitive": true,
+        "automated": false,
+        "freshness": {
+          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "source": "preserved",
+          "status": "preserved",
+          "lastSuccessfulRefreshAt": null,
+          "expiresAt": null,
+          "notes": "Event route cards are lifecycle-filtered and otherwise preserved."
+        }
+      }
+    }
+  }
 }

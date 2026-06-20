@@ -1,0 +1,179 @@
+{
+  "generatedAt": "2026-06-20T15:12:52-05:00",
+  "runMode": "local",
+  "overallStatus": "success",
+  "sections": {
+    "hoy.hero": {
+      "status": "manual",
+      "updatedAt": "2026-06-20T15:10:12-05:00",
+      "lastSuccessfulRefreshAt": null,
+      "sources": [
+        "Casa Palma"
+      ],
+      "itemsAdded": 0,
+      "itemsUpdated": 0,
+      "itemsRemoved": 0,
+      "itemsPreserved": 1,
+      "warnings": [],
+      "errors": []
+    },
+    "hoy.signals": {
+      "status": "preserved",
+      "updatedAt": "2026-06-20T15:10:12-05:00",
+      "lastSuccessfulRefreshAt": null,
+      "sources": [
+        "https://open-meteo.com/",
+        "https://www.frankfurter.app/",
+        "https://diredimoat.semar.gob.mx/OpSargazo/SargazoBoletinDiario.html"
+      ],
+      "itemsAdded": 0,
+      "itemsUpdated": 0,
+      "itemsRemoved": 0,
+      "itemsPreserved": 3,
+      "warnings": [],
+      "errors": []
+    },
+    "hoy.worldCup": {
+      "status": "fresh",
+      "updatedAt": "2026-06-20T15:12:52-05:00",
+      "lastSuccessfulRefreshAt": "2026-06-20T15:12:52-05:00",
+      "sources": [
+        "ESPN / FIFA"
+      ],
+      "itemsAdded": 0,
+      "itemsUpdated": 0,
+      "itemsRemoved": 0,
+      "itemsPreserved": 4,
+      "warnings": [],
+      "errors": []
+    },
+    "hoy.today": {
+      "status": "preserved",
+      "updatedAt": "2026-06-20T15:10:12-05:00",
+      "lastSuccessfulRefreshAt": null,
+      "sources": [
+        "AquaWorld",
+        "Coco Bongo",
+        "Rosa Negra",
+        "La Habichuela",
+        "Mandala Group",
+        "Ventura Park",
+        "Selvatica",
+        "Señor Frog's"
+      ],
+      "itemsAdded": 0,
+      "itemsUpdated": 0,
+      "itemsRemoved": 0,
+      "itemsPreserved": 8,
+      "warnings": [],
+      "errors": []
+    },
+    "hoy.week": {
+      "status": "preserved",
+      "updatedAt": "2026-06-20T15:10:12-05:00",
+      "lastSuccessfulRefreshAt": null,
+      "sources": [
+        "Ventura Park",
+        "AquaWorld",
+        "Rosa Negra",
+        "Selvatica",
+        "La Habichuela",
+        "Señor Frog's",
+        "Coco Bongo",
+        "Mandala Group"
+      ],
+      "itemsAdded": 0,
+      "itemsUpdated": 0,
+      "itemsRemoved": 0,
+      "itemsPreserved": 8,
+      "warnings": [],
+      "errors": []
+    },
+    "hoy.events": {
+      "status": "preserved",
+      "updatedAt": "2026-06-20T15:10:12-05:00",
+      "lastSuccessfulRefreshAt": null,
+      "sources": [
+        "VivoEnMX"
+      ],
+      "itemsAdded": 0,
+      "itemsUpdated": 0,
+      "itemsRemoved": 0,
+      "itemsPreserved": 1,
+      "warnings": [],
+      "errors": []
+    },
+    "week": {
+      "status": "preserved",
+      "updatedAt": "2026-06-20T15:10:12-05:00",
+      "lastSuccessfulRefreshAt": null,
+      "sources": [
+        "Ventura Park",
+        "AquaWorld",
+        "Rosa Negra",
+        "Selvatica",
+        "La Habichuela",
+        "Señor Frog's",
+        "Coco Bongo",
+        "Mandala Group",
+        "VivoEnMX"
+      ],
+      "itemsAdded": 0,
+      "itemsUpdated": 0,
+      "itemsRemoved": 0,
+      "itemsPreserved": 10,
+      "warnings": [],
+      "errors": []
+    },
+    "promos": {
+      "status": "manual",
+      "updatedAt": "2026-06-20T15:10:12-05:00",
+      "lastSuccessfulRefreshAt": null,
+      "sources": [
+        "Xoximilco",
+        "Ventura Park",
+        "Selvatica",
+        "AquaWorld",
+        "Señor Frog's",
+        "Rosa Negra",
+        "La Habichuela",
+        "Coco Bongo",
+        "Mandala Group",
+        "Harry's"
+      ],
+      "itemsAdded": 0,
+      "itemsUpdated": 0,
+      "itemsRemoved": 0,
+      "itemsPreserved": 20,
+      "warnings": [
+        "20 promo item(s) do not have explicit expiry/reviewAfter metadata."
+      ],
+      "errors": []
+    },
+    "events": {
+      "status": "preserved",
+      "updatedAt": "2026-06-20T15:10:12-05:00",
+      "lastSuccessfulRefreshAt": null,
+      "sources": [
+        "VivoEnMX"
+      ],
+      "itemsAdded": 0,
+      "itemsUpdated": 0,
+      "itemsRemoved": 0,
+      "itemsPreserved": 6,
+      "warnings": [],
+      "errors": []
+    }
+  },
+  "log": [
+    "Loaded local World Cup schedule fixture from .firecrawl/espn-worldcup-schedule.md; no secret value was read.",
+    "Parsed World Cup schedule for 7 Cancun dates.",
+    "Updated World Cup module from parsed schedule: 4 matches today, 6 day groups.",
+    "Updated data/platform-candidates.json.generatedAt to 2026-06-20T15:12:52-05:00.",
+    "World Cup today label already matches Cancun date.",
+    "Preserved events; every item looked expired and emptying the section would be unsafe.",
+    "Updated World Cup module from parsed schedule: 4 matches today, 6 day groups.",
+    "Updated data/platform.json.updatedAt to 2026-06-20T15:12:52-05:00.",
+    "World Cup today label already matches Cancun date."
+  ]
+}

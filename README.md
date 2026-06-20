@@ -74,7 +74,7 @@ These tools are non-visual. They harden the data pipeline without changing `plat
   - Manual run: GitHub Actions -> `Daily Platform Refresh` -> `Run workflow`.
   - Requires repository secret `FIRECRAWL_API_KEY` while the World Cup module is active.
   - Runs `node scripts/refresh-platform-data.mjs`, `node --check app.js`, `node scripts/check-platform.mjs`, and `node scripts/check-newsletter.mjs`.
-  - Commits only `data/platform.json` and `data/platform-candidates.json` when those files change.
+  - Commits only `data/platform.json`, `data/platform-candidates.json`, and `data/platform-refresh-report.json` when those files change.
 - Manual daily refresh:
   - `node scripts/refresh-platform-data.mjs`
   - Optional local fixture mode for reviewed Firecrawl markdown: `node scripts/refresh-platform-data.mjs --worldcup-markdown .firecrawl/espn-worldcup-schedule.md`
