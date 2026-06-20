@@ -30,6 +30,7 @@ const requiredFiles = [
   "scripts/refresh-platform-data.mjs",
   "scripts/generate-sponsor-report.mjs",
   ".github/workflows/daily-platform-refresh.yml",
+  "llms.txt",
   "robots.txt",
   "sitemap.xml"
 ];
@@ -406,6 +407,7 @@ const seoRoutes = [
 for (const [label, file, canonicalUrl] of seoRoutes) {
   const html = read(file);
   assert(html.includes(`<link rel="canonical" href="${canonicalUrl}">`), `${label} route is missing canonical URL`);
+  assert(html.includes('<meta name="robots" content="index, follow, max-image-preview:large">'), `${label} route is missing robots index/follow metadata`);
   assert(html.includes('property="og:title"'), `${label} route is missing OG title`);
   assert(html.includes('name="twitter:card"'), `${label} route is missing Twitter card metadata`);
   assert(html.includes('application/ld+json'), `${label} route is missing structured data`);
@@ -413,6 +415,13 @@ for (const [label, file, canonicalUrl] of seoRoutes) {
 
 const robots = read("robots.txt");
 assert(robots.includes("Sitemap: https://queondacancun.com/sitemap.xml"), "robots.txt must point to sitemap.xml");
+
+const llms = read("llms.txt");
+for (const [, , canonicalUrl] of seoRoutes) {
+  assert(llms.includes(canonicalUrl), `llms.txt is missing ${canonicalUrl}`);
+}
+assert(llms.includes("https://queondacancun.com/data/platform.json"), "llms.txt must point crawlers to current platform data");
+assert(llms.includes("Freshness:"), "llms.txt must document platform freshness");
 
 const sitemap = read("sitemap.xml");
 for (const [, , canonicalUrl] of seoRoutes) {

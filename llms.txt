@@ -1,0 +1,26 @@
+# Qué Onda Cancún
+
+> Daily local guide to Cancún in Spanish, covering what to do today, events, promotions, restaurants, nightlife, weather, sargassum, and useful local signals.
+
+Canonical site: https://queondacancun.com/
+Language: es-MX
+Primary geography: Cancún, Quintana Roo, México
+Freshness: updated daily around 01:00 America/Cancun through the platform refresh pipeline.
+
+## Key pages
+
+- https://queondacancun.com/ - Qué hacer hoy en Cancún: current events, promotions, restaurants, tours, weather, sargassum, and useful daily signals.
+- https://queondacancun.com/esta-semana/ - Weekly Cancún agenda and local planning signals.
+- https://queondacancun.com/promos/ - Active Cancún promotions for restaurants, tours, nightlife, experiences, and local plans.
+- https://queondacancun.com/eventos/ - Curated Cancún event agenda for today and the week.
+- https://queondacancun.com/newsletter/ - Weekly editorial newsletter.
+
+## Machine-readable references
+
+- https://queondacancun.com/data/platform.json - current platform data used by the website.
+- https://queondacancun.com/sitemap.xml - canonical URL list.
+- https://queondacancun.com/robots.txt - crawler policy and sitemap reference.
+
+## Editorial notes
+
+Qué Onda Cancún is a local, independent guide. Source-gathered information is filtered before publishing, and prior valid content is preserved when fresh source confidence is not high enough.
