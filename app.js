@@ -48,6 +48,28 @@ const SEARCH_TRACK_DELAY_MS = 900;
 let signalRefreshTimer = null;
 let searchTrackTimer = null;
 
+function resolvePlatformVersion() {
+  const script = document.currentScript;
+  if (script?.src) {
+    const fromSelf = new URL(script.src).searchParams.get("v");
+    if (fromSelf) return fromSelf;
+  }
+
+  const bootConfig = window.__qocPlatform;
+  if (bootConfig?.version) return bootConfig.version;
+
+  const bootScript = document.querySelector('script[src*="/platform-route-boot.js"]');
+  if (bootScript?.src) {
+    const fromBoot = new URL(bootScript.src).searchParams.get("v");
+    if (fromBoot) return fromBoot;
+  }
+
+  return bootConfig?.version || "";
+}
+
+const DATA_VERSION = resolvePlatformVersion();
+const DATA_VERSION_QUERY = DATA_VERSION ? `?v=${encodeURIComponent(DATA_VERSION)}` : "";
+
 const $ = (selector, root = document) => root.querySelector(selector);
 
 function escapeHtml(value) {
@@ -138,6 +160,10 @@ function trackAttrs({ action, item, section, label, targetUrl, campaignId, busin
 
 function signalSelector(id) {
   return `[data-signal="${String(id).replace(/"/g, "\\\"")}"]`;
+}
+
+function buildDataUrl() {
+  return `/data/platform.json${DATA_VERSION_QUERY}`;
 }
 
 function isReadableSignalValue(value) {
@@ -1039,7 +1065,7 @@ async function fetchLiveSignals() {
       return fetchFallbackSignals();
     }
 
-    const response = await fetch("/api/live-signals");
+    const response = await fetch("/api/live-signals", { cache: "no-store" });
     if (response.ok) {
       const data = await response.json();
       if (data?.ok) return data;
@@ -1069,26 +1095,27 @@ function renderApp() {
   app.innerHTML = renderListingPage(config, state.data);
 }
 
+function releaseBootShield() {
+  if (typeof window.qocReleaseBootShield === "function") {
+    window.qocReleaseBootShield();
+    return;
+  }
+  document.documentElement.classList.remove("qoc-booting", "qoc-route-transition");
+}
+
 async function init() {
   renderNav();
   renderModal();
-  const app = $("#app");
-  if (app) {
-    app.innerHTML = `
-      <section class="loading-card" aria-label="Cargando guía">
-        <span class="eyebrow">Qué Onda Cancún</span>
-        <h1>Armando el pulso de hoy</h1>
-      </section>
-    `;
-  }
-  const response = await fetch("/data/platform.json?v=20260619v");
+  const response = await fetch(buildDataUrl(), { cache: "no-store" });
   state.data = await response.json();
   renderApp();
+  releaseBootShield();
   bindInteractions();
 }
 
 init().catch((error) => {
   console.error(error);
+  releaseBootShield();
   const app = $("#app");
   if (app) app.innerHTML = `<p class="empty-state">No pudimos cargar la guía. Intenta de nuevo en unos segundos.</p>`;
 });
