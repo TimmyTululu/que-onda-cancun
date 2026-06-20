@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-20T15:12:52-05:00",
+  "generatedAt": "2026-06-20T16:26:28-05:00",
   "runMode": "local",
   "overallStatus": "success",
   "sections": {
@@ -35,8 +35,8 @@
     },
     "hoy.worldCup": {
       "status": "fresh",
-      "updatedAt": "2026-06-20T15:12:52-05:00",
-      "lastSuccessfulRefreshAt": "2026-06-20T15:12:52-05:00",
+      "updatedAt": "2026-06-20T16:26:28-05:00",
+      "lastSuccessfulRefreshAt": "2026-06-20T16:26:28-05:00",
       "sources": [
         "ESPN / FIFA"
       ],
@@ -127,7 +127,7 @@
     },
     "promos": {
       "status": "manual",
-      "updatedAt": "2026-06-20T15:10:12-05:00",
+      "updatedAt": "2026-06-20T16:25:49-05:00",
       "lastSuccessfulRefreshAt": null,
       "sources": [
         "Xoximilco",
@@ -145,10 +145,16 @@
       "itemsUpdated": 0,
       "itemsRemoved": 0,
       "itemsPreserved": 20,
-      "warnings": [
-        "20 promo item(s) do not have explicit expiry/reviewAfter metadata."
-      ],
-      "errors": []
+      "warnings": [],
+      "errors": [],
+      "lifecycleCounts": {
+        "active": 20,
+        "expired": 0,
+        "needs_review": 0,
+        "alwaysOn": 0,
+        "missingLifecycleMetadata": 0,
+        "preserved": 20
+      }
     },
     "events": {
       "status": "preserved",
@@ -169,11 +175,11 @@
     "Loaded local World Cup schedule fixture from .firecrawl/espn-worldcup-schedule.md; no secret value was read.",
     "Parsed World Cup schedule for 7 Cancun dates.",
     "Updated World Cup module from parsed schedule: 4 matches today, 6 day groups.",
-    "Updated data/platform-candidates.json.generatedAt to 2026-06-20T15:12:52-05:00.",
+    "Updated data/platform-candidates.json.generatedAt to 2026-06-20T16:26:28-05:00.",
     "World Cup today label already matches Cancun date.",
     "Preserved events; every item looked expired and emptying the section would be unsafe.",
     "Updated World Cup module from parsed schedule: 4 matches today, 6 day groups.",
-    "Updated data/platform.json.updatedAt to 2026-06-20T15:12:52-05:00.",
+    "Updated data/platform.json.updatedAt to 2026-06-20T16:26:28-05:00.",
     "World Cup today label already matches Cancun date."
   ]
 }

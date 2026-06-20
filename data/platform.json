@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-20T15:12:52-05:00",
+  "updatedAt": "2026-06-20T16:26:28-05:00",
   "editorialNote": "Manual live-content fallback. Update daily from public official sources before automated ingestion.",
   "schema": {
     "description": "Each card must be current, sourced, clickable, and useful for a local or visitor decision.",
@@ -1024,7 +1024,12 @@
       "priority": 1,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-ventura-2x1",
@@ -1047,7 +1052,12 @@
       "priority": 2,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-selvatica-gimmeall",
@@ -1070,7 +1080,12 @@
       "priority": 3,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-selvatica-canopy",
@@ -1093,7 +1108,12 @@
       "priority": 4,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-selvatica-offroad",
@@ -1116,7 +1136,12 @@
       "priority": 5,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-selvatica-zipline",
@@ -1139,7 +1164,12 @@
       "priority": 6,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-aquaworld-jungle",
@@ -1161,7 +1191,12 @@
       "priority": 7,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-aquaworld-subsee",
@@ -1183,7 +1218,12 @@
       "priority": 8,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-senor-frogs-pass",
@@ -1206,7 +1246,12 @@
       "priority": 9,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-senor-frogs-cancun",
@@ -1229,7 +1274,12 @@
       "priority": 10,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-rosa-reserva",
@@ -1251,7 +1301,12 @@
       "priority": 11,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-habichuela",
@@ -1273,7 +1328,12 @@
       "priority": 12,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-cocobongo",
@@ -1296,7 +1356,12 @@
       "priority": 13,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-mandala-group",
@@ -1319,7 +1384,12 @@
       "priority": 14,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-ventura-general",
@@ -1341,7 +1411,12 @@
       "priority": 15,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-aquaworld-general",
@@ -1363,7 +1438,12 @@
       "priority": 16,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-harrys",
@@ -1386,7 +1466,12 @@
       "priority": 17,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-rosa-late",
@@ -1408,7 +1493,12 @@
       "priority": 18,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-selvatica-live",
@@ -1431,7 +1521,12 @@
       "priority": 19,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     },
     {
       "id": "promo-senor-food",
@@ -1453,7 +1548,12 @@
       "priority": 20,
       "sourceType": "official",
       "confidence": "high",
-      "extractionMethod": "manual"
+      "extractionMethod": "manual",
+      "validUntil": null,
+      "reviewAfter": "2026-06-27T16:25:49-05:00",
+      "alwaysOn": false,
+      "lifecycleStatus": "active",
+      "lifecycleNotes": "No explicit promo expiry; review after 7 days because sourceType=official."
     }
   ],
   "events": [
@@ -1604,7 +1704,7 @@
   ],
   "platformMeta": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-20T15:12:52-05:00",
+    "generatedAt": "2026-06-20T16:26:28-05:00",
     "timeZone": "America/Cancun",
     "sections": {
       "hoy.hero": {
@@ -1635,10 +1735,10 @@
         "timeSensitive": true,
         "automated": true,
         "freshness": {
-          "updatedAt": "2026-06-20T15:12:52-05:00",
+          "updatedAt": "2026-06-20T16:26:28-05:00",
           "source": "espn",
           "status": "fresh",
-          "lastSuccessfulRefreshAt": "2026-06-20T15:12:52-05:00",
+          "lastSuccessfulRefreshAt": "2026-06-20T16:26:28-05:00",
           "expiresAt": "2026-07-19T23:59:59-05:00",
           "notes": "World Cup schedule is the required automated section while active."
         }
@@ -1695,7 +1795,7 @@
         "timeSensitive": true,
         "automated": false,
         "freshness": {
-          "updatedAt": "2026-06-20T15:10:12-05:00",
+          "updatedAt": "2026-06-20T16:25:49-05:00",
           "source": "manual",
           "status": "manual",
           "lastSuccessfulRefreshAt": null,

@@ -92,6 +92,8 @@ const validSectionStatuses = new Set(["fresh", "preserved", "stale", "failed", "
 const validSourceTypes = new Set(["official", "partner", "scraped", "manual", "unknown"]);
 const validConfidenceLevels = new Set(["high", "medium", "low"]);
 const trustedHighConfidenceSourceTypes = new Set(["official", "partner", "manual"]);
+const validPromoLifecycleStatuses = new Set(["active", "expired", "needs_review", "preserved", "manual"]);
+const promoAlwaysOnSourceTypes = new Set(["official", "partner", "manual"]);
 const weekdayIndex = new Map([
   ["dom", 0],
   ["lun", 1],
@@ -453,6 +455,59 @@ function assertLifecycleIntegrity(data) {
   }
 }
 
+function assertPromoLifecycle(data, report) {
+  const promos = data.promos || [];
+  const reportPromos = report.sections?.promos;
+  assert(reportPromos, "platform-refresh-report.sections.promos is missing");
+  assert(reportPromos.lifecycleCounts && typeof reportPromos.lifecycleCounts === "object", "promos report must include lifecycleCounts");
+  for (const key of ["active", "expired", "needs_review", "alwaysOn", "missingLifecycleMetadata", "preserved"]) {
+    assert(Number.isInteger(reportPromos.lifecycleCounts[key]) && reportPromos.lifecycleCounts[key] >= 0,
+      `promos lifecycleCounts.${key} must be a non-negative integer`);
+  }
+
+  let active = 0;
+  let needsReview = 0;
+  let alwaysOn = 0;
+  let missingLifecycleMetadata = 0;
+  for (const item of promos) {
+    const hasLifecycle = Boolean(item.validUntil || item.reviewAfter || item.alwaysOn === true);
+    if (!hasLifecycle) missingLifecycleMetadata += 1;
+    assert(hasLifecycle, `promos.${item.id} must include validUntil, reviewAfter, or alwaysOn=true`);
+    assert(validPromoLifecycleStatuses.has(item.lifecycleStatus), `promos.${item.id} lifecycleStatus is invalid`);
+
+    const sourceType = item.sourceType || "unknown";
+    if (item.alwaysOn === true) {
+      alwaysOn += 1;
+      assert(promoAlwaysOnSourceTypes.has(sourceType), `promos.${item.id} alwaysOn is not allowed for sourceType=${sourceType}`);
+    }
+    assert(!(item.alwaysOn === true && (sourceType === "scraped" || sourceType === "unknown")),
+      `promos.${item.id} scraped/unknown promos cannot be alwaysOn`);
+
+    const validUntilTs = parseTimestamp(item.validUntil);
+    if (Number.isFinite(validUntilTs)) {
+      assert(Date.now() <= validUntilTs, `promos.${item.id} is expired but still visible`);
+      assert(item.lifecycleStatus !== "expired", `promos.${item.id} must not be visible with lifecycleStatus=expired`);
+    }
+
+    const reviewAfterTs = parseTimestamp(item.reviewAfter);
+    if (!item.alwaysOn && !Number.isFinite(validUntilTs)) {
+      assert(Number.isFinite(reviewAfterTs), `promos.${item.id} without validUntil must include reviewAfter`);
+    }
+    if (Number.isFinite(reviewAfterTs) && Date.now() > reviewAfterTs && item.alwaysOn !== true) {
+      assert(item.lifecycleStatus === "needs_review", `promos.${item.id} reviewAfter is past but lifecycleStatus is not needs_review`);
+    }
+
+    if (item.lifecycleStatus === "active") active += 1;
+    if (item.lifecycleStatus === "needs_review") needsReview += 1;
+  }
+
+  assert(missingLifecycleMetadata === 0, "Visible promos still have missing lifecycle metadata after normalization");
+  assert(reportPromos.lifecycleCounts.preserved === promos.length, "promos lifecycle report preserved count must match visible promos");
+  assert(reportPromos.lifecycleCounts.active === active, "promos lifecycle report active count does not match platform data");
+  assert(reportPromos.lifecycleCounts.needs_review === needsReview, "promos lifecycle report needs_review count does not match platform data");
+  assert(reportPromos.lifecycleCounts.alwaysOn === alwaysOn, "promos lifecycle report alwaysOn count does not match platform data");
+}
+
 function assertSourceTrust(data) {
   const placeholderUrl = /example\.com|placeholder|todo|tbd|localhost|your-url/i;
   for (const [section, items] of Object.entries(visibleItemCollections(data))) {
@@ -693,6 +748,7 @@ const refreshReport = readJson("data/platform-refresh-report.json");
 assertFreshPlatformData(data);
 assertPlatformMeta(data, refreshReport);
 assertLifecycleIntegrity(data);
+assertPromoLifecycle(data, refreshReport);
 assertSourceTrust(data);
 const claimCouponApi = read("api/claim-coupon.js");
 const trackInteractionApi = read("api/track-interaction.js");

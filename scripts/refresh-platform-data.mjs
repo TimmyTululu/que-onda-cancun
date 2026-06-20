@@ -21,6 +21,9 @@ const SECTION_CONFIG = {
   promos: { timeSensitive: true, automated: false, source: "manual", status: "manual", notes: "Promo cards are preserved from manual/editorial data; unknown expiry requires review." },
   events: { timeSensitive: true, automated: false, source: "preserved", status: "preserved", notes: "Event route cards are lifecycle-filtered and otherwise preserved." }
 };
+const PROMO_REVIEW_DAYS_TRUSTED = 7;
+const PROMO_REVIEW_DAYS_UNTRUSTED = 3;
+const PROMO_ALWAYS_ON_SOURCE_TYPES = new Set(["official", "partner", "manual"]);
 const TRUSTED_HOST_SOURCE_TYPES = [
   ["espn.com", "official"],
   ["fifa.com", "official"],
@@ -180,6 +183,10 @@ function cancunNowIso(now = new Date()) {
   return `${isoDate}T${timeFormatter.format(now)}${CANCUN_OFFSET}`;
 }
 
+function cancunIsoFromTimestamp(ts) {
+  return cancunNowIso(new Date(ts));
+}
+
 function cancunDateLabel(isoDate, style = "long") {
   const date = new Date(`${isoDate}T12:00:00${CANCUN_OFFSET}`);
   const formatted = new Intl.DateTimeFormat("es-MX", {
@@ -229,6 +236,13 @@ function confidenceForSourceType(sourceType) {
   if (sourceType === "official" || sourceType === "partner" || sourceType === "manual") return "high";
   if (sourceType === "scraped") return "medium";
   return "low";
+}
+
+function capPromoConfidence(item) {
+  if (item.sourceType === "scraped" || item.sourceType === "unknown") {
+    return item.confidence === "high" ? "medium" : item.confidence || confidenceForSourceType(item.sourceType);
+  }
+  return item.confidence || confidenceForSourceType(item.sourceType);
 }
 
 function trustFieldsForItem(item, extractionMethod = "manual") {
@@ -386,6 +400,111 @@ function reviewPromoLifecycle(data, sectionOps) {
   }
 }
 
+function promoLifecycleBaselineMs(item, data, now) {
+  const candidates = [
+    item.verifiedAt,
+    item.updatedAt,
+    data.updatedAt,
+    data.generatedAt,
+    now.toISOString()
+  ];
+  for (const candidate of candidates) {
+    const ts = Date.parse(candidate || "");
+    if (Number.isFinite(ts)) return ts;
+  }
+  return now.getTime();
+}
+
+function normalizePromoLifecycle(data, now, sectionOps, log, options = {}) {
+  const visible = options.visible !== false;
+  const items = data.promos || [];
+  const normalized = [];
+  const counts = {
+    active: 0,
+    expired: 0,
+    needs_review: 0,
+    alwaysOn: 0,
+    missingLifecycleMetadata: 0,
+    preserved: 0
+  };
+
+  for (const rawItem of items) {
+    const sourceType = rawItem.sourceType || sourceTypeForItem(rawItem);
+    const hadLifecycleMetadata = Boolean(rawItem.validUntil || rawItem.activeUntil || rawItem.endsAt || rawItem.reviewAfter || rawItem.refreshAfter || rawItem.alwaysOn === true);
+    const item = {
+      ...rawItem,
+      sourceType,
+      confidence: capPromoConfidence({ ...rawItem, sourceType }),
+      extractionMethod: rawItem.extractionMethod || "manual"
+    };
+
+    let alwaysOn = item.alwaysOn === true;
+    if (alwaysOn && !PROMO_ALWAYS_ON_SOURCE_TYPES.has(sourceType)) {
+      alwaysOn = false;
+      sectionOps.promos.warnings.push(`${item.id} had alwaysOn removed because sourceType=${sourceType} is not allowed for evergreen promos.`);
+    }
+
+    const validUntilSource = item.validUntil || item.activeUntil || item.endsAt || null;
+    const validUntilTs = Date.parse(validUntilSource || "");
+    let reviewAfter = item.reviewAfter || item.refreshAfter || null;
+    let lifecycleNotes = item.lifecycleNotes || "";
+
+    if (!hadLifecycleMetadata) {
+      counts.missingLifecycleMetadata += 1;
+      const reviewDays = sourceType === "scraped" || sourceType === "unknown" ? PROMO_REVIEW_DAYS_UNTRUSTED : PROMO_REVIEW_DAYS_TRUSTED;
+      const baseline = promoLifecycleBaselineMs(item, data, now);
+      reviewAfter = cancunIsoFromTimestamp(baseline + reviewDays * DAY_MS);
+      lifecycleNotes = `No explicit promo expiry; review after ${reviewDays} days because sourceType=${sourceType}.`;
+    }
+
+    const reviewAfterTs = Date.parse(reviewAfter || "");
+    let lifecycleStatus = "active";
+    if (Number.isFinite(validUntilTs) && now.getTime() > validUntilTs) {
+      lifecycleStatus = "expired";
+      counts.expired += 1;
+    } else if (!alwaysOn && Number.isFinite(reviewAfterTs) && now.getTime() > reviewAfterTs) {
+      lifecycleStatus = "needs_review";
+      counts.needs_review += 1;
+    } else {
+      lifecycleStatus = alwaysOn ? "manual" : "active";
+      counts.active += 1;
+    }
+    if (alwaysOn) counts.alwaysOn += 1;
+
+    const nextItem = {
+      ...item,
+      validUntil: Number.isFinite(validUntilTs) ? validUntilSource : null,
+      reviewAfter: reviewAfter || null,
+      alwaysOn,
+      lifecycleStatus,
+      lifecycleNotes
+    };
+
+    if (lifecycleStatus === "expired" && visible) {
+      sectionOps.promos.itemsRemoved += 1;
+      sectionOps.promos.warnings.push(`Removed expired promo ${item.id}.`);
+      continue;
+    }
+
+    counts.preserved += 1;
+    normalized.push(nextItem);
+  }
+
+  setCollection(data, "promos", normalized);
+  sectionOps.promos.promoLifecycleCounts = counts;
+  if (counts.missingLifecycleMetadata) {
+    sectionOps.promos.itemsUpdated += counts.missingLifecycleMetadata;
+    sectionOps.promos.warnings.push(`Normalized ${counts.missingLifecycleMetadata} promo item(s) with reviewAfter metadata.`);
+    log.push(`Normalized ${counts.missingLifecycleMetadata} promo item(s) with reviewAfter metadata.`);
+  }
+  if (counts.needs_review) {
+    sectionOps.promos.warnings.push(`${counts.needs_review} promo item(s) need manual/source review.`);
+  }
+  if (counts.expired && visible) {
+    log.push(`Filtered ${counts.expired} expired promo item(s) from visible platform promos.`);
+  }
+}
+
 function createSectionOps() {
   return Object.fromEntries(Object.keys(SECTION_CONFIG).map((section) => [section, {
     status: SECTION_CONFIG[section].status,
@@ -454,6 +573,16 @@ function buildRefreshReport(data, nowIso, mode, sectionOps, worldCupUpdated, log
       warnings: ops.warnings,
       errors: ops.errors
     };
+    if (section === "promos") {
+      sections[section].lifecycleCounts = ops.promoLifecycleCounts || {
+        active: 0,
+        expired: 0,
+        needs_review: 0,
+        alwaysOn: 0,
+        missingLifecycleMetadata: 0,
+        preserved: items.length
+      };
+    }
   }
   const errors = Object.values(sections).flatMap((section) => section.errors || []);
   const requiredFailure = data.hoy?.worldCup && isTemporalFeatureActive(data.hoy.worldCup) && !worldCupUpdated;
@@ -817,8 +946,9 @@ async function run() {
   updateWorldCupToday(candidates.hoy.worldCup, now, log);
   updateTodayCardDates(candidates, now, log, candidateSectionOps);
   filterExpiredEvents(candidates, now, log, candidateSectionOps);
-  reviewPromoLifecycle(candidates, candidateSectionOps);
   applyTrustFields(candidates);
+  normalizePromoLifecycle(candidates, now, candidateSectionOps, log, { visible: false });
+  reviewPromoLifecycle(candidates, candidateSectionOps);
   addPlatformMeta(candidates, nowIso, candidateSectionOps, candidateWorldCupUpdated);
   assertFreshEnough(candidates, now, candidatesPath);
   writeJson(candidatesPath, candidates);
@@ -837,8 +967,9 @@ async function run() {
   updateWorldCupToday(platform.hoy.worldCup, now, log);
   updateTodayCardDates(platform, now, log, platformSectionOps);
   filterExpiredEvents(platform, now, log, platformSectionOps);
-  reviewPromoLifecycle(platform, platformSectionOps);
   applyTrustFields(platform);
+  normalizePromoLifecycle(platform, now, platformSectionOps, log, { visible: true });
+  reviewPromoLifecycle(platform, platformSectionOps);
   addPlatformMeta(platform, nowIso, platformSectionOps, platformWorldCupUpdated);
   assertFreshEnough(platform, now, platformPath);
   writeJson(platformPath, platform);

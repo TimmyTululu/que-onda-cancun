@@ -100,6 +100,14 @@ These tools are non-visual. They harden the data pipeline without changing `plat
   - Reads exported `Interaction Clicks`, `Search Queries`, and `Coupon Claims` data.
   - Does not write back to Sheets or change the website.
 
+### Promo lifecycle metadata
+
+- `validUntil`: the promo expires after this ISO date/time and should not remain active.
+- `reviewAfter`: the promo can stay visible, but needs manual/source review after this ISO date/time.
+- `alwaysOn: true`: only for manually verified evergreen promos from `manual`, `partner`, or `official` sources.
+- `needs_review` is an internal status; it does not add a visible badge yet.
+- Expired promos should be filtered from active visible promo data.
+
 ## Newsletter Send Utility
 
 - Script: `node scripts/send-newsletter.mjs`
