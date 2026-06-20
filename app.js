@@ -3,101 +3,52 @@ const NAV_ITEMS = [
   { label: "Esta semana", href: "/esta-semana/", key: "esta-semana" },
   { label: "Promos", href: "/promos/", key: "promos" },
   { label: "Eventos", href: "/eventos/", key: "eventos" },
-  { label: "Restaurantes", href: "/restaurantes/", key: "restaurantes" },
-  { label: "Beach clubs", href: "/beach-clubs/", key: "beach-clubs" },
-  { label: "Newsletter", href: "/newsletter/", key: "newsletter" }
+  { label: "Newsletter", href: "/newsletter/", key: "newsletter" },
+  { label: "Contacto", href: "#contacto", key: "contacto", type: "button" }
 ];
 
+const CONTACTO = {
+  copy: "¿Quieres anunciarte en Qué Onda Cancún?",
+  email: "hola@queondacancun.com",
+  whatsapp: {
+    number: "9981966876",
+    message: "Hola, quiero anunciar mi marca en Qué Onda Cancún."
+  }
+};
+
 const PAGE_CONFIG = {
-  hoy: {
-    eyebrow: "Hoy",
-    title: "Cancún, hoy.",
-    deck: "El pulso diario para decidir rápido: clima, sargazo, dólar, planes y mejores ventanas.",
-    primary: "Ver eventos",
-    primaryHref: "/eventos/",
-    secondary: "Newsletter",
-    secondaryHref: "/newsletter/",
-    collection: "today",
-    lead: "Hoy",
-    intro: "Una sola vista para moverte mejor por Cancún.",
-    filters: ["Todo", "Ahora", "Noche", "Fútbol", "Respaldo"]
-  },
+  hoy: { label: "Hoy" },
   "esta-semana": {
-    eyebrow: "Esta semana",
-    title: "La semana útil de Cancún.",
-    deck: "Lo que cambia decisiones de lunes a domingo: agenda, clima operativo, política, turismo y oportunidades.",
-    primary: "Leer newsletter",
-    primaryHref: "/newsletter/",
-    secondary: "Ver eventos",
-    secondaryHref: "/eventos/",
-    collection: "week",
-    lead: "Semana 22-28 junio",
-    intro: "El mapa semanal sin relleno.",
-    filters: ["Todo", "Agenda", "Política", "Movilidad", "Negocios"]
+    label: "Esta semana",
+    title: "Qué hacer esta semana",
+    collection: "week"
   },
   promos: {
-    eyebrow: "Promos",
-    title: "Promos que sí valen la vuelta.",
-    deck: "Descuentos, paquetes, noches especiales y beneficios publicados por los lugares. Todo con fuente y fecha de verificación.",
-    primary: "Enviar una promo",
-    primaryHref: "https://wa.me/529981528814?text=Hola%2C%20quiero%20promocionar%20mi%20marca%20en%20Qu%C3%A9%20Onda%20Canc%C3%BAn.",
-    secondary: "Ver eventos",
-    secondaryHref: "/eventos/",
-    collection: "promos",
-    lead: "Promos activas",
-    intro: "La capa diaria de descuentos y planes con acción clara.",
-    filters: ["Todo", "Experiencia", "Servicio destacado", "Noche", "Grupos", "Premium"]
+    label: "Promos",
+    title: "Promos activas",
+    collection: "promos"
   },
   eventos: {
-    eyebrow: "Eventos",
-    title: "Qué pasa hoy y este fin.",
-    deck: "Agenda limpia para elegir rápido: partidos, música, shows, experiencias, familia y noche.",
-    primary: "Ver calendario semanal",
-    primaryHref: "/esta-semana/",
-    secondary: "Ver promos",
-    secondaryHref: "/promos/",
-    collection: "events",
-    lead: "Agenda curada",
-    intro: "Eventos y momentos que cambian dónde conviene estar.",
-    filters: ["Todo", "Mundial", "Noche", "Fútbol", "México", "Grupos"]
-  },
-  restaurantes: {
-    eyebrow: "Restaurantes",
-    title: "Dónde comer sin perder tiempo.",
-    deck: "Una guía editorial que mezcla clásicos locales, mesas para visitantes y lugares útiles para residentes.",
-    primary: "Ver promos",
-    primaryHref: "/promos/",
-    secondary: "Ver hoy",
-    secondaryHref: "/",
-    collection: "restaurants",
-    lead: "Mesas para guardar",
-    intro: "No es directorio infinito. Es selección con criterio y uso real.",
-    filters: ["Todo", "Clásico local", "Mariscos", "Zona Hotelera", "Centro", "Cena"]
-  },
-  "beach-clubs": {
-    eyebrow: "Beach clubs",
-    title: "Playa, alberca y day pass.",
-    deck: "Clubs y planes de día ordenados por vibra, zona y tipo de experiencia.",
-    primary: "Ver promos",
-    primaryHref: "/promos/",
-    secondary: "Ver hoy",
-    secondaryHref: "/",
-    collection: "beachClubs",
-    lead: "Clubs para considerar",
-    intro: "La decisión rápida: fiesta, alberca, familia, reserva o plan tranquilo.",
-    filters: ["Todo", "Party beach", "Daylight club", "Pool", "Zona Hotelera", "Grupos"]
-  },
+    label: "Eventos",
+    title: "Eventos y planes",
+    collection: "events"
+  }
 };
 
 const state = {
   page: document.body.dataset.page || "hoy",
   data: null,
-  filter: "Todo",
-  channel: "email"
+  lastSignals: {},
+  searchQuery: "",
+  trackedSearchKeys: new Set()
 };
 
+const LIVE_SIGNALS_REFRESH_MS = 10 * 60 * 1000;
+const SEARCH_TRACK_DELAY_MS = 900;
+let signalRefreshTimer = null;
+let searchTrackTimer = null;
+
 const $ = (selector, root = document) => root.querySelector(selector);
-const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
 function escapeHtml(value) {
   return String(value || "")
@@ -105,6 +56,59 @@ function escapeHtml(value) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+function normalizeSearchText(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
+function matchesSearch(item, query) {
+  const normalized = normalizeSearchText(query);
+  if (!normalized) return true;
+  const haystack = [
+    item.title,
+    item.category,
+    item.description,
+    item.location,
+    item.neighborhood,
+    item.time,
+    item.date,
+    item.dateTime,
+    item.sourceName,
+    item.ctaLabel
+  ];
+  const subject = normalizeSearchText(haystack.join(" "));
+  return subject.includes(normalized);
+}
+
+function filterBySearch(items, query) {
+  if (!Array.isArray(items)) return [];
+  if (!query) return items;
+  return items.filter((item) => matchesSearch(item, query));
+}
+
+function renderSearchBar() {
+  const query = escapeHtml(state.searchQuery || "");
+  return `
+    <section class="content-search reveal">
+      <label class="search-shell" aria-label="Buscar en esta sección">
+        <span class="search-icon" aria-hidden="true"></span>
+        <input
+          class="platform-search-input"
+          id="platform-search"
+          type="search"
+          placeholder="Buscar restaurantes, tours, eventos..."
+          value="${query}"
+          autocomplete="off"
+          inputmode="search"
+        >
+      </label>
+      ${query ? `<button class="search-clear" type="button" data-clear-search>Limpiar</button>` : ""}
+    </section>
+  `;
 }
 
 function isExternal(url) {
@@ -115,226 +119,480 @@ function linkAttrs(url) {
   return isExternal(url) ? ' target="_blank" rel="noopener noreferrer"' : "";
 }
 
-function renderNav() {
-  const nav = $(".site-nav");
-  if (!nav) return;
-  nav.innerHTML = NAV_ITEMS.map((item) => `
-    <a href="${item.href}"${item.key === state.page ? ' aria-current="page"' : ""}>${item.label}</a>
-  `).join("");
+function dataAttr(name, value) {
+  const text = String(value || "").trim();
+  return text ? ` ${name}="${escapeHtml(text)}"` : "";
 }
 
-function metricCards(data) {
-  const signals = data.signals || [];
-  return `
-    <section class="signal-strip" aria-label="Senales rapidas">
-      ${signals.map((item) => `
-        <a class="signal-card" href="${item.url}"${linkAttrs(item.url)}>
-          <span class="signal-label">${escapeHtml(item.label)}</span>
-          <strong>${escapeHtml(item.value)}</strong>
-          <span>${escapeHtml(item.summary)}</span>
-        </a>
-      `).join("")}
-    </section>
-  `;
+function trackAttrs({ action, item, section, label, targetUrl, campaignId, business } = {}) {
+  return [
+    dataAttr("data-track-action", action),
+    dataAttr("data-track-item-id", item?.id),
+    dataAttr("data-track-business", business || item?.sourceName || item?.location),
+    dataAttr("data-track-label", label || item?.ctaLabel || item?.title),
+    dataAttr("data-track-target-url", targetUrl || item?.ctaUrl),
+    dataAttr("data-track-section", section),
+    dataAttr("data-track-campaign-id", campaignId)
+  ].join("");
 }
 
-function card(item, index = 0) {
-  const tags = item.tags || [];
-  return `
-    <article class="platform-card reveal" style="--delay:${Math.min(index, 8) * 55}ms">
-      <a class="card-media" href="${item.url}"${linkAttrs(item.url)} aria-label="${escapeHtml(item.title)}">
-        <img src="${item.image}" alt="${escapeHtml(item.title)}">
-      </a>
-      <div class="card-body">
-        <div class="card-meta">
-          <span>${escapeHtml(item.category || item.venue || "Cancún")}</span>
-          <span>${escapeHtml(item.verified || "Verificado")}</span>
-        </div>
-        <h3>${escapeHtml(item.title)}</h3>
-        <p>${escapeHtml(item.summary)}</p>
-        ${item.why ? `<p class="card-why">${escapeHtml(item.why)}</p>` : ""}
-        <div class="tag-row">
-          ${tags.slice(0, 4).map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}
-        </div>
-        <a class="card-link" href="${item.url}"${linkAttrs(item.url)}>${escapeHtml(item.cta || "Ver más")}</a>
-      </div>
-    </article>
-  `;
+function signalSelector(id) {
+  return `[data-signal="${String(id).replace(/"/g, "\\\"")}"]`;
 }
 
-function filterItems(items) {
-  if (state.filter === "Todo") return items;
-  return items.filter((item) => {
-    const values = [item.category, item.area, item.venue, ...(item.tags || [])].map((value) => String(value || "").toLowerCase());
-    return values.some((value) => value.includes(state.filter.toLowerCase()));
+function isReadableSignalValue(value) {
+  const normalized = String(value || "").trim().toLowerCase();
+  if (!normalized) return false;
+  if (normalized === "sin lectura") return false;
+  return true;
+}
+
+function getSignalSeedById(signalId) {
+  if (!state.data?.hoy?.signals) return null;
+  return state.data.hoy.signals.find((item) => item.id === signalId) || null;
+}
+
+function getSessionId() {
+  const key = "qoc_session_id";
+  try {
+    const existing = window.localStorage.getItem(key);
+    if (existing) return existing;
+    const created = window.crypto?.randomUUID
+      ? window.crypto.randomUUID()
+      : `qoc-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    window.localStorage.setItem(key, created);
+    return created;
+  } catch {
+    return `qoc-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  }
+}
+
+function analyticsPayload(type, payload = {}) {
+  return {
+    type,
+    page: state.page,
+    sessionId: getSessionId(),
+    landingUrl: window.location.href,
+    referrer: document.referrer,
+    ...payload
+  };
+}
+
+function sendAnalytics(type, payload = {}) {
+  if (!shouldUseServerlessEndpoint()) return;
+  const body = JSON.stringify(analyticsPayload(type, payload));
+  const endpoint = "/api/track-interaction";
+  if (navigator.sendBeacon) {
+    const sent = navigator.sendBeacon(endpoint, new Blob([body], { type: "application/json" }));
+    if (sent) return;
+  }
+  fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body,
+    keepalive: true
+  }).catch(() => {});
+}
+
+function trackClick(payload) {
+  sendAnalytics("click", payload);
+}
+
+function trackElementClick(element) {
+  trackClick({
+    action: element.dataset.trackAction,
+    itemId: element.dataset.trackItemId,
+    business: element.dataset.trackBusiness,
+    label: element.dataset.trackLabel || element.textContent,
+    targetUrl: element.dataset.trackTargetUrl || element.getAttribute("href"),
+    section: element.dataset.trackSection,
+    campaignId: element.dataset.trackCampaignId,
+    source: "website"
   });
 }
 
-function renderFilters(config) {
-  return `
-    <div class="filter-row" role="list" aria-label="Filtros">
-      ${config.filters.map((filter) => `
-        <button class="filter-chip${filter === state.filter ? " active" : ""}" type="button" data-filter="${escapeHtml(filter)}">${escapeHtml(filter)}</button>
-      `).join("")}
-    </div>
-  `;
+function currentSearchItems() {
+  if (!state.data) return [];
+  if (state.page === "hoy") {
+    const hoy = state.data.hoy || {};
+    return [...(hoy.today || []), ...(hoy.week || []), ...(hoy.events || [])];
+  }
+  const config = PAGE_CONFIG[state.page] || PAGE_CONFIG.hoy;
+  return state.data[config.collection] || [];
 }
 
-function renderHero(config) {
-  return `
-    <section class="platform-hero">
-      <div class="hero-copy reveal">
-        <span class="eyebrow">${escapeHtml(config.eyebrow)}</span>
-        <h1>${escapeHtml(config.title)}</h1>
-        <p>${escapeHtml(config.deck)}</p>
-        <div class="hero-actions">
-          <a class="action primary" href="${config.primaryHref}"${linkAttrs(config.primaryHref)}>${escapeHtml(config.primary)}</a>
-          <a class="action secondary" href="${config.secondaryHref}"${linkAttrs(config.secondaryHref)}>${escapeHtml(config.secondary)}</a>
-        </div>
-      </div>
-      <div class="hero-panel reveal" style="--delay:80ms">
-        <img src="/assets/social/que-onda-logo-trimmed.png" alt="Qué Onda Cancún">
-        <div>
-          <strong>Si está pasando en Cancún, está aquí.</strong>
-          <span>Planes, promos, eventos y señales locales en una sola superficie.</span>
-        </div>
-      </div>
-    </section>
+function scheduleSearchTracking(query) {
+  const normalized = normalizeSearchText(query).trim();
+  if (searchTrackTimer) clearTimeout(searchTrackTimer);
+  if (normalized.length < 3) return;
+
+  const page = state.page;
+  const resultsCount = filterBySearch(currentSearchItems(), query).length;
+  searchTrackTimer = setTimeout(() => {
+    const key = `${page}:${normalized}`;
+    if (state.trackedSearchKeys.has(key)) return;
+    state.trackedSearchKeys.add(key);
+    sendAnalytics("search", {
+      page,
+      query,
+      resultsCount,
+      source: "website-search"
+    });
+  }, SEARCH_TRACK_DELAY_MS);
+}
+
+function renderNav() {
+  const nav = $(".site-nav");
+  if (!nav) return;
+  const links = NAV_ITEMS.map((item) => {
+    const isCurrent = item.key === state.page;
+    if (item.type === "button") {
+      return `<button type="button" class="nav-action" data-action="contacto">${item.label}</button>`;
+    }
+    return `<a href="${item.href}"${isCurrent ? ' aria-current="page"' : ""}>${item.label}</a>`;
+  }).join("");
+  nav.innerHTML = `
+    <button type="button" class="mobile-nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Abrir menú">
+      <span>Menú</span>
+      <span class="mobile-nav-icon" aria-hidden="true"></span>
+    </button>
+    <div class="nav-links">${links}</div>
   `;
 }
 
 function renderBrand() {
   return `
     <a class="brand-mark" href="/" aria-label="Qué Onda Cancún">
-      <img src="/assets/social/que-onda-logo-trimmed.png" alt="Qué Onda Cancún">
+      <img src="/assets/social/que-onda-logo-trimmed.png" alt="Qué Onda Cancún" draggable="false">
     </a>
+    <p class="brand-subcopy">Todo lo que quieres saber de Cancún en un solo lugar</p>
   `;
 }
 
-function renderHomeExtras(data) {
+function renderMetaLine(item, { includeDateTime = true } = {}) {
+  const pieces = [includeDateTime ? item.dateTime : null, item.location, item.neighborhood].filter(Boolean);
+  return pieces.length ? `<p class="meta-line">${pieces.map(escapeHtml).join(" · ")}</p>` : "";
+}
+
+function renderHeroLeadLine(item) {
+  const dateTime = String(item.dateTime || "").trim();
+  const pieces = [dateTime, item.location, item.neighborhood].filter(Boolean);
+  return pieces.length ? `<p class="hero-leadline">${pieces.map(escapeHtml).join(" · ")}</p>` : "";
+}
+
+function renderHeroMetaChips(item) {
+  const dateTime = String(item.dateTime || "").trim();
+  const chips = Array.isArray(item.metaChips) && item.metaChips.length
+    ? item.metaChips
+    : [dateTime, item.neighborhood].filter(Boolean);
+  if (!chips.length) return "";
+
   return `
-    <section class="today-grid">
-      <div class="daily-brief reveal">
-        <span class="eyebrow">Pulso local</span>
-        <h2>Abre Cancún con contexto.</h2>
-        <p>Clima, sargazo, dólar, partidos, planes con techo y oportunidades para elegir mejor sin brincar entre diez fuentes.</p>
-      </div>
-      <a class="daily-brief accent reveal" href="/esta-semana/">
-        <span class="eyebrow">Edición semanal</span>
-        <h2>Semana 22-28 junio</h2>
-        <p>Política local, calendario mundialista, radar, lugar de la semana, conectividad y oferta local.</p>
-      </a>
+    <div class="hero-meta-pills">
+      ${chips.map((chip) => `<span>${escapeHtml(chip)}</span>`).join("")}
+    </div>
+  `;
+}
+
+function renderHeroTitle(item) {
+  const lines = Array.isArray(item.titleLines) && item.titleLines.length ? item.titleLines : null;
+  if (!lines) return `<h1 class="hero-title">${escapeHtml(item.title)}</h1>`;
+
+  return `
+    <h1 class="hero-title">
+      ${lines.map((line) => `<span class="hero-title-line">${escapeHtml(line)}</span>`).join("")}
+    </h1>
+  `;
+}
+
+function isCampaignActive(campaign, now = new Date()) {
+  if (!campaign || campaign.status !== "active") return false;
+  const startTs = Date.parse(campaign.activeFrom || "") || null;
+  const untilTs = Date.parse(campaign.activeUntil || "") || null;
+  const nowTs = now.getTime();
+  if (Number.isFinite(startTs) && nowTs < startTs) return false;
+  if (Number.isFinite(untilTs) && nowTs > untilTs) return false;
+  return true;
+}
+
+function renderHeroCampaign(item) {
+  const campaign = item.campaign;
+  if (!isCampaignActive(campaign)) return "";
+
+  return `
+    <button class="hero-coupon" type="button" data-action="coupon" data-campaign-id="${escapeHtml(campaign.id)}" aria-label="${escapeHtml(campaign.label)}">
+      <span>${escapeHtml(campaign.badgeKicker || "Cupón")}</span>
+      <strong>${escapeHtml(campaign.badgeText || campaign.label)}</strong>
+    </button>
+  `;
+}
+
+function renderHeroMedia(item) {
+  const gallery = Array.isArray(item.gallery) && item.gallery.length > 1 ? item.gallery : null;
+  if (!gallery) {
+    return `<img src="${item.image}" alt="${escapeHtml(item.imageAlt || item.title)}" loading="eager">`;
+  }
+
+  const slideDuration = Math.max(gallery.length * 4, 8);
+  return `
+    <span class="hero-gallery" style="--hero-slide-duration:${slideDuration}s">
+      ${gallery.map((slide, index) => `
+        <img
+          class="hero-gallery-image"
+          src="${escapeHtml(slide.image || item.image)}"
+          alt="${escapeHtml(slide.imageAlt || item.imageAlt || item.title)}"
+          loading="${index === 0 ? "eager" : "lazy"}"
+          style="--slide-delay:${index * 4}s; object-position:${escapeHtml(slide.objectPosition || "center center")};"
+        >
+      `).join("")}
+    </span>
+  `;
+}
+
+function renderSource(item) {
+  if (!item.sourceName || !item.sourceUrl) return "";
+  return `<a class="source-link" href="${item.sourceUrl}"${linkAttrs(item.sourceUrl)}>${escapeHtml(item.sourceName)}</a>`;
+}
+
+function sourceBadge(item) {
+  if (!item.sourceUrl) return "";
+  if (/sitio oficial|oficial/i.test(item.freshness || "")) return "Sitio oficial";
+  return "Sitio oficial";
+}
+
+function compactDescription(value, limit = 120) {
+  const text = String(value || "").trim();
+  if (text.length <= limit) return text;
+  const clipped = text.slice(0, limit - 1).trimEnd();
+  const end = clipped.lastIndexOf(" ");
+  return `${(end > 0 ? clipped.slice(0, end) : clipped)}.`;
+}
+
+function isTemporalFeatureActive(module = {}, now = new Date()) {
+  const startTs = Date.parse(module.activeFrom || "") || null;
+  const untilTs = Date.parse(module.activeUntil || "") || null;
+  const nowTs = now.getTime();
+
+  if (Number.isFinite(startTs) && nowTs < startTs) return false;
+  if (Number.isFinite(untilTs) && nowTs > untilTs) return false;
+
+  const candidateMatches = [
+    ...((module.today && module.today.matches) || []),
+    ...((module.days && module.days.flatMap((day) => day.matches || [])) || [])
+  ];
+
+  const hasFreshKickoff = candidateMatches.some((match) => {
+    const kickoffTs = Date.parse(match.kickoff || "");
+    if (!Number.isFinite(kickoffTs)) return false;
+    const margin = 90 * 60 * 1000;
+    return kickoffTs > nowTs - margin;
+  });
+
+  if (hasFreshKickoff) return true;
+  if (Number.isFinite(untilTs)) return true;
+  return candidateMatches.length > 0;
+}
+
+function renderCardMeta(item) {
+  const badges = [
+    item.category || "Descubrir",
+    item.time || "Hoy",
+    item.neighborhood || item.location || ""
+  ].filter(Boolean);
+  return `
+    <div class="card-meta-row">
+      ${badges.map((badge) => `<span>${escapeHtml(badge)}</span>`).join("")}
+    </div>
+  `;
+}
+
+function renderUtilityStrip(signals) {
+  const normalizedSignals = Array.isArray(signals) ? signals : [];
+  return `
+    <section class="utility-strip reveal" aria-label="Datos útiles de hoy">
+      ${normalizedSignals.map((item, index) => `
+        ${
+          item.id === "clima-2026-06-19" || item.id === "usd-mxn-2026-06-18" || item.id === "sargazo-regional"
+            ? `<article class="utility-card ${escapeHtml(item.tone || "")}" style="--delay:${index * 45}ms" data-signal="${escapeHtml(item.id)}">`
+            : `<a class="utility-card ${escapeHtml(item.tone || "")}" style="--delay:${index * 45}ms" href="${item.sourceUrl}"${linkAttrs(item.sourceUrl)} data-signal="${escapeHtml(item.id)}">`
+        }
+          <span>${escapeHtml(item.label)}</span>
+          <strong>${escapeHtml(item.value)}</strong>
+          <em>${escapeHtml(item.summary || "")}</em>
+        ${
+          item.id === "clima-2026-06-19" || item.id === "usd-mxn-2026-06-18" || item.id === "sargazo-regional"
+            ? "</article>"
+            : "</a>"
+        }
+      `).join("")}
     </section>
-    ${metricCards(data)}
   `;
 }
 
-function renderTodayPage(data) {
-  const today = data.hoy;
-  const signals = today.signals || [];
-  const lanes = today.lanes || [];
-  const spotlight = today.spotlight || [];
+function renderHero(item) {
+  const tone = item.heroTone ? ` live-hero--${escapeHtml(item.heroTone)}` : "";
   return `
-    ${renderBrand()}
-    <section class="today-command">
-      <div class="today-lead reveal">
-        <span class="eyebrow">${escapeHtml(today.eyebrow)}</span>
-        <h1>${escapeHtml(today.title)}</h1>
-        <p>${escapeHtml(today.deck)}</p>
-        <div class="today-actions">
-          <a class="action primary" href="/eventos/">Ver eventos</a>
-          <a class="action secondary" href="/newsletter/">Leer newsletter</a>
+    <section class="live-hero reveal${tone}" id="hoy">
+      <a class="live-hero-media" href="${item.ctaUrl}"${linkAttrs(item.ctaUrl)} aria-label="${escapeHtml(item.title)}"${trackAttrs({ action: "hero_media_click", item, section: "hoy.hero", targetUrl: item.ctaUrl })}>
+        ${renderHeroMedia(item)}
+      </a>
+      ${renderHeroCampaign(item)}
+      <div class="live-hero-copy">
+        ${item.kicker ? `<span class="eyebrow hero-eyebrow">${escapeHtml(item.kicker)}</span>` : ""}
+        ${renderHeroTitle(item)}
+        ${renderHeroMetaChips(item)}
+        <p class="hero-summary">${escapeHtml(item.description)}</p>
+        <div class="hero-divider" aria-hidden="true"></div>
+        <div class="action-row">
+          <a class="action primary hero-action" href="${item.ctaUrl}"${linkAttrs(item.ctaUrl)}${trackAttrs({ action: "hero_cta_click", item, section: "hoy.hero", targetUrl: item.ctaUrl })}>${escapeHtml(item.ctaLabel || "Ver detalles")}</a>
+          ${item.mapUrl ? `<a class="action hero-map-link" href="${item.mapUrl}" target="_blank" rel="noopener noreferrer"${trackAttrs({ action: "hero_map_click", item, section: "hoy.hero", label: "Ver en Google Maps", targetUrl: item.mapUrl })}>Ver en Google Maps</a>` : ""}
         </div>
       </div>
-      <div class="today-signals" aria-label="Señales de hoy">
-        ${signals.map((item, index) => `
-          <a class="today-signal reveal ${escapeHtml(item.tone || "")}" style="--delay:${index * 55}ms" href="${item.url}"${linkAttrs(item.url)}>
-            <span>${escapeHtml(item.label)}</span>
-            <strong>${escapeHtml(item.value)}</strong>
-            <small>${escapeHtml(item.summary)}</small>
-          </a>
-        `).join("")}
-      </div>
-      <div class="today-lanes">
-        ${lanes.map((lane, index) => `
-          <a class="lane-card reveal" style="--delay:${120 + index * 55}ms" href="${lane.url}"${linkAttrs(lane.url)}>
-            <span>${escapeHtml(lane.kicker)}</span>
-            <h2>${escapeHtml(lane.title)}</h2>
-            <p>${escapeHtml(lane.summary)}</p>
-            <strong>${escapeHtml(lane.cta)}</strong>
-          </a>
-        `).join("")}
-      </div>
-      <div class="today-spotlight">
-        ${spotlight.map((item, index) => `
-          <a class="spotlight-card reveal" style="--delay:${260 + index * 55}ms" href="${item.url}"${linkAttrs(item.url)}>
-            <img src="${item.image}" alt="${escapeHtml(item.title)}">
-            <div>
-              <span>${escapeHtml(item.category)}</span>
-              <h3>${escapeHtml(item.title)}</h3>
-              <p>${escapeHtml(item.summary)}</p>
-            </div>
-          </a>
-        `).join("")}
+    </section>
+  `;
+}
+
+function renderWorldCupPanel(worldCup) {
+  if (!worldCup?.days?.length) return "";
+  const todayMatches = worldCup.today?.matches || [];
+  const todayLabel = worldCup.today?.label ? `Hoy, ${worldCup.today.label.toLowerCase()}` : "";
+  return `
+    <section class="worldcup-panel reveal" aria-label="Calendario mundialista">
+      <div class="worldcup-shell">
+        <div class="worldcup-heading">
+          <h2>${escapeHtml(worldCup.title)}</h2>
+          ${todayLabel ? `<p class="worldcup-today-labelline">${escapeHtml(todayLabel)}</p>` : ""}
+        </div>
+        <div class="worldcup-today">
+          ${todayMatches.map((match) => `
+            <article class="worldcup-match" data-kickoff="${escapeHtml(match.kickoff || "")}" data-teams="${escapeHtml(match.teams)}">
+              <strong>${escapeHtml(match.time)}</strong>
+              <span>${escapeHtml(match.teams)}</span>
+              <em>${escapeHtml(match.channel || "")}</em>
+            </article>
+          `).join("")}
+        </div>
+        <details class="worldcup-details">
+          <summary>Ver calendario completo</summary>
+          <div class="worldcup-full">
+            ${worldCup.days.map((day) => `
+              <div class="worldcup-day">
+                <b>${escapeHtml(day.label)}</b>
+                ${day.matches.map((match) => `
+                  <p><strong>${escapeHtml(match.time)}</strong> ${escapeHtml(match.teams)}</p>
+                `).join("")}
+              </div>
+            `).join("")}
+          </div>
+        </details>
       </div>
     </section>
   `;
 }
 
-function renderWeeklyPage(config, data) {
-  const items = filterItems(data.week || []);
+function renderFeatureCard(item, index = 0) {
+  const variant = item.cardVariant || "standard";
+  const placeLine = [item.dateTime, item.location, item.neighborhood].filter(Boolean).join(" · ");
+  const cardClass = `feature-card reveal feature-card--${variant === "compact" ? "compact" : variant === "featured" ? "featured" : "standard"}`;
   return `
-    ${renderBrand()}
-    <section class="week-hero reveal">
-      <div>
-        <span class="eyebrow">${escapeHtml(config.eyebrow)}</span>
-        <h1>${escapeHtml(config.title)}</h1>
-        <p>${escapeHtml(config.deck)}</p>
-      </div>
-      <a class="week-issue" href="/newsletter/">
-        <span>Newsletter</span>
-        <strong>Semana 22-28 junio</strong>
-        <small>Edición completa + PDF</small>
+    <article class="${cardClass}" style="--delay:${Math.min(index, 8) * 55}ms">
+      <a class="feature-media" href="${item.ctaUrl}"${linkAttrs(item.ctaUrl)} aria-label="${escapeHtml(item.title)}"${trackAttrs({ action: "card_media_click", item, section: item.category, targetUrl: item.ctaUrl })}>
+        <img src="${item.image}" alt="${escapeHtml(item.imageAlt || item.title)}" loading="lazy">
       </a>
-    </section>
-    <section class="section-head compact">
-      <div>
-        <span class="eyebrow">${escapeHtml(config.lead)}</span>
-        <h2>${escapeHtml(config.intro)}</h2>
+      <div class="feature-body">
+        ${renderCardMeta(item)}
+        <h3>${escapeHtml(item.title)}</h3>
+        ${placeLine ? `<p class="card-place">${escapeHtml(placeLine)}</p>` : ""}
+        <p>${escapeHtml(compactDescription(item.description))}</p>
+        <div class="feature-footer">
+          <a class="card-link" href="${item.ctaUrl}"${linkAttrs(item.ctaUrl)}${trackAttrs({ action: "card_cta_click", item, section: item.category, targetUrl: item.ctaUrl })}>${escapeHtml(item.ctaLabel || "Ver más")}</a>
+          ${item.mapUrl ? `<a class="card-link card-link--map" href="${item.mapUrl}" target="_blank" rel="noopener noreferrer"${trackAttrs({ action: "card_map_click", item, section: item.category, label: "Ver en Google Maps", targetUrl: item.mapUrl })}>Ver en Google Maps</a>` : ""}
+        </div>
       </div>
-      ${renderFilters(config)}
-    </section>
-    <section class="card-grid weekly-grid" aria-live="polite">
-      ${items.map(card).join("") || `<p class="empty-state">No hay resultados para este filtro.</p>`}
-    </section>
+    </article>
   `;
 }
 
-function renderCollection(config, data) {
-  const items = filterItems(data[config.collection] || []);
+function renderSection(title, deck, items, className = "") {
+  if (!items || !items.length) return "";
   return `
-    <section class="section-head">
-      <div>
-        <span class="eyebrow">${escapeHtml(config.lead)}</span>
-        <h2>${escapeHtml(config.intro)}</h2>
+    <section class="content-section ${className}">
+      <div class="section-title">
+        <h2>${escapeHtml(title)}</h2>
+        ${deck ? `<p>${escapeHtml(deck)}</p>` : ""}
       </div>
-      ${renderFilters(config)}
-    </section>
-    <section class="card-grid" aria-live="polite">
-      ${items.map(card).join("") || `<p class="empty-state">No hay resultados para este filtro.</p>`}
+      <div class="portal-grid">
+        ${items.map(renderFeatureCard).join("")}
+      </div>
     </section>
   `;
 }
 
 function renderNewsletterPanel() {
   return `
-    <section class="newsletter-panel" id="newsletter-signup">
+    <section class="newsletter-panel compact-panel">
       <div>
         <span class="eyebrow">Newsletter</span>
-        <h2>Una lectura útil. Una vez por semana. Cero spam.</h2>
-        <p>Recibe la edición local cada lunes.</p>
+        <h2>Suscribete al Newsletter</h2>
+        <p>Newsletter local. Cada lunes. Cero spam.</p>
       </div>
-      ${subscribeForm("page")}
+      ${subscribeForm("homepage")}
+    </section>
+  `;
+}
+
+function renderHomePage(data) {
+  const hoy = data.hoy;
+  const searchQuery = (state.searchQuery || "").trim();
+  const worldCupPanel = isTemporalFeatureActive(hoy.worldCup)
+    ? renderWorldCupPanel(hoy.worldCup)
+    : "";
+  if (searchQuery) {
+    const allCards = [...(hoy.today || []), ...(hoy.week || []), ...(hoy.events || [])];
+    const results = filterBySearch(allCards, searchQuery);
+    return `
+      ${renderBrand()}
+      ${renderUtilityStrip(hoy.signals || [])}
+      ${renderSearchBar()}
+      <section class="content-section">
+        <div class="section-title">
+          <h2>Resultados</h2>
+          <p>Mostrando ${results.length} resultados para "${escapeHtml(searchQuery)}".</p>
+        </div>
+        <div class="portal-grid listing-grid">
+          ${results.map(renderFeatureCard).join("") || `<p class="empty-state">No encontramos resultados para esta búsqueda.</p>`}
+        </div>
+      </section>
+    `;
+  }
+  return `
+    ${renderBrand()}
+    ${renderUtilityStrip(hoy.signals || [])}
+    ${renderSearchBar()}
+    ${renderHero(hoy.hero)}
+    ${worldCupPanel}
+    ${renderSection("Hoy en Cancún", "", hoy.today || [])}
+    ${renderSection("Esta semana", "", hoy.week || [])}
+    ${renderSection("Eventos y noche", "", hoy.events || [])}
+    ${renderNewsletterPanel()}
+  `;
+}
+
+function renderListingPage(config, data) {
+  const items = data[config.collection] || [];
+  const query = (state.searchQuery || "").trim();
+  const filtered = filterBySearch(items, query);
+  return `
+    ${renderBrand()}
+    <section class="listing-head reveal">
+      <h1>${escapeHtml(config.title)}</h1>
+    </section>
+    ${renderSearchBar()}
+    <section class="listing-content-wrap" aria-live="polite">
+      ${query ? `<p class="search-summary">Mostrando ${filtered.length} de ${items.length} resultados para "${escapeHtml(query)}".</p>` : ""}
+      <div class="portal-grid listing-grid">
+        ${filtered.map(renderFeatureCard).join("") || `<p class="empty-state">No hay señales cargadas para esta sección.</p>`}
+      </div>
     </section>
   `;
 }
@@ -356,18 +614,86 @@ function subscribeForm(source) {
 function renderModal() {
   const root = $("#modal-root");
   if (!root) return;
+  root.innerHTML = "";
+}
+
+function findCampaignById(campaignId) {
+  const heroCampaign = state.data?.hoy?.hero?.campaign;
+  if (heroCampaign?.id === campaignId) return heroCampaign;
+  return null;
+}
+
+function renderContactModal() {
+  const root = $("#modal-root");
+  if (!root) return;
+  const encodedMessage = encodeURIComponent(CONTACTO.whatsapp.message);
+  const whatsappUrl = `https://wa.me/52${CONTACTO.whatsapp.number}?text=${encodedMessage}`;
+
   root.innerHTML = `
-    <div class="modal-backdrop" data-modal hidden>
-      <section class="signup-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <button class="modal-close" type="button" aria-label="Cerrar">×</button>
-        <span class="eyebrow">Newsletter local</span>
-        <h2 id="modal-title">Recibe Qué Onda Cancún</h2>
-        <p>La guía local para decidir mejor en Cancún.</p>
-        ${subscribeForm("modal")}
-        <button class="modal-later" type="button">Ahora no</button>
-      </section>
+    <div class="modal-backdrop" role="presentation" data-close-contact aria-label="Cerrar contacto">
+      <div class="contact-modal" role="dialog" aria-modal="true" aria-label="Contacto comercial">
+        <button class="modal-close" type="button" data-close-contact aria-label="Cerrar">✕</button>
+        <p class="contact-title">${escapeHtml(CONTACTO.copy)}</p>
+        <div class="contact-actions" role="list">
+          <a class="contact-action contact-action--primary" href="mailto:${CONTACTO.email}" target="_blank" rel="noopener noreferrer"${trackAttrs({ action: "contact_email_click", business: "Qué Onda Cancún", label: CONTACTO.email, targetUrl: `mailto:${CONTACTO.email}`, section: "contacto" })}>Email: ${escapeHtml(CONTACTO.email)}</a>
+          <a class="contact-action contact-action--secondary" href="${whatsappUrl}" target="_blank" rel="noopener noreferrer"${trackAttrs({ action: "contact_whatsapp_click", business: "Qué Onda Cancún", label: CONTACTO.whatsapp.number, targetUrl: whatsappUrl, section: "contacto" })}>WhatsApp: ${escapeHtml(CONTACTO.whatsapp.number)}</a>
+        </div>
+      </div>
     </div>
   `;
+}
+
+function renderCouponModal(campaign) {
+  const root = $("#modal-root");
+  if (!root || !campaign) return;
+
+  root.innerHTML = `
+    <div class="modal-backdrop coupon-backdrop" role="presentation" data-close-modal aria-label="Cerrar cupón">
+      <div class="coupon-modal" role="dialog" aria-modal="true" aria-label="${escapeHtml(campaign.modalTitle)}">
+        <button class="modal-close" type="button" data-close-modal aria-label="Cerrar">✕</button>
+        <span class="coupon-modal-kicker">${escapeHtml(campaign.business || "Qué Onda Cancún")}</span>
+        <h2>${escapeHtml(campaign.modalTitle)}</h2>
+        <p>${escapeHtml(campaign.modalCopy)}</p>
+        <form class="coupon-form" data-campaign-id="${escapeHtml(campaign.id)}" aria-label="Reclamar cupón">
+          <div class="coupon-form-row">
+            <label class="coupon-field">
+              <input type="email" name="email" placeholder="tu@email.com" autocomplete="email" required>
+            </label>
+            <button class="coupon-submit" type="submit">${escapeHtml(campaign.submitLabel || "Reclamar cupón")}</button>
+          </div>
+          <p class="coupon-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  `;
+}
+
+function renderCouponResult(form, campaign, claim, message) {
+  const modal = form.closest(".coupon-modal");
+  if (!modal) return;
+  const code = claim?.code || campaign.code;
+  const terms = claim?.terms || campaign.terms || "";
+  modal.innerHTML = `
+    <button class="modal-close" type="button" data-close-modal aria-label="Cerrar">✕</button>
+    <span class="coupon-modal-kicker">${escapeHtml(campaign.business || "Qué Onda Cancún")}</span>
+    <h2>${escapeHtml(campaign.successTitle || "Cupón listo")}</h2>
+    <p>${escapeHtml(message)}</p>
+    <div class="coupon-code-box" aria-label="Código de cupón">
+      <span>Código</span>
+      <strong>${escapeHtml(code)}</strong>
+    </div>
+    <p class="coupon-terms">${escapeHtml(terms)}</p>
+  `;
+}
+
+function closeModal() {
+  const root = $("#modal-root");
+  if (!root) return;
+  root.innerHTML = "";
+}
+
+function closeContactModal() {
+  closeModal();
 }
 
 async function handleSubscribe(event) {
@@ -378,7 +704,6 @@ async function handleSubscribe(event) {
   const button = $(".subscribe-button", form);
   const status = $(".subscribe-status", form);
   const value = input.value.trim();
-  const channel = "email";
   const messages = {
     subscribed: "Listo. Te sumamos a Qué Onda Cancún.",
     already_subscribed: "Ya estabas en la lista. Te mantenemos activo.",
@@ -395,7 +720,7 @@ async function handleSubscribe(event) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        channel,
+        channel: "email",
         email: value,
         whatsapp: "",
         source: form.dataset.source || "platform",
@@ -403,9 +728,9 @@ async function handleSubscribe(event) {
         referrer: document.referrer
       })
     });
-    const data = await response.json().catch(() => ({}));
-    const message = messages[data.message] || messages[data.error] || messages.subscribe_failed;
-    if (!response.ok || !data.ok) {
+    const result = await response.json().catch(() => ({}));
+    const message = messages[result.message] || messages[result.error] || messages.subscribe_failed;
+    if (!response.ok || !result.ok) {
       status.textContent = message;
       status.dataset.state = "error";
       return;
@@ -413,7 +738,6 @@ async function handleSubscribe(event) {
     status.textContent = message;
     status.dataset.state = "success";
     form.reset();
-    window.localStorage.setItem("qoc_newsletter_seen", "1");
   } catch {
     status.textContent = messages.subscribe_failed;
     status.dataset.state = "error";
@@ -422,66 +746,342 @@ async function handleSubscribe(event) {
   }
 }
 
-function bindInteractions(config) {
-  document.addEventListener("click", (event) => {
-    const filter = event.target.closest(".filter-chip");
-    if (filter) {
-      state.filter = filter.dataset.filter || "Todo";
-      renderApp();
+async function handleCouponClaim(event) {
+  const form = event.target.closest(".coupon-form");
+  if (!form) return;
+  event.preventDefault();
+
+  const campaign = findCampaignById(form.dataset.campaignId);
+  const input = $("input", form);
+  const button = $(".coupon-submit", form);
+  const status = $(".coupon-status", form);
+  if (!campaign || !input || !button || !status) return;
+
+  const value = input.value.trim();
+  const messages = {
+    subscribed: "Listo. Ya estás en el newsletter. Tu cupón queda activo.",
+    already_subscribed: "Ya estabas en el newsletter. Tu cupón queda activo.",
+    invalid_email: "Escribe un email válido.",
+    subscribe_failed: "No entró. Inténtalo otra vez en unos segundos."
+  };
+
+  status.textContent = "Generando cupón...";
+  status.dataset.state = "loading";
+  button.disabled = true;
+
+  try {
+    const response = await fetch("/api/subscribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        channel: "email",
+        email: value,
+        whatsapp: "",
+        source: `coupon:${campaign.id}`,
+        landingUrl: window.location.href,
+        referrer: document.referrer
+      })
+    });
+    const result = await response.json().catch(() => ({}));
+    const message = messages[result.message] || messages[result.error] || messages.subscribe_failed;
+    if (!response.ok || !result.ok) {
+      status.textContent = message;
+      status.dataset.state = "error";
       return;
     }
 
-    if (event.target.closest(".modal-close") || event.target.closest(".modal-later")) {
+    const claimResponse = await fetch("/api/claim-coupon", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: value,
+        campaignId: campaign.id,
+        source: `coupon:${campaign.id}`,
+        landingUrl: window.location.href,
+        referrer: document.referrer
+      })
+    });
+    const claim = await claimResponse.json().catch(() => ({}));
+    if (!claimResponse.ok || !claim.ok) {
+      status.textContent = "No pudimos generar el cupón. Inténtalo otra vez en unos segundos.";
+      status.dataset.state = "error";
+      return;
+    }
+
+    renderCouponResult(form, campaign, claim, message);
+  } catch {
+    status.textContent = messages.subscribe_failed;
+    status.dataset.state = "error";
+  } finally {
+    button.disabled = false;
+  }
+}
+
+function bindInteractions() {
+  document.addEventListener("submit", handleSubscribe);
+  document.addEventListener("submit", handleCouponClaim);
+  document.addEventListener("input", (event) => {
+    if (event.target.matches(".platform-search-input")) {
+      state.searchQuery = event.target.value.trim();
+      renderApp();
+      const input = $("#platform-search");
+      if (input) input.focus();
+      scheduleSearchTracking(state.searchQuery);
+    }
+  });
+  document.addEventListener("click", (event) => {
+    if (!event.target.matches("[data-clear-search]")) return;
+    state.searchQuery = "";
+    renderApp();
+    const input = $("#platform-search");
+    if (input) input.focus();
+  });
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const navToggle = target.closest("[data-nav-toggle]");
+    if (navToggle) {
+      event.preventDefault();
+      const nav = navToggle.closest(".site-nav");
+      const isOpen = !nav?.classList.contains("is-open");
+      nav?.classList.toggle("is-open", isOpen);
+      navToggle.setAttribute("aria-expanded", String(isOpen));
+      navToggle.setAttribute("aria-label", isOpen ? "Cerrar menú" : "Abrir menú");
+      return;
+    }
+
+    const contactTrigger = target.closest("[data-action='contacto']");
+    if (contactTrigger) {
+      event.preventDefault();
+      trackClick({
+        action: "contact_modal_open",
+        business: "Qué Onda Cancún",
+        label: "Contacto",
+        section: "contacto",
+        source: "nav"
+      });
+      renderContactModal();
+      return;
+    }
+
+    const couponTrigger = target.closest("[data-action='coupon']");
+    if (couponTrigger) {
+      event.preventDefault();
+      const campaign = findCampaignById(couponTrigger.dataset.campaignId);
+      trackClick({
+        action: "coupon_modal_open",
+        itemId: state.data?.hoy?.hero?.id,
+        business: campaign?.business,
+        label: campaign?.label,
+        section: "hoy.hero",
+        campaignId: campaign?.id,
+        source: "hero"
+      });
+      renderCouponModal(campaign);
+      return;
+    }
+
+    const tracked = target.closest("[data-track-action]");
+    if (tracked) {
+      trackElementClick(tracked);
+    }
+
+    if (target.matches("[data-close-modal]") || target.closest("[data-close-modal]")) {
       closeModal();
       return;
     }
 
-    const backdrop = event.target.closest("[data-modal]");
-    if (backdrop && event.target === backdrop) closeModal();
+    if (target.matches("[data-close-contact]") || target.closest("[data-close-contact]")) {
+      closeContactModal();
+    }
+
+    if (target.matches(".modal-backdrop")) {
+      closeModal();
+    }
   });
 
-  document.addEventListener("submit", handleSubscribe);
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeModal();
+    if (event.key === "Escape") {
+      closeModal();
+    }
   });
-
 }
 
-function openModal() {
-  const modal = $("[data-modal]");
-  if (!modal || window.localStorage.getItem("qoc_newsletter_seen")) return;
-  modal.hidden = false;
-  requestAnimationFrame(() => modal.classList.add("visible"));
+async function fetchFallbackSignals() {
+  const climaSeed = getSignalSeedById("clima-2026-06-19");
+  const usdSeed = getSignalSeedById("usd-mxn-2026-06-18");
+  const sargazoSeed = getSignalSeedById("sargazo-regional");
+  const values = {
+    clima: {
+      value: climaSeed?.value || "Sin lectura",
+      tone: climaSeed?.tone || "green",
+      summary: climaSeed?.summary || "",
+      sourceUrl: climaSeed?.sourceUrl || "https://open-meteo.com/",
+      label: climaSeed?.label || "Clima"
+    },
+    usd: {
+      value: usdSeed?.value || "Sin lectura",
+      tone: usdSeed?.tone || "green",
+      sourceUrl: usdSeed?.sourceUrl || "https://www.frankfurter.app/",
+      label: usdSeed?.label || "USD/MXN"
+    },
+    sargazo: {
+      value: sargazoSeed?.value || "Medio",
+      tone: sargazoSeed?.tone || "yellow",
+      sourceUrl: sargazoSeed?.sourceUrl || "https://diredimoat.semar.gob.mx/OpSargazo/SargazoBoletinDiario.html",
+      summary: "",
+      label: sargazoSeed?.label || "Sargazo"
+    }
+  };
+
+  try {
+    const climaRes = await fetch("https://api.open-meteo.com/v1/forecast?latitude=21.1619&longitude=-86.8515&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=America%2FCancun&forecast_days=1");
+    if (climaRes.ok) {
+      const data = await climaRes.json();
+      const min = data?.daily?.temperature_2m_min?.[0];
+      const max = data?.daily?.temperature_2m_max?.[0];
+      const rain = data?.daily?.precipitation_probability_max?.[0];
+      if (Number.isFinite(min) && Number.isFinite(max)) {
+        values.clima.value = `${Math.round(min)}-${Math.round(max)} C`;
+        const details = [];
+        if (Number.isFinite(rain)) details.push(`Lluvia ${Math.round(rain)}%`);
+        if (details.length) values.clima.summary = details.join(" · ");
+      }
+    }
+  } catch {
+    values.clima.value = climaSeed?.value || "Sin lectura";
+    values.clima.summary = "";
+  }
+
+  try {
+    const usdRes = await fetch("https://api.frankfurter.app/latest?from=USD&to=MXN");
+    if (usdRes.ok) {
+      const data = await usdRes.json();
+      const rate = Number(data?.rates?.MXN);
+      if (Number.isFinite(rate)) values.usd.value = rate.toFixed(4);
+    }
+  } catch {
+    values.usd.value = usdSeed?.value || "Sin lectura";
+  }
+
+  return {
+    ok: true,
+    signals: [
+      {
+        id: "clima-2026-06-19",
+        label: values.clima.label,
+        value: values.clima.value,
+        tone: "green",
+        summary: values.clima.summary || "",
+        sourceUrl: values.clima.sourceUrl
+      },
+      {
+        id: "usd-mxn-2026-06-18",
+        label: values.usd.label,
+        value: values.usd.value,
+        tone: values.usd.tone,
+        summary: "",
+        sourceUrl: values.usd.sourceUrl
+      },
+      {
+        id: "sargazo-regional",
+        label: values.sargazo.label,
+        value: values.sargazo.value,
+        tone: values.sargazo.tone,
+        summary: "",
+        sourceUrl: values.sargazo.sourceUrl
+      },
+    ]
+  };
 }
 
-function closeModal() {
-  const modal = $("[data-modal]");
-  if (!modal) return;
-  modal.classList.remove("visible");
-  window.localStorage.setItem("qoc_newsletter_seen", "1");
-  setTimeout(() => {
-    modal.hidden = true;
-  }, 180);
+function shouldUseServerlessEndpoint() {
+  const localHosts = new Set(["127.0.0.1", "localhost", "::1"]);
+  if (!localHosts.has(window.location.hostname)) return true;
+  return window.location.port === "3000" || window.location.port === "3001";
+}
+
+function shouldUseLiveSignalsEndpoint() {
+  return shouldUseServerlessEndpoint();
+}
+
+async function hydrateLiveSignals() {
+  const payload = await fetchLiveSignals();
+  if (!payload || !Array.isArray(payload.signals)) return;
+  const cards = payload.signals;
+
+  cards.forEach((signal) => {
+    const card = document.querySelector(signalSelector(signal.id));
+    if (!card) return;
+
+    const label = card.querySelector("strong");
+    const summary = card.querySelector("em");
+
+    if (label && isReadableSignalValue(signal.value)) {
+      label.textContent = String(signal.value);
+      state.lastSignals[signal.id] = String(signal.value);
+    } else if (state.lastSignals[signal.id] && label) {
+      label.textContent = state.lastSignals[signal.id];
+    }
+
+    if (signal.tone && isReadableSignalValue(signal.value)) {
+      const allowed = ["sun", "green", "purple", "yellow", "red"];
+      card.classList.remove(...allowed);
+      card.classList.add(signal.tone);
+    }
+
+    if (summary) {
+      const text = String(signal.summary || "").trim();
+      if (isReadableSignalValue(signal.value) && text) {
+        summary.textContent = text;
+        summary.style.display = "block";
+      } else {
+        summary.textContent = "";
+        summary.style.display = "none";
+      }
+    }
+
+    if (signal.summary) {
+      card.title = signal.summary;
+    }
+  });
+}
+
+async function fetchLiveSignals() {
+  try {
+    if (!shouldUseLiveSignalsEndpoint()) {
+      return fetchFallbackSignals();
+    }
+
+    const response = await fetch("/api/live-signals");
+    if (response.ok) {
+      const data = await response.json();
+      if (data?.ok) return data;
+      if (!data?.ok) {
+        return fetchFallbackSignals();
+      }
+    }
+
+    return fetchFallbackSignals();
+  } catch {
+    return fetchFallbackSignals();
+  }
 }
 
 function renderApp() {
   const app = $("#app");
   if (!app || !state.data) return;
   const config = PAGE_CONFIG[state.page] || PAGE_CONFIG.hoy;
-  document.title = state.page === "hoy" ? "Hoy | Qué Onda Cancún" : `${config.eyebrow} | Qué Onda Cancún`;
+  document.title = state.page === "hoy" ? "Hoy | Qué Onda Cancún" : `${config.label} | Qué Onda Cancún`;
   if (state.page === "hoy") {
-    app.innerHTML = renderTodayPage(state.data);
+    app.innerHTML = renderHomePage(state.data);
+    hydrateLiveSignals();
+    if (signalRefreshTimer) clearInterval(signalRefreshTimer);
+    signalRefreshTimer = setInterval(hydrateLiveSignals, LIVE_SIGNALS_REFRESH_MS);
     return;
   }
-  if (state.page === "esta-semana") {
-    app.innerHTML = renderWeeklyPage(config, state.data);
-    return;
-  }
-  app.innerHTML = `
-    ${renderBrand()}
-    ${renderHero(config)}
-    ${renderCollection(config, state.data)}
-  `;
+  app.innerHTML = renderListingPage(config, state.data);
 }
 
 async function init() {
@@ -492,15 +1092,14 @@ async function init() {
     app.innerHTML = `
       <section class="loading-card" aria-label="Cargando guía">
         <span class="eyebrow">Qué Onda Cancún</span>
-        <h1>Armando el pulso de hoy.</h1>
-        <p>Promos, eventos, restaurantes y señales locales en camino.</p>
+        <h1>Armando el pulso de hoy</h1>
       </section>
     `;
   }
-  const response = await fetch("/data/platform.json");
+  const response = await fetch("/data/platform.json?v=20260619v");
   state.data = await response.json();
   renderApp();
-  bindInteractions(PAGE_CONFIG[state.page] || PAGE_CONFIG.hoy);
+  bindInteractions();
 }
 
 init().catch((error) => {

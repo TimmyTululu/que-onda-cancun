@@ -1,0 +1,181 @@
+{
+  "version": "1.0",
+  "capturedAt": "2026-06-19T13:00:00-05:00",
+  "items": [
+    {
+      "id": "sr-casapalma-hero-2026-06-19",
+      "kind": "hero",
+      "section": "hoy.hero",
+      "sourceUrl": "https://casapalma.mx/",
+      "raw": {
+        "title": "Casa Palma: food for the soul",
+        "titleLines": ["Casa Palma:", "food for the", "soul"],
+        "kicker": "Recomendación de la semana",
+        "brandLanguage": "food for the soul",
+        "hours": {
+          "domingoAMiercoles": "08:00-23:00",
+          "juevesASabado": "08:00-00:30",
+          "visibleSchedule": [
+            "Domingo-miércoles · 08:00-23:00",
+            "Jueves-sábado · 08:00-00:30"
+          ]
+        },
+        "description": "Food for the soul: cocina, diseño y ambiente para comer con calma. Desde la energía con el café en la mañana, hasta sabores frescos que te acompañan durante todo el día.",
+        "campaign": {
+          "id": "casa-palma-10-20260619",
+          "type": "coupon",
+          "approval": "Casa Palma approved; owned relationship",
+          "offer": "10% descuento",
+          "weeklyCode": "PALMA-8Q7",
+          "activeFrom": "2026-06-19T00:00:00-05:00",
+          "activeUntil": "2026-06-26T23:59:59-05:00",
+          "terms": "Muestra el código al mesero. Válido esta semana en Casa Palma. No acumulable con otras promociones."
+        },
+        "image": "/assets/sponsored/casa-palma-hero-2.png",
+        "gallery": [
+          {
+            "image": "/assets/sponsored/casa-palma-hero-2.png",
+            "sourceImageUrl": "https://casapalma.mx/img/terraza-2.png",
+            "imageAlt": "Terraza de Casa Palma en Marina Puerto Cancún",
+            "objectPosition": "center center"
+          },
+          {
+            "image": "/assets/sponsored/casa-palma-hero-3.png",
+            "sourceImageUrl": "https://casapalma.mx/img/interior-2.png",
+            "imageAlt": "Interior luminoso de Casa Palma",
+            "objectPosition": "center center"
+          },
+          {
+            "image": "/assets/sponsored/casa-palma-hero-4.png",
+            "sourceImageUrl": "https://casapalma.mx/img/fotos-1.png",
+            "imageAlt": "Comedor interior de Casa Palma",
+            "objectPosition": "center center"
+          }
+        ],
+        "cta": {
+          "label": "Reservar",
+          "url": "https://casapalma.mx/"
+        },
+        "map": "https://www.google.com/maps/search/?api=1&query=Casa+Palma+Restaurante+Cancun"
+      }
+    },
+    {
+      "id": "sr-clima-2026-06-19",
+      "kind": "signal",
+      "section": "hoy.signals",
+      "sourceUrl": "https://open-meteo.com/",
+      "raw": {
+        "label": "Clima",
+        "value": "27-31 C",
+        "summary": "Lluvia: 7%",
+        "tone": "green"
+      }
+    },
+    {
+      "id": "sr-usd-mxn-2026-06-19",
+      "kind": "signal",
+      "section": "hoy.signals",
+      "sourceUrl": "https://www.frankfurter.app/",
+      "raw": {
+        "label": "USD/MXN",
+        "value": "17.3914",
+        "summary": "",
+        "tone": "green"
+      }
+    },
+    {
+      "id": "sr-sargazo-2026-06-19",
+      "kind": "signal",
+      "section": "hoy.signals",
+      "sourceUrl": "https://diredimoat.semar.gob.mx/OpSargazo/SargazoBoletinDiario.html",
+      "raw": {
+        "label": "Sargazo",
+        "value": "Medio",
+        "summary": "",
+        "tone": "yellow"
+      }
+    },
+    {
+      "id": "sr-hoy-aquaworld",
+      "kind": "card",
+      "section": "hoy.today",
+      "sourceUrl": "https://aquaworld.com.mx/",
+      "raw": {
+        "title": "AquaWorld: reserva antes de salir al mar",
+        "source": "https://aquaworld.com.mx/",
+        "category": "Tour",
+        "time": "Hoy",
+        "dateTime": "Hoy · Salidas por reserva",
+        "location": "AquaWorld",
+        "neighborhood": "Zona Hotelera",
+        "ctaLabel": "Ver tours",
+        "ctaUrl": "https://aquaworld.com.mx/",
+        "description": "Si el mar está viable, conviene reservar con operador grande y confirmar horario antes de moverse."
+      }
+    },
+    {
+      "id": "sr-hoy-cbingo",
+      "kind": "card",
+      "section": "hoy.today",
+      "sourceUrl": "https://www.cocobongo.com/locations/?lang=es",
+      "raw": {
+        "title": "Coco Bongo: show cerrado para noche de lluvia",
+        "source": "https://www.cocobongo.com/",
+        "category": "Show",
+        "time": "Noche",
+        "dateTime": "Hoy · Noche",
+        "location": "Coco Bongo",
+        "neighborhood": "Zona Hotelera",
+        "ctaLabel": "Ver tickets",
+        "ctaUrl": "https://www.cocobongo.com/locations/?lang=es",
+        "description": "Show con ingreso cubierto y mejor desempeño en lluvias."
+      }
+    },
+    {
+      "id": "sr-week-cocobongo",
+      "kind": "card",
+      "section": "week",
+      "sourceUrl": "https://www.cocobongo.com/locations/?lang=es",
+      "raw": {
+        "title": "Coco Bongo: noche cerrada y segura esta semana",
+        "source": "https://www.cocobongo.com/",
+        "category": "Show",
+        "time": "Noche",
+        "dateTime": "Toda la semana · Noche",
+        "location": "Coco Bongo",
+        "neighborhood": "Zona Hotelera",
+        "ctaLabel": "Ver tickets",
+        "ctaUrl": "https://www.cocobongo.com/locations/?lang=es",
+        "description": "Show cerrrado en horarios con lluvia alta o cierre de playa."
+      }
+    },
+    {
+      "id": "sr-evento-salsa",
+      "kind": "card",
+      "section": "events",
+      "sourceUrl": "https://vivoen.mx/eventos-de-la-semana/",
+      "raw": {
+        "title": "Viernes de salsa en Las Palapas",
+        "source": "https://vivoen.mx/eventos-de-la-semana/",
+        "category": "Baile",
+        "time": "19:30",
+        "dateTime": "Hoy · 19:30",
+        "location": "Parque de Las Palapas",
+        "neighborhood": "Centro",
+        "ctaLabel": "Ver detalles",
+        "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
+        "description": "Baile abierto en Centro para salida nocturna con logística simple."
+      }
+    },
+    {
+      "id": "sr-worldcup-2026",
+      "kind": "module",
+      "section": "hoy.worldCup",
+      "sourceUrl": "https://www.sbnation.com/soccer/1117513/world-cup-schedule-2026-how-to-watch-every-match-scores-and-more",
+      "raw": {
+        "title": "MUNDIAL: CALENDARIO EN HORA CANCÚN",
+        "moduleType": "world-cup-calendar"
+      }
+    }
+  ]
+}

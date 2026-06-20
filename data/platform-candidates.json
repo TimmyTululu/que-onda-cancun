@@ -1,0 +1,326 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-06-19T13:00:00-05:00",
+  "sourceRef": "data/source-research.json",
+  "schema": {
+    "source": "manual-to-validated pipeline",
+    "allowedCollections": ["hoy.today", "week", "promos", "events", "signals", "worldCup", "hero"]
+  },
+  "hoy": {
+    "hero": {
+      "id": "casa-palma-semana",
+      "kicker": "Recomendación de la semana",
+      "title": "Casa Palma: food for the soul",
+      "titleLines": ["Casa Palma:", "food for the", "soul"],
+      "category": "Restaurante",
+      "date": "2026-06-19",
+      "time": "Semana",
+      "dateTime": "Domingo-miércoles · 08:00-23:00 / Jueves-sábado · 08:00-00:30",
+      "metaChips": ["Domingo-miércoles · 08:00-23:00", "Jueves-sábado · 08:00-00:30"],
+      "location": "Casa Palma",
+      "neighborhood": "Cancún",
+      "image": "/assets/sponsored/casa-palma-hero-2.png",
+      "imageAlt": "Casa Palma restaurante en Cancún",
+      "gallery": [
+        {
+          "image": "/assets/sponsored/casa-palma-hero-2.png",
+          "imageAlt": "Terraza de Casa Palma en Marina Puerto Cancún",
+          "objectPosition": "center center"
+        },
+        {
+          "image": "/assets/sponsored/casa-palma-hero-3.png",
+          "imageAlt": "Interior luminoso de Casa Palma",
+          "objectPosition": "center center"
+        },
+        {
+          "image": "/assets/sponsored/casa-palma-hero-4.png",
+          "imageAlt": "Comedor interior de Casa Palma",
+          "objectPosition": "center center"
+        }
+      ],
+      "sourceUrl": "https://casapalma.mx/",
+      "sourceName": "Casa Palma",
+      "freshness": "Directo",
+      "ctaLabel": "Reservar",
+      "ctaUrl": "https://casapalma.mx/",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Casa+Palma+Restaurante+Cancun",
+      "description": "Food for the soul: cocina, diseño y ambiente para comer con calma. Desde la energía con el café en la mañana, hasta sabores frescos que te acompañan durante todo el día.",
+      "priority": 1,
+      "heroTone": "gold",
+      "campaign": {
+        "id": "casa-palma-10-20260619",
+        "status": "active",
+        "type": "coupon",
+        "business": "Casa Palma",
+        "label": "Cupón: 10% descuento",
+        "badgeKicker": "Cupón",
+        "badgeText": "10% descuento",
+        "modalTitle": "Recibe tu 10% en Casa Palma",
+        "modalCopy": "Suscríbete al newsletter y muestra tu código al mesero.",
+        "submitLabel": "Reclamar cupón",
+        "successTitle": "Cupón listo",
+        "code": "PALMA-8Q7",
+        "activeFrom": "2026-06-19T00:00:00-05:00",
+        "activeUntil": "2026-06-26T23:59:59-05:00",
+        "terms": "Muestra el código al mesero. Válido esta semana en Casa Palma. No acumulable con otras promociones."
+      }
+    },
+    "signals": [
+      {
+        "id": "clima-2026-06-19",
+        "label": "Clima",
+        "value": "27-31 C",
+        "summary": "Lluvia: 7%",
+        "tone": "green",
+        "sourceUrl": "https://open-meteo.com/"
+      },
+      {
+        "id": "usd-mxn-2026-06-19",
+        "label": "USD/MXN",
+        "value": "17.3914",
+        "summary": "",
+        "tone": "green",
+        "sourceUrl": "https://www.frankfurter.app/"
+      },
+      {
+        "id": "sargazo-regional",
+        "label": "Sargazo",
+        "value": "Medio",
+        "summary": "",
+        "tone": "yellow",
+        "sourceUrl": "https://diredimoat.semar.gob.mx/OpSargazo/SargazoBoletinDiario.html"
+      }
+    ],
+    "worldCup": {
+      "title": "MUNDIAL: CALENDARIO EN HORA CANCÚN",
+      "activeFrom": "2026-06-14T00:00:00-05:00",
+      "activeUntil": "2026-07-19T23:59:59-05:00",
+      "sourceName": "SB Nation / FIFA",
+      "sourceUrl": "https://www.sbnation.com/soccer/1117513/world-cup-schedule-2026-how-to-watch-every-match-scores-and-more",
+      "today": {
+        "label": "viernes 19 de junio",
+        "matches": [
+          {
+            "time": "14:00",
+            "teams": "Estados Unidos vs Australia",
+            "channel": "FOX",
+            "kickoff": "2026-06-19T14:00:00-05:00"
+          },
+          {
+            "time": "17:00",
+            "teams": "Escocia vs Marruecos",
+            "channel": "FOX",
+            "kickoff": "2026-06-19T17:00:00-05:00"
+          }
+        ]
+      },
+      "days": [
+        {
+          "label": "Lun 22",
+          "matches": [
+            { "time": "12:00", "teams": "Argentina vs Austria" },
+            { "time": "16:00", "teams": "Francia vs Irak" }
+          ]
+        }
+      ]
+    },
+    "today": [
+      {
+        "id": "aquaworld-hoy",
+        "title": "AquaWorld: reserva antes de salir al mar",
+        "category": "Tour",
+        "date": "2026-06-19",
+        "time": "Hoy",
+        "dateTime": "Hoy · Salidas por reserva",
+        "location": "AquaWorld",
+        "neighborhood": "Zona Hotelera",
+        "image": "https://aquaworld.com.mx/uploads/0000/1/2024/09/19/1920x514-0011-layer-25-min.jpg",
+        "imageAlt": "AquaWorld Cancún",
+        "sourceUrl": "https://aquaworld.com.mx/",
+        "sourceName": "AquaWorld",
+        "freshness": "Sitio oficial",
+        "ctaLabel": "Ver tours",
+        "ctaUrl": "https://aquaworld.com.mx/",
+        "description": "Si el mar está viable, conviene reservar con operador grande y confirmar horario antes de moverse.",
+        "priority": 2
+      },
+      {
+        "id": "coco-bongo-hoy",
+        "title": "Coco Bongo: show cerrado para noche de lluvia",
+        "category": "Show",
+        "date": "2026-06-19",
+        "time": "Noche",
+        "dateTime": "Hoy · Noche",
+        "location": "Coco Bongo",
+        "neighborhood": "Zona Hotelera",
+        "image": "/assets/platform-cocobongo-cancun.jpg",
+        "imageAlt": "Coco Bongo Cancún",
+        "sourceUrl": "https://www.cocobongo.com/locations/?lang=es",
+        "sourceName": "Coco Bongo",
+        "freshness": "Sitio oficial",
+        "ctaLabel": "Ver tickets",
+        "ctaUrl": "https://www.cocobongo.com/locations/?lang=es",
+        "description": "Show cerrado para noche lluviosa con compra directa y sin improvisar.",
+        "priority": 3
+      },
+      {
+        "id": "la-habichuela-hoy",
+        "title": "La Habichuela: cena clásica en Centro",
+        "category": "Restaurante",
+        "date": "2026-06-19",
+        "time": "12:30-23:00",
+        "dateTime": "Hoy · 12:30-23:00",
+        "location": "La Habichuela",
+        "neighborhood": "Centro",
+        "image": "/assets/platform-la-habichuela-interior.jpg",
+        "imageAlt": "La Habichuela Cancún",
+        "sourceUrl": "https://www.lahabichuela.com/",
+        "sourceName": "La Habichuela",
+        "freshness": "Sitio oficial",
+        "ctaLabel": "Reservar",
+        "ctaUrl": "https://www.lahabichuela.com/",
+        "description": "Cierre útil para clima variable y plan de noche en zona céntrica.",
+        "priority": 4
+      }
+    ]
+  },
+  "week": [
+    {
+      "id": "venturapark-week",
+      "title": "Ventura Park: día completo para familias",
+      "category": "Familia",
+      "date": "2026-06-22",
+      "time": "09:00-17:00",
+      "dateTime": "Toda la semana · 09:00-17:00",
+      "location": "Ventura Park",
+      "neighborhood": "Zona Hotelera",
+      "image": "https://images.venturapark.com/img/2025/01/venturapark-2x1-platinum-january-desktop-eng-1347x421.jpg",
+      "imageAlt": "Ventura Park Cancún",
+      "sourceUrl": "https://www.venturapark.com/en/2x1-platinum-january/",
+      "sourceName": "Ventura Park",
+      "freshness": "Oferta oficial",
+      "ctaLabel": "Ver promo",
+      "ctaUrl": "https://www.venturapark.com/en/2x1-platinum-january/",
+      "description": "Plan familiar con horarios claros para día completo.",
+      "priority": 3
+    },
+    {
+      "id": "aquaworld-week",
+      "title": "AquaWorld: reserva según ventana de clima",
+      "category": "Tour",
+      "date": "2026-06-22",
+      "time": "Por reserva",
+      "dateTime": "Toda la semana · Por reserva",
+      "location": "AquaWorld",
+      "neighborhood": "Zona Hotelera",
+      "image": "https://aquaworld.com.mx/uploads/0000/1/2023/10/24/1280x720-0008s-0001-layer-49-min1.jpg",
+      "imageAlt": "AquaWorld Cancún",
+      "sourceUrl": "https://aquaworld.com.mx/",
+      "sourceName": "AquaWorld",
+      "freshness": "Sitio oficial",
+      "ctaLabel": "Ver tours",
+      "ctaUrl": "https://aquaworld.com.mx/",
+      "description": "Revisa clima y reserva antes de pagar para evitar pérdidas.",
+      "priority": 4
+    },
+    {
+      "id": "habichuela-week",
+      "title": "La Habichuela: clásico útil del Centro",
+      "category": "Restaurante",
+      "date": "2026-06-22",
+      "time": "12:30-23:00",
+      "dateTime": "Toda la semana · 12:30-23:00",
+      "location": "La Habichuela",
+      "neighborhood": "Centro",
+      "image": "/assets/platform-la-habichuela-fachada.jpg",
+      "imageAlt": "La Habichuela Cancún",
+      "sourceUrl": "https://www.lahabichuela.com/",
+      "sourceName": "La Habichuela",
+      "freshness": "Sitio oficial",
+      "ctaLabel": "Reservar",
+      "ctaUrl": "https://www.lahabichuela.com/",
+      "description": "Cenita y ubicación centrada para plan de semana con grupos.",
+      "priority": 5
+    }
+  ],
+  "promos": [
+    {
+      "id": "mandala-week",
+      "title": "Mandala Group: ofertas nocturnas en Zona Hotelera",
+      "category": "Noche",
+      "date": "2026-06-22",
+      "time": "Noche",
+      "dateTime": "Esta semana · Noche",
+      "location": "Mandala Group",
+      "neighborhood": "Zona Hotelera",
+      "image": "/assets/platform-mandala-group.jpg",
+      "imageAlt": "Mandala Group Cancún",
+      "sourceUrl": "https://www.mandalagroup.com/",
+      "sourceName": "Mandala Group",
+      "freshness": "Sitio oficial",
+      "ctaLabel": "Ver marcas",
+      "ctaUrl": "https://www.mandalagroup.com/",
+      "description": "Varios venues con acceso rápido para plan nocturno.",
+      "priority": 1
+    },
+    {
+      "id": "xoximilco-promo",
+      "title": "Xoximilco: plan para lluvia y tarde familiar",
+      "category": "Noche",
+      "date": "2026-06-22",
+      "time": "10:00-23:59",
+      "dateTime": "Esta semana · 10:00-23:59",
+      "location": "Xoximilco Cancún",
+      "neighborhood": "Cancún",
+      "image": "/assets/platform-la-habichuela-fachada.jpg",
+      "imageAlt": "Xoximilco Cancún",
+      "sourceUrl": "https://www.xoximilco.com/",
+      "sourceName": "Xoximilco",
+      "freshness": "Sitio oficial",
+      "ctaLabel": "Ver oferta",
+      "ctaUrl": "https://www.xoximilco.com/",
+      "description": "Plan de diversión con alternativas cerradas bajo techo.",
+      "priority": 2
+    }
+  ],
+  "events": [
+    {
+      "id": "evento-salsa-palapas",
+      "title": "Viernes de salsa en Las Palapas",
+      "category": "Baile",
+      "date": "2026-06-19",
+      "time": "19:30",
+      "dateTime": "Hoy · 19:30",
+      "location": "Parque de Las Palapas",
+      "neighborhood": "Centro",
+      "image": "https://i0.wp.com/vivoen.mx/wp-content/uploads/2026/06/19_19_salsa.jpg?resize=640%2C800&ssl=1",
+      "imageAlt": "Viernes de salsa en Cancún",
+      "sourceUrl": "https://vivoen.mx/eventos-de-la-semana/",
+      "sourceName": "VivoEnMX",
+      "freshness": "Hoy",
+      "ctaLabel": "Ver detalles",
+      "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
+      "description": "Baile abierto en Centro para noche de barrio y plan rápido.",
+      "priority": 1
+    },
+    {
+      "id": "evento-ancestros-home",
+      "title": "Ancestros: aventura clown",
+      "category": "Teatro",
+      "date": "2026-06-19",
+      "time": "20:00",
+      "dateTime": "Hoy · 20:00",
+      "location": "Centro Cultural Xbalamqué",
+      "neighborhood": "Centro",
+      "image": "https://i0.wp.com/vivoen.mx/wp-content/uploads/2026/06/19_20_danielancestros.jpg?resize=640%2C800&ssl=1",
+      "imageAlt": "Ancestros Aventura Clown",
+      "sourceUrl": "https://vivoen.mx/eventos-de-la-semana/",
+      "sourceName": "VivoEnMX",
+      "freshness": "Hoy",
+      "ctaLabel": "Ver detalles",
+      "ctaUrl": "https://vivoen.mx/eventos-de-la-semana/",
+      "description": "Evento cultural nocturno para grupo familiar o pareja.",
+      "priority": 2
+    }
+  ]
+}

@@ -10,6 +10,9 @@ For platform/product rules, read `PLATFORM_RULES.md` before changing the homepag
 
 - Canonical: `https://queondacancun.com`
 - Redirect: `https://www.queondacancun.com` -> `https://queondacancun.com`
+- Sitemap: `https://queondacancun.com/sitemap.xml`
+- Robots: `https://queondacancun.com/robots.txt`
+- SEO guardrail: `node scripts/check-platform.mjs` must pass before deploy; it verifies canonical tags, social metadata, structured data, `robots.txt`, and `sitemap.xml`.
 
 ## DNS
 
@@ -34,6 +37,9 @@ Email/security records are intentionally untouched.
 - Email registry: `Email Subscribers!A:W`
 - WhatsApp registry: `WhatsApp Subscribers!A:O`
 - Email send log: `Send Log`
+- Coupon claim log: `Coupon Claims`
+- Click intent log: `Interaction Clicks`
+- Search intent log: `Search Queries`
 - Vercel env vars:
   - `GOOGLE_CLIENT_ID`
   - `GOOGLE_CLIENT_SECRET`
@@ -46,7 +52,43 @@ Email/security records are intentionally untouched.
   - Looks up `unsubscribe_token` in `Email Subscribers`
   - Updates `status=unsubscribed`, `unsubscribed_at`, and `unsubscribe_reason=one-click`
   - Returns a branded confirmation page without exposing contact data
+- Coupon claim endpoint: `POST /api/claim-coupon`
+  - Validates the campaign against `data/platform.json`
+  - Ensures `Coupon Claims` exists with deterministic headers
+  - Appends every claim with `campaign_id`, `business`, `email`, `contact_key`, `code`, `landing_url`, `referrer`, `user_agent`, and `status`
+  - Returns the server-side coupon code only after the claim is logged
+- Interaction endpoint: `POST /api/track-interaction`
+  - Keeps analytics organized in two separate tabs: `Interaction Clicks` and `Search Queries`
+  - Logs high-intent clicks such as coupon opens, hero CTAs, Maps clicks, card CTAs, and contact actions
+  - Logs search queries only after the user pauses and only for searches with 3+ characters
+  - Does not write emails or WhatsApp numbers to analytics tabs; subscriber and coupon identity data stay in their own tabs
 - Migration: existing `Sheet1` rows were backfilled into channel-specific tabs. `Sheet1` remains untouched as legacy backup.
+
+## Platform Automation Tools
+
+These tools are non-visual. They harden the data pipeline without changing `platform.css`, card layout, or page structure.
+
+- Data audit:
+  - `node scripts/audit-platform-data.mjs`
+  - Surfaces remote images, missing local assets, stale dates, promo/event expiry gaps, repeated locations, and generic CTA labels.
+- Lifecycle dry run:
+  - `node scripts/apply-platform-lifecycle.mjs`
+  - Reports expired items to remove and unknown-expiry items that need review.
+- Lifecycle write mode:
+  - `node scripts/apply-platform-lifecycle.mjs --write`
+  - Removes only items with safe expiry evidence: explicit `validUntil`/`endsAt`/`activeUntil`, or passed event date cleanup window.
+  - Unknown promo expiry is flagged for review, not deleted blindly.
+- Image cache dry run:
+  - `node scripts/cache-platform-images.mjs`
+  - Lists remote images from `data/platform-candidates.json` without writing files.
+- Image cache write mode:
+  - `node scripts/cache-platform-images.mjs --write`
+  - Downloads approved remote images into `assets/platform-cache/` and rewrites candidate data to local image paths.
+  - Review before building `data/platform.json`.
+- Sponsor report from exported Sheets data:
+  - `node scripts/generate-sponsor-report.mjs --business "Casa Palma" --clicks clicks.csv --searches searches.csv --claims claims.csv --out report.md`
+  - Reads exported `Interaction Clicks`, `Search Queries`, and `Coupon Claims` data.
+  - Does not write back to Sheets or change the website.
 
 ## Newsletter Send Utility
 

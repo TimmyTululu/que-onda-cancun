@@ -19,6 +19,23 @@
   <meta name="twitter:description" content="Todo lo que necesitas saber de Cancún en cinco minutos. Semana 22-28 junio.">
   <meta name="twitter:image" content="https://queondacancun.com/assets/newsletter/photo-guia-playa.jpg">
   <link rel="canonical" href="https://queondacancun.com/newsletter/">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Newsletter | Qué Onda Cancún",
+      "url": "https://queondacancun.com/newsletter/",
+      "inLanguage": "es-MX",
+      "description": "Edición semanal de Qué Onda Cancún: política local, radar, lugares, conectividad y ofertas de la semana.",
+      "image": "https://queondacancun.com/assets/newsletter/photo-guia-playa.jpg",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Qué Onda Cancún",
+        "url": "https://queondacancun.com/",
+        "logo": "https://queondacancun.com/assets/social/que-onda-logo-trimmed.png"
+      }
+    }
+  </script>
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicons/favicon-16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicons/favicon-32.png">
@@ -64,10 +81,10 @@
     a:hover { text-decoration: underline; }
 
     .site-nav {
-      width: min(100% - 28px, 760px);
+      width: min(100% - 28px, 860px);
       margin: 0 auto 16px;
       display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 6px;
       align-items: center;
       justify-content: center;
@@ -79,8 +96,17 @@
       backdrop-filter: blur(18px);
     }
 
-    .site-nav a {
-      min-height: 38px;
+    .nav-links {
+      display: contents;
+    }
+
+    .mobile-nav-toggle {
+      display: none;
+    }
+
+    .site-nav a,
+    .site-nav button {
+      min-height: 51px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -88,18 +114,131 @@
       border-radius: 999px;
       color: #f3ead8;
       padding: 0 10px;
-      font-size: 0.76rem;
+      font-size: 1rem;
       font-weight: 900;
       line-height: 1;
       text-decoration: none;
       white-space: nowrap;
     }
 
+    .site-nav button {
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      font-family: inherit;
+      cursor: pointer;
+      color: #f3ead8;
+      padding: 0 10px;
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    .site-nav button:focus-visible {
+      outline: 2px solid rgba(32, 199, 203, 0.55);
+      outline-offset: 2px;
+    }
+
     .site-nav a:hover,
-    .site-nav a[aria-current="page"] {
+    .site-nav a[aria-current="page"],
+    .site-nav button:hover {
       background: rgba(32, 199, 203, 0.2);
       color: #ffffff;
       text-decoration: none;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: grid;
+      place-items: center;
+      background: rgba(6, 32, 31, 0.74);
+      padding: 20px;
+    }
+
+    .contact-modal {
+      position: relative;
+      width: min(100%, 600px);
+      border-radius: 24px;
+      border: 1px solid rgba(32, 199, 203, 0.28);
+      background:
+        radial-gradient(circle at 18% 0%, rgba(32, 199, 203, 0.16), transparent 34%),
+        radial-gradient(circle at 92% 0%, rgba(255, 196, 37, 0.1), transparent 30%),
+        rgba(17, 22, 21, 0.98);
+      color: #f3ead8;
+      box-shadow: 0 26px 90px rgba(0, 0, 0, 0.58);
+      padding: 34px 32px 30px;
+      backdrop-filter: blur(18px);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 253, 248, 0.14);
+      background: rgba(255, 253, 248, 0.1);
+      color: #fffdf8;
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .contact-title {
+      max-width: 520px;
+      margin: 0 auto 24px;
+      color: #fffdf8;
+      font-size: clamp(1.18rem, 2vw, 1.42rem);
+      font-weight: 950;
+      line-height: 1.18;
+      text-align: center;
+      text-wrap: balance;
+    }
+
+    .contact-actions {
+      display: grid;
+      gap: 14px;
+    }
+
+    .contact-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 60px;
+      border: 1px solid rgba(255, 253, 248, 0.2);
+      border-radius: 18px;
+      color: #fffdf8;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 16px 34px rgba(0, 0, 0, 0.24);
+      text-decoration: none;
+      font-weight: 950;
+      padding: 0 22px;
+      font-size: 1.02rem;
+      letter-spacing: 0;
+      line-height: 1.1;
+      text-align: center;
+      white-space: nowrap;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    }
+
+    .contact-action:hover {
+      filter: saturate(1.06) brightness(1.04);
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+
+    .contact-action:focus-visible {
+      outline: 2px solid rgba(255, 253, 248, 0.72);
+      outline-offset: 3px;
+    }
+
+    .contact-action--primary {
+      background: linear-gradient(135deg, #0b4fa7, #1787d2 62%, #42b8f2);
+    }
+
+    .contact-action--secondary {
+      background: linear-gradient(135deg, #087b4f, #18a66f 58%, #52d18d);
     }
 
     .download-row {
@@ -706,15 +845,80 @@
       }
       .site-nav {
         gap: 4px;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        width: min(100% - 28px, 360px);
-        max-width: 360px;
+        grid-template-columns: 1fr;
+        width: calc(100% - 20px);
+        max-width: 100%;
         margin: 12px auto;
       }
-      .site-nav a {
-        min-height: 34px;
+      .nav-links {
+        display: none;
+        grid-template-columns: 1fr;
+        gap: 5px;
+      }
+      .site-nav.is-open .nav-links {
+        display: grid;
+      }
+      .mobile-nav-toggle {
+        min-height: 45px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        border: 1px solid rgba(255, 253, 248, 0.08);
+        border-radius: 999px;
+        background: linear-gradient(135deg, rgba(32, 199, 203, 0.22), rgba(255, 253, 248, 0.08));
+        color: #fffdf8;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+      .mobile-nav-icon {
+        position: relative;
+        width: 18px;
+        height: 12px;
+      }
+      .mobile-nav-icon::before,
+      .mobile-nav-icon::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 18px;
+        height: 2px;
+        border-radius: 999px;
+        background: currentColor;
+        transition: transform 0.18s ease, top 0.18s ease;
+      }
+      .mobile-nav-icon::before { top: 1px; }
+      .mobile-nav-icon::after { top: 9px; }
+      .site-nav.is-open .mobile-nav-icon::before {
+        top: 5px;
+        transform: rotate(45deg);
+      }
+      .site-nav.is-open .mobile-nav-icon::after {
+        top: 5px;
+        transform: rotate(-45deg);
+      }
+      .site-nav a,
+      .site-nav button {
+        min-height: 45px;
         padding: 0 9px;
-        font-size: 0.7rem;
+        font-size: 0.95rem;
+      }
+      .contact-modal {
+        width: min(100%, 420px);
+        padding: 34px 18px 22px;
+      }
+      .contact-title {
+        max-width: 100%;
+        margin-bottom: 18px;
+        font-size: 1.14rem;
+      }
+      .contact-actions {
+        gap: 12px;
+      }
+      .contact-action {
+        min-height: 56px;
+        padding: 0 14px;
+        font-size: 0.94rem;
+        white-space: normal;
       }
       .download-row {
         width: min(100% - 28px, 360px);
@@ -818,14 +1022,20 @@
 <body>
   <div class="page">
     <nav class="site-nav" aria-label="Navegación principal">
-      <a href="/">Hoy</a>
-      <a href="/esta-semana/">Esta semana</a>
-      <a href="/promos/">Promos</a>
-      <a href="/eventos/">Eventos</a>
-      <a href="/restaurantes/">Restaurantes</a>
-      <a href="/beach-clubs/">Beach clubs</a>
-      <a href="/newsletter/" aria-current="page">Newsletter</a>
+      <button type="button" class="mobile-nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Abrir menú">
+        <span>Menú</span>
+        <span class="mobile-nav-icon" aria-hidden="true"></span>
+      </button>
+      <div class="nav-links">
+        <a href="/">Hoy</a>
+        <a href="/esta-semana/">Esta semana</a>
+        <a href="/promos/">Promos</a>
+        <a href="/eventos/">Eventos</a>
+        <a href="/newsletter/" aria-current="page">Newsletter</a>
+        <button type="button" data-action="contacto">Contacto</button>
+      </div>
     </nav>
+    <div id="modal-root" aria-live="polite"></div>
     <div class="download-row">
       <a class="pdf-download" href="/assets/newsletter/que-onda-cancun-semana-22-28-junio.pdf" download>Descargar PDF</a>
     </div>
@@ -1068,5 +1278,88 @@
 
     </article>
   </div>
+  <script>
+    (() => {
+      const CONTACTO = {
+        copy: "¿Quieres anunciarte en Qué Onda Cancún?",
+        email: "hola@queondacancun.com",
+        whatsapp: {
+          number: "9981966876",
+          message: "Hola, quiero anunciar mi marca en Qué Onda Cancún."
+        }
+      };
+
+      const $ = (selector) => document.querySelector(selector);
+
+      const escapeHtml = (value) => {
+        const div = document.createElement("div");
+        div.textContent = String(value || "");
+        return div.innerHTML;
+      };
+
+      const openContactModal = () => {
+        const root = $("#modal-root");
+        if (!root) {
+          return;
+        }
+
+        const encodedMessage = encodeURIComponent(CONTACTO.whatsapp.message);
+        const whatsappUrl = `https://wa.me/52${CONTACTO.whatsapp.number}?text=${encodedMessage}`;
+
+        root.innerHTML = `
+          <div class="modal-backdrop" role="presentation" data-close-contact aria-label="Cerrar contacto">
+            <div class="contact-modal" role="dialog" aria-modal="true" aria-label="Contacto comercial">
+              <button type="button" class="modal-close" data-close-contact aria-label="Cerrar">×</button>
+              <p class="contact-title">${escapeHtml(CONTACTO.copy)}</p>
+              <div class="contact-actions">
+                <a class="contact-action contact-action--primary" href="mailto:${escapeHtml(CONTACTO.email)}" target="_blank" rel="noopener noreferrer">Email: ${escapeHtml(CONTACTO.email)}</a>
+                <a class="contact-action contact-action--secondary" href="${whatsappUrl}" target="_blank" rel="noopener noreferrer">WhatsApp: ${escapeHtml(CONTACTO.whatsapp.number)}</a>
+              </div>
+            </div>
+          </div>
+        `;
+      };
+
+      const closeContactModal = () => {
+        const root = $("#modal-root");
+        if (!root) {
+          return;
+        }
+        root.innerHTML = "";
+      };
+
+      const openContactButton = document.querySelector('[data-action="contacto"]');
+      if (openContactButton) {
+        openContactButton.addEventListener("click", openContactModal);
+      }
+
+      const navToggle = document.querySelector("[data-nav-toggle]");
+      if (navToggle) {
+        navToggle.addEventListener("click", () => {
+          const nav = navToggle.closest(".site-nav");
+          const isOpen = !nav?.classList.contains("is-open");
+          nav?.classList.toggle("is-open", isOpen);
+          navToggle.setAttribute("aria-expanded", String(isOpen));
+          navToggle.setAttribute("aria-label", isOpen ? "Cerrar menú" : "Abrir menú");
+        });
+      }
+
+      document.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) {
+          return;
+        }
+        if (target.matches("[data-close-contact]") || target.closest("[data-close-contact]")) {
+          closeContactModal();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeContactModal();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
