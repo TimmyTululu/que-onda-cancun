@@ -768,10 +768,7 @@ function renderDecisionBar() {
   const activeMode = decisionModeByKey(state.decisionKey);
   return `
     <section class="decision-panel reveal" aria-label="Elegir plan por mood">
-      <div class="decision-copy">
-        <span class="eyebrow">Qué hago si...</span>
-        <h2>Elige por situación</h2>
-      </div>
+      <p class="decision-label">Qué hago si...</p>
       <div class="decision-actions">
         ${DECISION_MODES.map((mode) => `
           <button
@@ -878,6 +875,8 @@ function renderHomePage(data) {
       ${renderBrand()}
       ${renderUtilityStrip(hoy.signals || [])}
       ${renderSearchBar()}
+      ${renderHero(hoy.hero)}
+      ${worldCupPanel}
       ${renderDecisionBar()}
       ${renderDecisionResults(activeMode, decisionItems)}
       ${renderNewsletterPanel()}
@@ -887,10 +886,9 @@ function renderHomePage(data) {
     ${renderBrand()}
     ${renderUtilityStrip(hoy.signals || [])}
     ${renderSearchBar()}
-    ${renderDecisionBar()}
-    ${activeMode ? renderDecisionResults(activeMode, decisionItems) : ""}
     ${renderHero(hoy.hero)}
     ${worldCupPanel}
+    ${renderDecisionBar()}
     ${renderSection("Hoy en Cancún", "", hoy.today || [])}
     ${renderSection("Esta semana", "", hoy.week || [])}
     ${renderSection("Eventos y noche", "", hoy.events || [])}
