@@ -38,6 +38,13 @@ const routes = [
     url: "https://queondacancun.com/promos/",
     label: "Promociones en Cancún",
     description: "Promociones activas en Cancún con fuente y metadatos internos de revisión."
+  },
+  {
+    key: "party",
+    file: "party/index.html",
+    url: "https://queondacancun.com/party/",
+    label: "Antros y party en Cancún",
+    description: "Antros, shows nocturnos y lugares de fiesta en Cancún con fuente y acción útil para reservar o revisar tickets."
   }
 ];
 
@@ -146,6 +153,14 @@ function currentEvents(data) {
   );
 }
 
+function activeParty(data) {
+  return (data.party || []).filter((item) =>
+    item.title &&
+    item.sourceUrl &&
+    item.confidence !== "low"
+  );
+}
+
 function activePromos(data) {
   return (data.promos || []).filter((item) =>
     item.lifecycleStatus === "active" &&
@@ -237,7 +252,8 @@ function routeItems(routeKey, data) {
       today: currentToday(data).slice(0, 5),
       events: currentEvents(data).slice(0, 3),
       promos: activePromos(data).slice(0, 3),
-      week: []
+      week: [],
+      party: activeParty(data).slice(0, 3)
     };
   }
   if (routeKey === "week") {
@@ -245,7 +261,8 @@ function routeItems(routeKey, data) {
       today: [],
       events: [],
       promos: [],
-      week: currentWeek(data).slice(0, 10)
+      week: currentWeek(data).slice(0, 10),
+      party: []
     };
   }
   if (routeKey === "events") {
@@ -253,14 +270,25 @@ function routeItems(routeKey, data) {
       today: [],
       events: currentEvents(data),
       promos: [],
-      week: []
+      week: [],
+      party: []
+    };
+  }
+  if (routeKey === "party") {
+    return {
+      today: [],
+      events: [],
+      promos: [],
+      week: [],
+      party: activeParty(data)
     };
   }
   return {
     today: [],
     events: [],
     promos: activePromos(data),
-    week: []
+    week: [],
+    party: []
   };
 }
 
@@ -278,6 +306,7 @@ function buildSnapshot(route, data) {
     sectionHtml("Esta semana", items.week),
     sectionHtml("Eventos actuales", items.events),
     sectionHtml("Promociones activas", items.promos, { includeReview: true }),
+    sectionHtml("Party", items.party),
     `    </section>`
   ].filter(Boolean).join("\n");
   return `${SNAPSHOT_START}\n  <noscript>\n${blocks}\n  </noscript>\n${SNAPSHOT_END}`;
@@ -289,7 +318,8 @@ function itemListJsonLd(route, data) {
     ...items.today,
     ...items.week,
     ...items.events,
-    ...items.promos
+    ...items.promos,
+    ...items.party
   ].map((item, index) => ({
     "@type": "ListItem",
     position: index + 1,

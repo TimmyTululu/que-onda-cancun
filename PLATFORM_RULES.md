@@ -57,6 +57,7 @@ Public nav:
 - Esta semana
 - Promos
 - Eventos
+- Party
 - Newsletter
 
 Do not add `Inicio`; it is redundant because the home page is `Hoy`.
@@ -213,6 +214,7 @@ Then browser-check:
 - `/esta-semana/`
 - `/promos/`
 - `/eventos/`
+- `/party/`
 - `/newsletter/`
 - `/restaurantes/` redirects
 - `/beach-clubs/` redirects
@@ -238,6 +240,7 @@ For the active routes:
 - `data/platform.json`: seed content, source metadata, and manual fallback schema.
 - `promos/index.html`: Promos route.
 - `eventos/index.html`: Eventos route.
+- `party/index.html`: Party route.
 - `esta-semana/index.html`: weekly platform route.
 - `newsletter/index.html`: approved weekly newsletter web edition.
 - `boletin/index.html`: compatibility redirect to `/newsletter/`.

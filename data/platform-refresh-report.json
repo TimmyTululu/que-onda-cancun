@@ -161,13 +161,34 @@
       "updatedAt": "2026-06-20T15:10:12-05:00",
       "lastSuccessfulRefreshAt": null,
       "sources": [
-        "VivoEnMX"
+        "VivoEnMX",
+        "Mandala Tickets"
       ],
-      "itemsAdded": 0,
+      "itemsAdded": 1,
+      "itemsUpdated": 0,
+      "itemsRemoved": 1,
+      "itemsPreserved": 6,
+      "warnings": [
+        "Removed expired evento-bistro-mx during validation and added current source-backed Rakata Saturday Party."
+      ],
+      "errors": []
+    },
+    "party": {
+      "status": "preserved",
+      "updatedAt": "2026-06-20T19:56:00-05:00",
+      "lastSuccessfulRefreshAt": null,
+      "sources": [
+        "Coco Bongo",
+        "HRoof",
+        "Mandala Tickets"
+      ],
+      "itemsAdded": 9,
       "itemsUpdated": 0,
       "itemsRemoved": 0,
-      "itemsPreserved": 6,
-      "warnings": [],
+      "itemsPreserved": 9,
+      "warnings": [
+        "The City, Bar 27, Dolly Social Club and Abolengo were discovered from secondary/search sources but excluded until a current official/actionable source is verified."
+      ],
       "errors": []
     }
   },
@@ -180,6 +201,8 @@
     "Preserved events; every item looked expired and emptying the section would be unsafe.",
     "Updated World Cup module from parsed schedule: 4 matches today, 6 day groups.",
     "Updated data/platform.json.updatedAt to 2026-06-20T17:01:28-05:00.",
-    "World Cup today label already matches Cancun date."
+    "World Cup today label already matches Cancun date.",
+    "Added source-backed Party route seed data from official venue/ticket pages.",
+    "Replaced expired evento-bistro-mx with source-backed Rakata Saturday Party."
   ]
 }

@@ -80,7 +80,7 @@ img {
   width: min(100% - 28px, 860px);
   margin: 14px auto 0;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 6px;
   padding: 6px;
   border: 1px solid rgba(32, 199, 203, 0.46);
@@ -103,7 +103,7 @@ img {
   border-radius: 999px;
   color: #f3ead8;
   padding: 0 10px;
-  font-size: 1rem;
+  font-size: 0.96rem;
   font-weight: 900;
   line-height: 1;
   text-align: center;

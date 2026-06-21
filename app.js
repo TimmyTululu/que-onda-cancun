@@ -3,6 +3,7 @@ const NAV_ITEMS = [
   { label: "Esta semana", href: "/esta-semana/", key: "esta-semana" },
   { label: "Promos", href: "/promos/", key: "promos" },
   { label: "Eventos", href: "/eventos/", key: "eventos" },
+  { label: "Party", href: "/party/", key: "party" },
   { label: "Newsletter", href: "/newsletter/", key: "newsletter" },
   { label: "Contacto", href: "#contacto", key: "contacto", type: "button" }
 ];
@@ -32,6 +33,11 @@ const PAGE_CONFIG = {
     label: "Eventos",
     title: "Eventos y planes",
     collection: "events"
+  },
+  party: {
+    label: "Party",
+    title: "Party en Cancún",
+    collection: "party"
   }
 };
 
@@ -110,6 +116,16 @@ function filterBySearch(items, query) {
   if (!Array.isArray(items)) return [];
   if (!query) return items;
   return items.filter((item) => matchesSearch(item, query));
+}
+
+function restoreSearchFocus(selectionStart, selectionEnd) {
+  const input = $("#platform-search");
+  if (!input) return;
+  input.focus({ preventScroll: true });
+  if (Number.isInteger(selectionStart) && Number.isInteger(selectionEnd)) {
+    const valueLength = input.value.length;
+    input.setSelectionRange(Math.min(selectionStart, valueLength), Math.min(selectionEnd, valueLength));
+  }
 }
 
 function renderSearchBar() {
@@ -901,10 +917,10 @@ function bindInteractions() {
   document.addEventListener("submit", handleCouponClaim);
   document.addEventListener("input", (event) => {
     if (event.target.matches(".platform-search-input")) {
-      state.searchQuery = event.target.value.trim();
+      const { value, selectionStart, selectionEnd } = event.target;
+      state.searchQuery = value;
       renderApp();
-      const input = $("#platform-search");
-      if (input) input.focus();
+      restoreSearchFocus(selectionStart, selectionEnd);
       scheduleSearchTracking(state.searchQuery);
     }
   });
@@ -912,8 +928,7 @@ function bindInteractions() {
     if (!event.target.matches("[data-clear-search]")) return;
     state.searchQuery = "";
     renderApp();
-    const input = $("#platform-search");
-    if (input) input.focus();
+    restoreSearchFocus(0, 0);
   });
   document.addEventListener("click", (event) => {
     const target = event.target;

@@ -13,6 +13,7 @@ Freshness: updated daily around 01:00 America/Cancun through the platform refres
 - https://queondacancun.com/esta-semana/ - Weekly Cancún agenda and local planning signals.
 - https://queondacancun.com/promos/ - Active Cancún promotions for restaurants, tours, nightlife, experiences, and local plans.
 - https://queondacancun.com/eventos/ - Curated Cancún event agenda for today and the week.
+- https://queondacancun.com/party/ - Source-backed Cancun nightlife, antros, shows, and party reservation paths.
 - https://queondacancun.com/newsletter/ - Weekly editorial newsletter.
 
 ## Machine-readable references

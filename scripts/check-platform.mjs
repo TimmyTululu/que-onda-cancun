@@ -10,13 +10,14 @@ const routes = [
   ["Esta semana", "esta-semana/index.html", 'data-page="esta-semana"'],
   ["Promos", "promos/index.html", 'data-page="promos"'],
   ["Eventos", "eventos/index.html", 'data-page="eventos"'],
+  ["Party", "party/index.html", 'data-page="party"'],
   ["Newsletter", "newsletter/index.html", "Descargar PDF"],
   ["Boletín redirect", "boletin/index.html", "/newsletter/"],
   ["Restaurantes redirect", "restaurantes/index.html", "url=/"],
   ["Beach clubs redirect", "beach-clubs/index.html", "url=/"]
 ];
 
-const requiredNav = ["Hoy", "Esta semana", "Promos", "Eventos", "Newsletter", "Contacto"];
+const requiredNav = ["Hoy", "Esta semana", "Promos", "Eventos", "Party", "Newsletter", "Contacto"];
 const removedNav = ['label: "Inicio"', 'label: "Restaurantes"', 'label: "Beach clubs"', 'href="/restaurantes/"', 'href="/beach-clubs/"'];
 const requiredFiles = [
   "scripts/validate-platform-content.mjs",
@@ -41,7 +42,8 @@ const platformShellRoutes = [
   "index.html",
   "esta-semana/index.html",
   "promos/index.html",
-  "eventos/index.html"
+  "eventos/index.html",
+  "party/index.html"
 ];
 const platformVersionString = "20260620f";
 const platformBootSrc = "platform-route-boot.js";
@@ -52,6 +54,7 @@ const platformVersionContractFiles = [
   "esta-semana/index.html",
   "promos/index.html",
   "eventos/index.html",
+  "party/index.html",
   "platform.css",
   "newsletter/index.html"
 ];
@@ -88,7 +91,8 @@ const requiredFreshnessSections = [
   "hoy.events",
   "week",
   "promos",
-  "events"
+  "events",
+  "party"
 ];
 const validSectionStatuses = new Set(["fresh", "preserved", "stale", "failed", "manual"]);
 const validSourceTypes = new Set(["official", "partner", "scraped", "manual", "unknown"]);
@@ -234,7 +238,7 @@ function assertDailyAutomationContract() {
   assert(workflow.includes("node --check scripts/generate-platform-snapshots.mjs"), "Daily workflow must syntax-check snapshot generator");
   assert(workflow.includes("node scripts/check-platform.mjs"), "Daily workflow must run platform checks");
   assert(workflow.includes("node scripts/check-newsletter.mjs"), "Daily workflow must run newsletter checks");
-  assert(workflow.includes("git add data/platform.json data/platform-candidates.json data/platform-refresh-report.json index.html esta-semana/index.html eventos/index.html promos/index.html"), "Daily workflow must commit intended data/report/snapshot files only");
+  assert(workflow.includes("git add data/platform.json data/platform-candidates.json data/platform-refresh-report.json index.html esta-semana/index.html eventos/index.html promos/index.html party/index.html"), "Daily workflow must commit intended data/report/snapshot files only");
   assert(workflow.includes("data/platform-refresh-report.json"), "Daily workflow must include platform refresh report in diff/commit path");
   assert(workflow.includes("FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}"), "Daily workflow must read FIRECRAWL_API_KEY from Actions secrets");
   assert(!/echo\s+["']?\$FIRECRAWL_API_KEY/.test(workflow), "Daily workflow must not print FIRECRAWL_API_KEY");
@@ -434,7 +438,8 @@ function visibleItemCollections(data) {
     "hoy.events": data.hoy?.events || [],
     week: data.week || [],
     promos: data.promos || [],
-    events: data.events || []
+    events: data.events || [],
+    party: data.party || []
   };
 }
 
@@ -756,6 +761,7 @@ const seoRoutes = [
   ["Esta semana", "esta-semana/index.html", "https://queondacancun.com/esta-semana/"],
   ["Promos", "promos/index.html", "https://queondacancun.com/promos/"],
   ["Eventos", "eventos/index.html", "https://queondacancun.com/eventos/"],
+  ["Party", "party/index.html", "https://queondacancun.com/party/"],
   ["Newsletter", "newsletter/index.html", "https://queondacancun.com/newsletter/"]
 ];
 
@@ -911,7 +917,7 @@ for (const collection of ["today", "week", "events"]) {
   assert(Array.isArray(data.hoy[collection]) && data.hoy[collection].length > 0, `Hoy is missing ${collection}`);
   data.hoy[collection].forEach((item, index) => validateItem(item, `hoy.${collection}[${index}]`));
 }
-for (const collection of ["week", "promos", "events"]) {
+for (const collection of ["week", "promos", "events", "party"]) {
   assert(Array.isArray(data[collection]) && data[collection].length > 0, `Missing data collection: ${collection}`);
   data[collection].forEach((item, index) => validateItem(item, `${collection}[${index}]`));
 }
@@ -920,6 +926,7 @@ assert(data.hoy.week.length >= 8, "Hoy weekly preview must have at least 8 items
 assert(data.week.length >= 10, "Esta semana must have at least 10 items");
 assert(data.promos.length >= 20, "Promos must have at least 20 active opportunities");
 assert(data.events.length >= 6, "Eventos must keep at least 6 non-expired items after lifecycle filtering");
+assert(data.party.length >= 8, "Party must keep at least 8 source-backed nightlife listings");
 
 const nonPromoData = JSON.stringify({
   hoy: data.hoy,

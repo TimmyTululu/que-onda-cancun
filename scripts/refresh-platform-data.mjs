@@ -19,7 +19,8 @@ const SECTION_CONFIG = {
   "hoy.events": { timeSensitive: true, automated: false, source: "preserved", status: "preserved", notes: "Home event cards are lifecycle-filtered and otherwise preserved." },
   week: { timeSensitive: true, automated: false, source: "preserved", status: "preserved", notes: "Weekly route cards are preserved from editorial data." },
   promos: { timeSensitive: true, automated: false, source: "manual", status: "manual", notes: "Promo cards are preserved from manual/editorial data; unknown expiry requires review." },
-  events: { timeSensitive: true, automated: false, source: "preserved", status: "preserved", notes: "Event route cards are lifecycle-filtered and otherwise preserved." }
+  events: { timeSensitive: true, automated: false, source: "preserved", status: "preserved", notes: "Event route cards are lifecycle-filtered and otherwise preserved." },
+  party: { timeSensitive: true, automated: false, source: "preserved", status: "preserved", notes: "Party route listings are preserved from source-backed editorial data." }
 };
 const PROMO_REVIEW_DAYS_TRUSTED = 7;
 const PROMO_REVIEW_DAYS_UNTRUSTED = 3;
@@ -36,6 +37,8 @@ const TRUSTED_HOST_SOURCE_TYPES = [
   ["rosanegra.com.mx", "official"],
   ["lahabichuela.com", "official"],
   ["mandalagroup.com", "official"],
+  ["mandalatickets.com", "official"],
+  ["hroof.com.mx", "official"],
   ["venturapark.com", "official"],
   ["selvatica.com.mx", "official"],
   ["senorfrogs.com", "official"],
@@ -271,7 +274,8 @@ function itemCollections(data) {
     "hoy.events": data.hoy?.events || [],
     week: data.week || [],
     promos: data.promos || [],
-    events: data.events || []
+    events: data.events || [],
+    party: data.party || []
   };
 }
 
@@ -284,6 +288,7 @@ function setCollection(data, section, items) {
   if (section === "week") data.week = items;
   if (section === "promos") data.promos = items;
   if (section === "events") data.events = items;
+  if (section === "party") data.party = items;
 }
 
 function applyTrustFields(data) {
@@ -602,7 +607,7 @@ function assertPlatformShape(data, label) {
   if (!Array.isArray(data.hoy.signals) || data.hoy.signals.length !== 3) {
     throw new Error(`${label}.hoy.signals must contain exactly 3 signals`);
   }
-  for (const section of ["today", "week", "promos", "events"]) {
+  for (const section of ["today", "week", "promos", "events", "party"]) {
     const items = section === "today" ? data.hoy.today : data[section];
     if (!Array.isArray(items) || items.length === 0) {
       throw new Error(`${label}.${section} must be a non-empty array`);
@@ -620,7 +625,7 @@ function assertCandidateShape(data, label) {
   if (!Array.isArray(data.hoy.today) || data.hoy.today.length === 0) {
     throw new Error(`${label}.hoy.today must be a non-empty array`);
   }
-  for (const section of ["week", "promos", "events"]) {
+  for (const section of ["week", "promos", "events", "party"]) {
     if (!Array.isArray(data[section]) || data[section].length === 0) {
       throw new Error(`${label}.${section} must be a non-empty array`);
     }
