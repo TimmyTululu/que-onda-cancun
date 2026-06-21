@@ -794,6 +794,18 @@ const css = read("platform.css");
 for (const item of requiredNav) {
   assert(app.includes(`label: "${item}"`), `App nav is missing ${item}`);
 }
+const decisionStart = app.indexOf("const DECISION_MODES");
+const decisionEnd = app.indexOf("function resolvePlatformVersion");
+assert(decisionStart >= 0 && decisionEnd > decisionStart, "App must declare decision modes before runtime boot");
+const decisionBlock = app.slice(decisionStart, decisionEnd);
+const requiredDecisionModes = ["Noche", "Con lluvia", "Con niños", "Barato", "Premium", "Zona Hotelera", "Reserva ya"];
+for (const item of requiredDecisionModes) {
+  assert(decisionBlock.includes(`label: "${item}"`), `Decision modes are missing ${item}`);
+}
+assert(!decisionBlock.includes('label: "Hoy"'), "Decision modes must not duplicate Hoy nav");
+assert(!decisionBlock.includes('label: "Party"'), "Decision modes must not duplicate Party nav");
+assert(app.includes("renderDecisionResults") && app.includes("rankedDecisionItems"), "App must render ranked decision results");
+assert(css.includes(".decision-panel") && css.includes(".decision-chip"), "Decision UI styles are missing");
 for (const file of requiredFiles) {
   assert(existsSync(path.join(root, file)), `Missing required file for pipeline: ${file}`);
 }

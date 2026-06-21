@@ -46,6 +46,7 @@ const state = {
   data: null,
   lastSignals: {},
   searchQuery: "",
+  decisionKey: "",
   trackedSearchKeys: new Set()
 };
 
@@ -53,6 +54,65 @@ const LIVE_SIGNALS_REFRESH_MS = 10 * 60 * 1000;
 const SEARCH_TRACK_DELAY_MS = 900;
 let signalRefreshTimer = null;
 let searchTrackTimer = null;
+
+const DECISION_MODES = [
+  {
+    key: "noche",
+    label: "Noche",
+    title: "Noche sin perder tiempo",
+    deck: "Planes que funcionan mejor cuando ya quieres salir, cenar o cerrar la noche.",
+    reason: "Buen fit nocturno: horario tarde, show, cena, mesa o salida en zona activa.",
+    terms: ["noche", "22:00", "23:00", "02:00", "03:00", "antro", "club", "show", "cena", "bar", "rooftop", "vip", "party", "reggaeton", "reggaetón"]
+  },
+  {
+    key: "lluvia",
+    label: "Con lluvia",
+    title: "Cuando el clima no ayuda",
+    deck: "Opciones bajo techo o con logística clara para no depender de playa perfecta.",
+    reason: "Resiste lluvia mejor que un plan de playa: techo, show, cena, reserva o operador claro.",
+    terms: ["lluvia", "cerrado", "show", "cena", "restaurante", "techo", "interior", "reserva", "centro", "coco bongo", "rosa negra", "habichuela"]
+  },
+  {
+    key: "ninos",
+    label: "Con niños",
+    title: "Para ir con niños",
+    deck: "Planes familiares, de día o con logística sencilla para resolver sin improvisar.",
+    reason: "Mejor para familia: horario claro, actividad de día, parque, tour o experiencia controlada.",
+    terms: ["familia", "familias", "niños", "ninos", "parque", "ventura", "tour", "día completo", "dia completo", "09:00", "17:00", "aqua", "xoximilco"]
+  },
+  {
+    key: "barato",
+    label: "Barato",
+    title: "Buen plan cuidando presupuesto",
+    deck: "Promos, descuentos y opciones donde el valor está más claro antes de reservar.",
+    reason: "Tiene señal de ahorro: promo, descuento, 2x1, paquete o precio más controlable.",
+    terms: ["promo", "promoción", "promocion", "descuento", "2x1", "hasta", "oferta", "paquete", "cupón", "cupon", "barato", "gratis"]
+  },
+  {
+    key: "premium",
+    label: "Premium",
+    title: "Para una salida más cuidada",
+    deck: "Restaurantes, clubs y experiencias donde conviene reservar y subir el nivel.",
+    reason: "Señal premium: reserva formal, VIP, club privado, cena-show o experiencia más cuidada.",
+    terms: ["premium", "vip", "mesa", "reserva", "privado", "exclusiva", "exclusivo", "steak", "harry", "rosa negra", "hroof", "cena-show"]
+  },
+  {
+    key: "zona-hotelera",
+    label: "Zona Hotelera",
+    title: "Cerca de Zona Hotelera",
+    deck: "Lo que tiene más sentido si te estás moviendo por la zona turística.",
+    reason: "Está en Zona Hotelera o cerca de la franja donde se concentran hoteles, antros y tours.",
+    terms: ["zona hotelera", "hotelera", "kukulcan", "kukulcán", "coco bongo", "mandala", "rakata", "hroof", "aqua", "ventura"]
+  },
+  {
+    key: "reserva",
+    label: "Reserva ya",
+    title: "Cierra el plan desde aquí",
+    deck: "Opciones con ticket, reserva, mapa o acción directa para no quedarte en investigación.",
+    reason: "Tiene acción directa: reserva, tickets, mesa, RSVP, compra o fuente oficial clara.",
+    terms: ["reserva", "reservar", "tickets", "ticket", "boletos", "mesa", "rsvp", "comprar", "ver disponibilidad", "oficial"]
+  }
+];
 
 function resolvePlatformVersion() {
   const script = document.currentScript;
@@ -116,6 +176,87 @@ function filterBySearch(items, query) {
   if (!Array.isArray(items)) return [];
   if (!query) return items;
   return items.filter((item) => matchesSearch(item, query));
+}
+
+function decisionModeByKey(key) {
+  return DECISION_MODES.find((mode) => mode.key === key) || null;
+}
+
+function itemSearchSubject(item) {
+  return normalizeSearchText([
+    item.id,
+    item.title,
+    item.category,
+    item.description,
+    item.location,
+    item.neighborhood,
+    item.time,
+    item.date,
+    item.dateTime,
+    item.sourceName,
+    item.ctaLabel,
+    item.ctaUrl
+  ].join(" "));
+}
+
+function priorityScore(item) {
+  const priority = Number(item.priority);
+  return Number.isFinite(priority) ? Math.max(0, 120 - priority) / 120 : 0;
+}
+
+function decisionScore(item, mode) {
+  const subject = itemSearchSubject(item);
+  let score = priorityScore(item);
+
+  for (const term of mode.terms) {
+    if (subject.includes(normalizeSearchText(term))) score += 2;
+  }
+
+  if (mode.key === "noche" && /(?:18|19|20|21|22|23|00|01|02|03):/.test(subject)) score += 2;
+  if (mode.key === "barato" && /(?:%|2x1|\bpromo\b|descuento|hasta)/i.test(`${item.title} ${item.description} ${item.ctaLabel}`)) score += 3;
+  if (mode.key === "zona-hotelera" && normalizeSearchText(item.neighborhood || item.location).includes("zona hotelera")) score += 5;
+  if (mode.key === "reserva" && /reserva|ticket|boleto|mesa|rsvp|compra/i.test(`${item.ctaLabel} ${item.ctaUrl} ${item.description}`)) score += 4;
+  if (mode.key === "premium" && /vip|premium|reserva|privad|steak|cena-show/i.test(`${item.title} ${item.category} ${item.description}`)) score += 3;
+  if (mode.key === "lluvia" && /lluvia|cerrado|show|cena|restaurante|techo/i.test(`${item.title} ${item.category} ${item.description}`)) score += 3;
+  if (mode.key === "ninos" && /familia|familias|niñ|nin|parque|día completo|dia completo|tour/i.test(`${item.title} ${item.category} ${item.description}`)) score += 3;
+
+  return score;
+}
+
+function uniqueItems(items) {
+  const seen = new Set();
+  return items.filter((item) => {
+    const key = item.id || `${item.title}-${item.ctaUrl}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function homeDecisionItems(data) {
+  const hoy = data.hoy || {};
+  return uniqueItems([
+    hoy.hero,
+    ...(hoy.today || []),
+    ...(hoy.week || []),
+    ...(hoy.events || []),
+    ...(data.week || []),
+    ...(data.promos || []),
+    ...(data.events || []),
+    ...(data.party || [])
+  ].filter(Boolean));
+}
+
+function listingDecisionItems(config, data) {
+  return uniqueItems(data[config.collection] || []);
+}
+
+function rankedDecisionItems(items, mode) {
+  return uniqueItems(items)
+    .map((item) => ({ item, score: decisionScore(item, mode) }))
+    .filter((entry) => entry.score >= 2)
+    .sort((a, b) => b.score - a.score || Number(a.item.priority || 999) - Number(b.item.priority || 999))
+    .map((entry) => entry.item);
 }
 
 function restoreSearchFocus(selectionStart, selectionEnd) {
@@ -623,6 +764,76 @@ function renderSection(title, deck, items, className = "") {
   `;
 }
 
+function renderDecisionBar() {
+  const activeMode = decisionModeByKey(state.decisionKey);
+  return `
+    <section class="decision-panel reveal" aria-label="Elegir plan por mood">
+      <div class="decision-copy">
+        <span class="eyebrow">Qué hago si...</span>
+        <h2>Elige por situación</h2>
+      </div>
+      <div class="decision-actions">
+        ${DECISION_MODES.map((mode) => `
+          <button
+            class="decision-chip${activeMode?.key === mode.key ? " is-active" : ""}"
+            type="button"
+            data-decision-key="${escapeHtml(mode.key)}"
+            aria-pressed="${activeMode?.key === mode.key ? "true" : "false"}"
+          >${escapeHtml(mode.label)}</button>
+        `).join("")}
+        ${activeMode ? `<button class="decision-clear" type="button" data-clear-decision>Ver todo</button>` : ""}
+      </div>
+    </section>
+  `;
+}
+
+function decisionReason(item, mode) {
+  if (mode.key === "zona-hotelera" && /zona hotelera/i.test(`${item.neighborhood} ${item.location}`)) {
+    return "Está en Zona Hotelera, así que reduce traslados si ya estás en la franja turística.";
+  }
+  if (mode.key === "reserva" && /ticket|boleto|reserva|mesa|rsvp/i.test(`${item.ctaLabel} ${item.description}`)) {
+    return "Tiene una acción clara para cerrar el plan antes de moverte.";
+  }
+  if (mode.key === "barato" && /2x1|descuento|promo|hasta|%/i.test(`${item.title} ${item.description}`)) {
+    return "La señal de ahorro está explícita, no escondida en letra chiquita.";
+  }
+  return mode.reason;
+}
+
+function renderDecisionPick(item, mode, index) {
+  const pickNumber = String(index + 1).padStart(2, "0");
+  return `
+    <article class="decision-pick">
+      <span>Pick ${pickNumber}</span>
+      <h3>${escapeHtml(item.title)}</h3>
+      <p>${escapeHtml(decisionReason(item, mode))}</p>
+      <a href="${item.ctaUrl}"${linkAttrs(item.ctaUrl)}${trackAttrs({ action: "decision_pick_click", item, section: `decision.${mode.key}`, targetUrl: item.ctaUrl })}>${escapeHtml(item.ctaLabel || "Ver detalles")}</a>
+    </article>
+  `;
+}
+
+function renderDecisionResults(mode, sourceItems) {
+  if (!mode) return "";
+  const matches = rankedDecisionItems(sourceItems, mode);
+  const topPicks = matches.slice(0, 3);
+  const cardItems = matches.slice(0, 8);
+
+  return `
+    <section class="decision-results reveal" aria-live="polite">
+      <div class="section-title">
+        <div>
+          <h2>${escapeHtml(mode.title)}</h2>
+          <p>${escapeHtml(mode.deck)}</p>
+        </div>
+      </div>
+      ${topPicks.length ? `<div class="decision-picks">${topPicks.map((item, index) => renderDecisionPick(item, mode, index)).join("")}</div>` : ""}
+      <div class="portal-grid listing-grid">
+        ${cardItems.map(renderFeatureCard).join("") || `<p class="empty-state">No encontramos suficientes planes para este mood todavía.</p>`}
+      </div>
+    </section>
+  `;
+}
+
 function renderNewsletterPanel() {
   return `
     <section class="newsletter-panel compact-panel">
@@ -639,6 +850,8 @@ function renderNewsletterPanel() {
 function renderHomePage(data) {
   const hoy = data.hoy;
   const searchQuery = (state.searchQuery || "").trim();
+  const activeMode = decisionModeByKey(state.decisionKey);
+  const decisionItems = homeDecisionItems(data);
   const worldCupPanel = isTemporalFeatureActive(hoy.worldCup)
     ? renderWorldCupPanel(hoy.worldCup)
     : "";
@@ -660,10 +873,22 @@ function renderHomePage(data) {
       </section>
     `;
   }
+  if (activeMode) {
+    return `
+      ${renderBrand()}
+      ${renderUtilityStrip(hoy.signals || [])}
+      ${renderSearchBar()}
+      ${renderDecisionBar()}
+      ${renderDecisionResults(activeMode, decisionItems)}
+      ${renderNewsletterPanel()}
+    `;
+  }
   return `
     ${renderBrand()}
     ${renderUtilityStrip(hoy.signals || [])}
     ${renderSearchBar()}
+    ${renderDecisionBar()}
+    ${activeMode ? renderDecisionResults(activeMode, decisionItems) : ""}
     ${renderHero(hoy.hero)}
     ${worldCupPanel}
     ${renderSection("Hoy en Cancún", "", hoy.today || [])}
@@ -677,18 +902,22 @@ function renderListingPage(config, data) {
   const items = data[config.collection] || [];
   const query = (state.searchQuery || "").trim();
   const filtered = filterBySearch(items, query);
+  const activeMode = decisionModeByKey(state.decisionKey);
+  const decisionItems = listingDecisionItems(config, data);
   return `
     ${renderBrand()}
     <section class="listing-head reveal">
       <h1>${escapeHtml(config.title)}</h1>
     </section>
     ${renderSearchBar()}
-    <section class="listing-content-wrap" aria-live="polite">
+    ${renderDecisionBar()}
+    ${activeMode ? renderDecisionResults(activeMode, decisionItems) : ""}
+    ${activeMode && !query ? "" : `<section class="listing-content-wrap" aria-live="polite">
       ${query ? `<p class="search-summary">Mostrando ${filtered.length} de ${items.length} resultados para "${escapeHtml(query)}".</p>` : ""}
       <div class="portal-grid listing-grid">
         ${filtered.map(renderFeatureCard).join("") || `<p class="empty-state">No hay señales cargadas para esta sección.</p>`}
       </div>
-    </section>
+    </section>`}
   `;
 }
 
@@ -919,6 +1148,7 @@ function bindInteractions() {
     if (event.target.matches(".platform-search-input")) {
       const { value, selectionStart, selectionEnd } = event.target;
       state.searchQuery = value;
+      if (value) state.decisionKey = "";
       renderApp();
       restoreSearchFocus(selectionStart, selectionEnd);
       scheduleSearchTracking(state.searchQuery);
@@ -929,6 +1159,34 @@ function bindInteractions() {
     state.searchQuery = "";
     renderApp();
     restoreSearchFocus(0, 0);
+  });
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const decisionTrigger = target.closest("[data-decision-key]");
+    if (decisionTrigger) {
+      state.decisionKey = decisionTrigger.dataset.decisionKey === state.decisionKey ? "" : decisionTrigger.dataset.decisionKey || "";
+      renderApp();
+      trackClick({
+        action: "decision_mode_select",
+        label: state.decisionKey || "clear",
+        section: `decision.${state.page}`,
+        source: "decision-panel"
+      });
+      return;
+    }
+
+    if (target.closest("[data-clear-decision]")) {
+      state.decisionKey = "";
+      renderApp();
+      trackClick({
+        action: "decision_mode_clear",
+        label: "Ver todo",
+        section: `decision.${state.page}`,
+        source: "decision-panel"
+      });
+    }
   });
   document.addEventListener("click", (event) => {
     const target = event.target;
