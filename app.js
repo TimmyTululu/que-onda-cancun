@@ -1138,17 +1138,11 @@ async function fetchLiveSignals() {
     }
 
     const response = await fetch("/api/live-signals", { cache: "no-store" });
-    if (response.ok) {
-      const data = await response.json();
-      if (data?.ok) return data;
-      if (!data?.ok) {
-        return fetchFallbackSignals();
-      }
-    }
-
-    return fetchFallbackSignals();
+    if (!response.ok) return null;
+    const data = await response.json();
+    return data?.ok ? data : null;
   } catch {
-    return fetchFallbackSignals();
+    return null;
   }
 }
 
@@ -1163,6 +1157,10 @@ function renderApp() {
     if (signalRefreshTimer) clearInterval(signalRefreshTimer);
     signalRefreshTimer = setInterval(hydrateLiveSignals, LIVE_SIGNALS_REFRESH_MS);
     return;
+  }
+  if (signalRefreshTimer) {
+    clearInterval(signalRefreshTimer);
+    signalRefreshTimer = null;
   }
   app.innerHTML = renderListingPage(config, state.data);
 }
