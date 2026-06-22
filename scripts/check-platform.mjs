@@ -232,7 +232,7 @@ function assertPlatformRefreshStandbyContract() {
 
   assert(!workflow.includes("schedule:"), "Standby platform refresh must not include a scheduled trigger");
   assert(!/cron:\s*["']/.test(workflow), "Standby platform refresh must not include cron automation");
-  assert(workflow.includes("workflow_dispatch:"), "Standby platform refresh may remain manually runnable");
+  assert(workflow.includes("workflow_dispatch:"), "Standby platform refresh may keep a manual dispatch hook for later re-enable");
   assert(workflow.includes("node scripts/refresh-platform-data.mjs"), "Manual refresh workflow must run the refresh script");
   assert(workflow.includes("node scripts/generate-platform-snapshots.mjs"), "Manual refresh workflow must generate static platform snapshots after refresh");
   assert(workflow.includes("node --check app.js"), "Manual refresh workflow must syntax-check app.js");

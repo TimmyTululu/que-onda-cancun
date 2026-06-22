@@ -70,8 +70,8 @@ These tools are non-visual. They harden the data pipeline without changing `plat
 
 - Platform refresh workflow:
   - GitHub Actions file: `.github/workflows/daily-platform-refresh.yml`
-  - Standby status: scheduled daily runs are disabled.
-  - Manual run only: GitHub Actions -> `Manual Platform Refresh` -> `Run workflow`.
+  - Standby status: the GitHub workflow is disabled and scheduled daily runs are removed.
+  - Manual refresh requires re-enabling the workflow first, then GitHub Actions -> `Manual Platform Refresh` -> `Run workflow`.
   - Requires repository secret `FIRECRAWL_API_KEY` while the World Cup module is active.
   - Runs `node scripts/refresh-platform-data.mjs`, `node --check app.js`, `node scripts/check-platform.mjs`, and `node scripts/check-newsletter.mjs`.
   - Commits only `data/platform.json`, `data/platform-candidates.json`, and `data/platform-refresh-report.json` when those files change.
