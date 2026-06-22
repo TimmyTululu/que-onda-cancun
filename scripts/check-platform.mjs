@@ -226,24 +226,25 @@ function assertNewsletterIsolation() {
   assert(!newsletter.includes("beforeunload"), "newsletter should not include beforeunload logic");
 }
 
-function assertDailyAutomationContract() {
+function assertPlatformRefreshStandbyContract() {
   const workflow = read(".github/workflows/daily-platform-refresh.yml");
   const refreshScript = read("scripts/refresh-platform-data.mjs");
 
-  assert(workflow.includes('cron: "0 6 * * *"'), "Daily refresh must run at 06:00 UTC / 01:00 Cancun");
-  assert(workflow.includes("workflow_dispatch:"), "Daily refresh must allow manual workflow_dispatch runs");
-  assert(workflow.includes("node scripts/refresh-platform-data.mjs"), "Daily workflow must run the refresh script");
-  assert(workflow.includes("node scripts/generate-platform-snapshots.mjs"), "Daily workflow must generate static platform snapshots after refresh");
-  assert(workflow.includes("node --check app.js"), "Daily workflow must syntax-check app.js");
-  assert(workflow.includes("node --check scripts/generate-platform-snapshots.mjs"), "Daily workflow must syntax-check snapshot generator");
-  assert(workflow.includes("node scripts/check-platform.mjs"), "Daily workflow must run platform checks");
-  assert(workflow.includes("node scripts/check-newsletter.mjs"), "Daily workflow must run newsletter checks");
-  assert(workflow.includes("git add data/platform.json data/platform-candidates.json data/platform-refresh-report.json index.html esta-semana/index.html eventos/index.html promos/index.html party/index.html"), "Daily workflow must commit intended data/report/snapshot files only");
-  assert(workflow.includes("data/platform-refresh-report.json"), "Daily workflow must include platform refresh report in diff/commit path");
-  assert(workflow.includes("FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}"), "Daily workflow must read FIRECRAWL_API_KEY from Actions secrets");
-  assert(!/echo\s+["']?\$FIRECRAWL_API_KEY/.test(workflow), "Daily workflow must not print FIRECRAWL_API_KEY");
-  assert(!/secrets\.FIRECRAWL_API_KEY[^}\n]*>>/.test(workflow), "Daily workflow must not write FIRECRAWL_API_KEY to logs/files");
-  assert(!/git add \./.test(workflow), "Daily workflow must not blindly commit the whole repo");
+  assert(!workflow.includes("schedule:"), "Standby platform refresh must not include a scheduled trigger");
+  assert(!/cron:\s*["']/.test(workflow), "Standby platform refresh must not include cron automation");
+  assert(workflow.includes("workflow_dispatch:"), "Standby platform refresh may remain manually runnable");
+  assert(workflow.includes("node scripts/refresh-platform-data.mjs"), "Manual refresh workflow must run the refresh script");
+  assert(workflow.includes("node scripts/generate-platform-snapshots.mjs"), "Manual refresh workflow must generate static platform snapshots after refresh");
+  assert(workflow.includes("node --check app.js"), "Manual refresh workflow must syntax-check app.js");
+  assert(workflow.includes("node --check scripts/generate-platform-snapshots.mjs"), "Manual refresh workflow must syntax-check snapshot generator");
+  assert(workflow.includes("node scripts/check-platform.mjs"), "Manual refresh workflow must run platform checks");
+  assert(workflow.includes("node scripts/check-newsletter.mjs"), "Manual refresh workflow must run newsletter checks");
+  assert(workflow.includes("git add data/platform.json data/platform-candidates.json data/platform-refresh-report.json index.html esta-semana/index.html eventos/index.html promos/index.html party/index.html"), "Manual refresh workflow must commit intended data/report/snapshot files only");
+  assert(workflow.includes("data/platform-refresh-report.json"), "Manual refresh workflow must include platform refresh report in diff/commit path");
+  assert(workflow.includes("FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}"), "Manual refresh workflow must read FIRECRAWL_API_KEY from Actions secrets");
+  assert(!/echo\s+["']?\$FIRECRAWL_API_KEY/.test(workflow), "Manual refresh workflow must not print FIRECRAWL_API_KEY");
+  assert(!/secrets\.FIRECRAWL_API_KEY[^}\n]*>>/.test(workflow), "Manual refresh workflow must not write FIRECRAWL_API_KEY to logs/files");
+  assert(!/git add \./.test(workflow), "Manual refresh workflow must not blindly commit the whole repo");
 
   assert(refreshScript.includes("FIRECRAWL_API_KEY"), "Refresh script must gate Firecrawl ingestion on FIRECRAWL_API_KEY");
   assert(refreshScript.includes("/v2/scrape"), "Refresh script must use Firecrawl scrape for source gathering");
@@ -753,7 +754,7 @@ assertPlatformVersionContract();
 assertBootDuplicationContract();
 assertLoadingContract();
 assertNewsletterIsolation();
-assertDailyAutomationContract();
+assertPlatformRefreshStandbyContract();
 assertSnapshotContract();
 
 const seoRoutes = [
